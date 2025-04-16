@@ -11,7 +11,7 @@
 <div class="flex min-h-screen flex-col bg-[#4F4943] text-white">
 	<header class="flex items-center justify-between px-8 py-6">
 		<div class="logo">
-			<img class="cInvert" src={DarkLogo} alt="Norwegian Open WCS 2025 Logo" class="h-12" />
+			<img class="cInvert h-12" src={DarkLogo} alt="Norwegian Open WCS 2025 Logo" />
 		</div>
 		<nav class="hidden md:block">
 			<ul class="flex space-x-6">
