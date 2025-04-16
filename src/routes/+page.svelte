@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Logo from '$lib/components/logo/nopenLogo.png';
 	import BackdropSrc from '$lib/components/backdropHero.png';
+	import DarkLogo from '$lib/components/logo/nopenDarkLogo.png';
 </script>
 
 <svelte:head>
@@ -43,12 +44,14 @@
 				class="bg-opacity-50 inset-0 flex h-screen items-center justify-center"
 			>
 				<div class="mx-auto max-w-3xl px-6 py-24 text-center md:py-32 lg:py-48">
-					<h1 class="mb-10 text-4xl font-bold md:text-5xl lg:text-6xl">Norwegian Open 2025</h1>
-					<a
+					<img class="cInvert max-h-120 mx-auto" src={DarkLogo} alt="Norwegian Open WCS 2025 Logo" />
+					<!-- <h1 class="mb-10 text-4xl font-bold md:text-5xl lg:text-6xl">Norwegian Open 2025</h1> -->
+					<h2 class="mb-10 text-4xl font-bold md:text-3xl lg:text-4xl">Save the dates 2nd of October - 6th of October</h2>
+					<!-- <a
 						href="#register"
 						class="mt-10 rounded-md bg-[#A09992] px-6 py-3 text-lg font-semibold text-black hover:bg-[#D4CABC]"
 						>Register Now</a
-					>
+					> -->
 				</div>
 			</div>
 		</section>
@@ -136,12 +139,24 @@
 <style>
 	/* Optional custom styles */
 	@font-face {
-		font-family: 'NorseTest';
+		font-family: 'NorseBold';
 		src: url('/fonts/Norsebold.otf') format('opentype');
 		font-weight: normal;
 		font-style: normal;
 	}
+	@font-face {
+		font-family: 'NorseSmall';
+		src: url('/fonts/Norse.otf') format('opentype');
+		font-weight: normal;
+		font-style: normal;
+	}
 	h1 {
-		font-family: 'NorseTest';
+		font-family: 'NorseSmall';
+	}
+	h2 {
+		font-family: 'NorseSmall';
+	}
+	.cInvert {
+		filter: invert(100%);
 	}
 </style>
