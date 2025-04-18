@@ -1,88 +1,184 @@
-import { supabase } from "$lib/supaBaseClient";
-import { supabaseAdmin } from "$lib/supabaseAdminClient";
+// src/routes/+page.server.ts (adjust path)
+
+import { supabaseAdmin } from '$lib/supabaseAdminClient';
 import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
 
+// --- Define Deadlines, Base Prices, Pass Options, Party Price SERVER-SIDE ---
+// MUST MATCH THE CLIENT SIDE
+const YMIR_DEADLINE_STRING_SERVER = '2024-10-31'; // <<< SET YOUR DATE
+const MIDGARD_DEADLINE_STRING_SERVER = '2024-12-31'; // <<< SET YOUR DATE
+
+const ymirDeadlineServer = new Date(YMIR_DEADLINE_STRING_SERVER + 'T23:59:59');
+const midgardDeadlineServer = new Date(MIDGARD_DEADLINE_STRING_SERVER + 'T23:59:59');
+
+const serverBasePrices = {
+    Ymir: { Nordic: 1700, World: 1900 },
+    Midgard: { Nordic: 1900, World: 2100 },
+    Ragnarok: { Nordic: 2100, World: 2300 }
+};
+
+const serverPassOptionsByLevel = {
+    'All-Star': ['Regular Pass', 'Judge (Free Pass)', 'Party Pass'],
+    'Advanced': ['Regular Pass', 'Judge (20% Discount)', 'Party Pass'],
+    'Other': ['Regular Pass', 'Party Pass'] // For Intermediate/Novice/Newcomer
+};
+
+const SERVER_PARTY_PASS_PRICE = 800; // Set your party pass price
+
+
+// --- Helper Functions Server-Side ---
+
+function getCurrentTierServer(): 'Ymir' | 'Midgard' | 'Ragnarok' {
+    const todayServer = new Date();
+	if (todayServer <= ymirDeadlineServer) return 'Ymir';
+	if (todayServer <= midgardDeadlineServer) return 'Midgard';
+	return 'Ragnarok';
+}
+
+function getBasePriceServer(tier: 'Ymir' | 'Midgard' | 'Ragnarok', region: 'Nordic' | 'World'): number | null {
+    const tierPrices = serverBasePrices[tier];
+    return tierPrices ? tierPrices[region] : null;
+}
+
+function getLevelCategoryServer(level: string | null): 'All-Star' | 'Advanced' | 'Other' | null {
+    if (!level) return null;
+    if (level === 'All-Star') return 'All-Star';
+    if (level === 'Advanced') return 'Advanced';
+    if (['Intermediate', 'Novice', 'Newcomer'].includes(level)) return 'Other';
+    return null;
+}
+
+function isValidPassOptionForLevel(level: string | null, passOption: string | null): boolean {
+     if (!level || !passOption) return false;
+     const category = getLevelCategoryServer(level);
+     if (!category) return false;
+     const validOptions = serverPassOptionsByLevel[category];
+     return validOptions.includes(passOption);
+}
+
+function calculateFinalAmountDueServer(basePrice: number, level: string | null, passOption: string | null): number | null {
+    if (passOption === null || level === null) return null; // Need these
+
+    switch (passOption) {
+        case 'Regular Pass':
+            return basePrice;
+        case 'Judge (Free Pass)':
+             // Add extra check - only All-Stars should have this option
+             return (getLevelCategoryServer(level) === 'All-Star') ? 0 : null;
+        case 'Judge (20% Discount)':
+             // Add extra check - only Advanced should have this option
+            return (getLevelCategoryServer(level) === 'Advanced') ? Math.round(basePrice * 0.80) : null;
+        case 'Party Pass':
+            return SERVER_PARTY_PASS_PRICE;
+        default:
+            return null; // Invalid option
+    }
+}
+
+function calculatePaymentDeadline(): string {
+    // ... same calculation as before ...
+    const futureDate = new Date();
+    futureDate.setDate(futureDate.getDate() + 14);
+    const year = futureDate.getFullYear();
+    const month = String(futureDate.getMonth() + 1).padStart(2, '0');
+    const day = String(futureDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+
+// --- load function ---
+export async function load() { return {}; }
+
+// --- actions ---
 export const actions: Actions = {
 	register: async ({ request }) => {
 		const formData = await request.formData();
 
-        const futureDate = new Date();
-        futureDate.setDate(futureDate.getDate() + 14)
-
-        const paymentDate = String(futureDate)
-
-
-		// --- Get Data from Form ---
-        // Use formData.get('nameAttribute') - names must match your svelte form
+        // --- Get Data ---
         const email = formData.get('Email') as string | null;
         const fullName = formData.get('FullName') as string | null;
-        const wsdcId = formData.get('WSDCID') as string | null; // Or Number if applicable
-        const passType = formData.get('Passtype') as string | null;
+        const wsdcId = formData.get('WSDCID') as string | null;
+        // PassType might be irrelevant now
         const role = formData.get('Role') as string | null;
         const partnerName = formData.get('PartnerName') as string | null;
-        const gender = formData.get('Gender') as string | null;
         const country = formData.get('Country') as string | null;
-        const partnerId = formData.get('PartnerID') as string | null; // Or Number
-        // Checkbox value is 'on' if checked, null otherwise. Convert to boolean.
         const competing = formData.get('Competing') === 'on';
-        const paymentType = formData.get('PaymentType') as string | null;
         const acceptedRules = formData.get('AcceptedRules') === 'on';
         const acceptedToC = formData.get('AcceptedToC') === 'on';
-        const hotelRoomType = formData.get('HotelRoomType') as string | null;
-        const amountDue = formData.get('AmountDue') as string | null; // Or Number
-        const paymentDeadline = paymentDate as string | null; // Date string
 
-        // --- Basic Server-Side Validation (Example) ---
-        if (!email || !email.includes('@')) {
-            return fail(400, { field: 'Email', error: 'Valid email is required.', missing: true });
+        // --- Get NEW Region, Level, and PassOption fields ---
+        const region = formData.get('Region') as 'Nordic' | 'World' | null; // Type hint
+        const level = formData.get('Level') as string | null;
+        const passOption = formData.get('PassOption') as string | null; // Get submitted pass option
+
+
+        // --- Server-Side Validation ---
+        // (Include checks for region, level, role, country, terms etc.)
+        if (!email /* ... */ ) { return fail(400, { data: Object.fromEntries(formData), field: 'Email', error: '...', missing: true }); }
+        if (!fullName) { return fail(400, { data: Object.fromEntries(formData), field: 'FullName', error: '...', missing: true }); }
+        if (!region) { return fail(400, { data: Object.fromEntries(formData), field: 'Region', error: 'Region selection is required.', missing: true }); }
+        if (!level) { return fail(400, { data: Object.fromEntries(formData), field: 'Level', error: 'Level selection is required.', missing: true }); }
+        if (!passOption) { return fail(400, { data: Object.fromEntries(formData), field: 'PassOption', error: 'Pass Option selection is required.', missing: true }); }
+        if (!role) { return fail(400, { data: Object.fromEntries(formData), field: 'Role', error: 'Role selection is required.', missing: true }); }
+        if (!country) { return fail(400, { data: Object.fromEntries(formData), field: 'Country', error: 'Country is required.', missing: true }); }
+        if (!acceptedRules || !acceptedToC) { return fail(400, { data: Object.fromEntries(formData), field: 'Terms', error: '...', missing: true }); }
+
+        // *** CRITICAL: Validate Pass Option against Level ***
+        if (!isValidPassOptionForLevel(level, passOption)) {
+            return fail(400, { data: Object.fromEntries(formData), field: 'PassOption', error: `Selected pass option '${passOption}' is not valid for level '${level}'.` });
         }
-        if (!fullName) {
-            return fail(400, { field: 'FullName', error: 'Full Name is required.', missing: true });
+
+        // --- Calculate Price and Deadline SERVER-SIDE ---
+        const currentTierServer = getCurrentTierServer();
+        const basePriceServer = getBasePriceServer(currentTierServer, region);
+
+        if (basePriceServer === null) { // Should not happen if region validation passed
+             return fail(500, { data: Object.fromEntries(formData), error: 'Could not determine base price.' });
         }
-        if (!acceptedRules || !acceptedToC) {
-             return fail(400, { field: 'Terms', error: 'You must accept the Rules and Terms & Conditions.', missing: true });
+
+        const finalAmountDueServer = calculateFinalAmountDueServer(basePriceServer, level, passOption);
+
+        if (finalAmountDueServer === null) { // Should not happen if validation passed
+            return fail(500, { data: Object.fromEntries(formData), error: 'Could not calculate final price.' });
         }
-        // Add more validation for other required fields...
+
+        const paymentDeadlineString = calculatePaymentDeadline();
+
 
         // --- Prepare Data for Supabase ---
         const registrationData = {
             Email: email,
             FullName: fullName,
-            WSDCID: wsdcId, // Ensure type matches Supabase column (string or number)
-            Passtype: passType,
+            WSDCID: wsdcId,
+            // Passtype: passType, // Maybe store the final chosen passOption here?
             Role: role,
             PartnerName: partnerName,
-            Gender: gender,
             Country: country,
-            PartnerID: partnerId, // Ensure type matches
-            Competing: competing, // Boolean
-            PaymentType: paymentType,
-            AcceptedRules: acceptedRules, // Boolean
-            AcceptedToC: acceptedToC, // Boolean
-            HotelRoomType: hotelRoomType,
-            AmountDue: amountDue ? Number(amountDue) : null, // Convert to number if needed
-            PaymentDeadline: paymentDeadline, // Ensure format matches Supabase date/timestamp
+            Region: region,
+            Level: level,
+            PassOption: passOption, // Store the selected pass option
+            Competing: competing,
+            AcceptedRules: acceptedRules,
+            AcceptedToC: acceptedToC,
+            AmountDue: finalAmountDueServer, // USE FINAL SERVER CALCULATED PRICE
+            PaymentDeadline: paymentDeadlineString,
+            PriceTier: currentTierServer // Store the tier they registered in
         };
 
         // --- Insert into Supabase ---
 		const { data, error: dbError } = await supabaseAdmin
 			.from('RegistrationDB')
-			.insert([registrationData]) // Pass the prepared data object
-			.select() // Select the inserted row(s)
-            .maybeSingle(); // Expecting one row or null
+			.insert([registrationData])
+			.select()
+            .maybeSingle();
 
         // --- Handle Response ---
 		if (dbError) {
-            console.error("Supabase Insert Error:", dbError);
-			// You might want more specific error codes based on dbError.code
-            return fail(500, { error: `Database error: ${dbError.message}` });
+            console.error("Supabase Admin Insert Error:", dbError);
+            return fail(500, { data: Object.fromEntries(formData), error: `Database error: ${dbError.message}` });
 		}
 
-        console.log("Inserted Data:", data);
-
-		// Return success state, maybe with the inserted data
-        // Redirecting after success is also common: throw redirect(303, '/thank-you');
-		return { success: true, insertedId: data?.id /* or some other identifier if needed */ };
+		return { success: true, insertedId: data?.id };
 	}
 };
