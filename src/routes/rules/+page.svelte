@@ -13,7 +13,7 @@
         {eventName} COMPETITION RULES
       </h1>
   
-      <p class="mb-6">Welcome to the {eventName}! We aim to provide a fair, fun, and spirited competition environment. These rules outline the requirements and expectations for all competitors. By registering for any competition, you agree to abide by these rules.</p>
+      <p class="mb-6">Welcome to the {eventName}! These rules exists to provide a fair, fun, and spirited competition environment. They outline the requirements and expectations for all competitors. By registering for any competition, you agree to abide by these rules.</p>
   
       <section class="mb-8">
         <h2 class="mt-10 mb-5 pb-2 border-b border-gray-300 text-xl sm:text-2xl font-medium text-gray-700">
@@ -24,7 +24,7 @@
           <li>Hold a valid event pass that permits competition entry (e.g., <code class="code-style">[e.g., Full Weekend Pass, Party Pass]</code>).</li>
           <li>Complete the official registration for each desired competition before the announced deadline. Registration can be done via <code class="code-style"><a href="scoring.dance">Scoring.Dance</a> or Registration Desk]</code>.</li>
           <li>Pay all required entry fees associated with their chosen competitions.</li>
-          <li>Pick up their competitor bib number during the designated times and wear it visibly during preliminary and semi-final rounds. Bibs are recommended but may not be mandatory for spotlighted finals.</li>
+          <li>Pick up their competitor bib number during the designated times and wear it visibly during preliminary and semi-final and final rounds. Bibs are recommended but may not be mandatory for spotlighted finals.</li>
           <li>Sign the event's legal waiver and release form. Competitors under the age of 18 must have a parent or legal guardian sign the waiver on their behalf.</li>
           <li>Meet the specific eligibility criteria for each division entered, as outlined in these rules and by the World Swing Dance Council (WSDC) where applicable.</li>
           <li>Competitors under the age of <code class="code-style">18</code> must have parental/guardian consent and should be comfortable and accustomed to social dancing in an adult environment.</li>
@@ -82,9 +82,9 @@
         <p class="mb-4">Competitors are expected to uphold a high standard of conduct and personal responsibility.</p>
         <ul class="list-disc pl-6 space-y-2 mb-4">
           <li><strong class="font-semibold">Know the Rules:</strong> Familiarize yourself with all competition rules and schedules. Ignorance of the rules is not an excuse for non-compliance. Ask questions of the Chief Judge or Event Staff if unclear.</li>
-          <li><strong class="font-semibold">Be Prepared:</strong> Arrive at the ballroom well in advance (<code class="code-style">[15-20 minutes]</code>) of your scheduled competition and marshalling times. Check the final schedule posted at the event (<code class="code-style"><a href="norwegianopen.no/schedule">Norwegian Open Schedule</a></code>) for any updates.</li>
+          <li><strong class="font-semibold">Be Prepared:</strong> Arrive at the ballroom well in advance (<code class="code-style">[15-20 minutes]</code>) of your scheduled competition and marshalling times. Check the final schedule posted at the event (<code class="code-style"><a href="/schedule">Norwegian Open Schedule</a></code>) for any updates.</li>
           <li><strong class="font-semibold">Marshalling:</strong> Listen for marshalling calls and proceed promptly to the designated area. Failure to be present when your heat or final call is made may result in disqualification. Alternates may be called for finals if registered competitors are absent.</li>
-          <li><strong class="font-semibold">Sportsmanship:</strong> Demonstrate respect towards partners, fellow competitors, judges, staff, and spectators at all times, both on and off the floor. Poor sportsmanship or disrespectful behavior may lead to penalties or disqualification.</li>
+          <li><strong class="font-semibold">Sportsmanship:</strong> Demonstrate respect towards partners, fellow competitors, judges, staff, and spectators at all times, both on and off the floor. Poor sportsmanship or disrespectful behavior may lead to penalties or disqualification. All decisions are made in complience of event director and cheif judge.</li>
           <li><strong class="font-semibold">Communication:</strong> Address concerns or questions appropriately through official channels, such as speaking privately with the Chief Judge or Ida Maria Stand, our ED. Directly confronting, arguing with, or harassing judges or officials is prohibited and may result in disqualification and future bans.</li>
           <li><strong class="font-semibold">Withdrawals:</strong> If you must withdraw after the registration deadline, your entry fees will be forfeited. Please notify competition staff as soon as possible.</li>
         </ul>
@@ -102,7 +102,7 @@
             <ul class="list-disc pl-6 space-y-2">
                 <li>"On the ground" support moves (drops, slides, leans where connection to the floor is maintained) are generally permitted if executed safely and appropriately for a social dance context.</li>
                 <li>Lifts, aerials, and acrobatic moves where both of a partner's feet leave the floor are <strong class="font-bold text-red-600 uppercase">NOT ALLOWED</strong> in most divisions (Newcomer, Novice, Intermediate J&J and Strictly).</li>
-                <li><em class="font-medium">Exception:</em> Limited lifts (e.g., below the shoulder) may be permitted <em class="font-medium">only</em> in specified divisions like <code class="code-style">[All-Star J&J, Open Strictly Swing]</code>. Confirm specific divisional rules.</li>
+                <li><em class="font-medium">Exception:</em> Limited lifts (e.g., below the shoulder) may be permitted <em class="font-medium">only</em> in specified divisions like <code class="code-style">(All-Star J&J, Open Strictly Swing)</code>. Confirm specific divisional rules.</li>
                 <li>Any move deemed unsafe by the judges may result in a penalty. When in doubt, prioritize safety and leave it out.</li>
             </ul>
           </div>
@@ -125,7 +125,7 @@
           VI. Competition Formats
         </h2>
         <div class="mb-6">
-          <strong class="font-semibold block mb-2">Jack & Jill (WSDC Levels: <code class="code-style">[Newcome, Novice, Intermediate, Advanced, Allstar, Sophisticated]</code>)</strong>
+          <strong class="font-semibold block mb-2">Jack & Jill (WSDC Levels: <code class="code-style">Newcome, Novice, Intermediate, Advanced, Allstar, Sophisticated</code>)</strong>
           <ul class="list-disc pl-6 space-y-2">
               <li>Competitors enter individually.</li>
               <li>Leaders and Followers are randomly paired for preliminary/semi-final rounds and judged individually based on callbacks. Partner changes occur between dances.</li>
@@ -135,7 +135,7 @@
           </ul>
         </div>
         <div>
-          <strong class="font-semibold block mb-2">Strictly Swing (Levels: <code class="code-style">[Novice, Intermediate, Open]</code>)</strong>
+          <strong class="font-semibold block mb-2">Strictly Swing (Levels: <code class="code-style">Novice, Intermediate, Open</code>)</strong>
           <ul class="list-disc pl-6 space-y-2">
               <li>Competitors enter as a pre-selected couple.</li>
               <li>Couples dance to music selected by the event DJ.</li>
@@ -153,14 +153,14 @@
         </h2>
         <p class="mb-4"><strong class="font-semibold">Competition Music:</strong> The event Head DJ will select all music for Jack & Jill and Strictly Swing competitions. Music length and style will vary.</p>
         <!-- <p class="mb-4"><strong class="font-semibold">Routine Music:</strong> If offering routine divisions (<code class="code-style">[Routine Division Names]</code>), competitors must provide their own music in the required format (<code class="code-style">[Music Format, e.g., MP3 on USB]</code>) to the DJ (<code class="code-style">[DJ Name/Location]</code>) by the deadline (<code class="code-style">[Music Submission Deadline]</code>). Bring backups.</p> -->
-        <p class="mb-4"><strong class="font-semibold">Scoring:</strong> Competitions are scored using a relative placement system, typically managed by computer software (<code class="code-style">scoring.dance</code>). Scores/results may be posted at <code class="code-style"><a href="scoring.dance">Scoring.dance</a></code> after awards.</p>
+        <p class="mb-4"><strong class="font-semibold">Scoring:</strong> Competitions are scored using a relative placement system, (<code class="code-style">scoring.dance</code>). Scores/results may be posted at <code class="code-style"><a href="scoring.dance">Scoring.dance</a></code> after awards.</p>
       </section>
   
        <section class="mb-8">
         <h2 class="mt-10 mb-5 pb-2 border-b border-gray-300 text-xl sm:text-2xl font-medium text-gray-700">
           VIII. Organizer Rights & Final Authority
         </h2>
-        <p class="mb-4">The <code class="code-style">{eventName}</code> Organizers (<code class="code-style">[Norvind WCS]</code>) and the Chief Judge reserve the right to modify competition rules, schedules, formats, or cancel any division that does not meet minimum participation (<code class="code-style">[e.g., 5 couples/leaders/followers]</code>).</p>
+        <p class="mb-4">The <code class="code-style">{eventName}</code> Organizers (<code class="code-style">Norvind WCS</code>) and the Chief Judge reserve the right to modify competition rules, schedules, formats, or cancel any division that does not meet minimum participation (<code class="code-style">e.g., 5 couples/leaders/followers</code>).</p>
         <p class="mb-4">All decisions made by the Chief Judge and event officials regarding rule interpretations, eligibility, and placements are final and binding.</p>
       </section>
   
@@ -172,7 +172,7 @@
         <ul class="list-none pl-0 space-y-2">
           <li><strong class="font-semibold inline-block w-32">Chief Judge:</strong> <code class="code-style">TBA</code></li>
           <li><strong class="font-semibold inline-block w-32">Event Organizers:</strong> <code class="code-style">Noravind WCS</code></li>
-          <li><strong class="font-semibold inline-block w-32">Event Website:</strong> <a href="norwegianopen.no" target="_blank" rel="noopener noreferrer" class="link-style"><code class="code-style">Norwegiaopen.no</code></a></li>
+          <li><strong class="font-semibold inline-block w-32">Event Website:</strong> <a href="/" target="_blank" rel="noopener noreferrer" class="link-style"><code class="code-style">Norwegianopen.no</code></a></li>
         </ul>
        </section>
   
@@ -197,5 +197,12 @@
     } 
     h1 {
         font-family: 'NorseBold';
+    }
+    a {
+        color: lightblue;
+        text-decoration: underline;
+    }
+    h2 {
+        font-family: 'Norse';
     }
   </style>
