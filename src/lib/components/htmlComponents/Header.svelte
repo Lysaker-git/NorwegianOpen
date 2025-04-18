@@ -11,7 +11,7 @@
     <nav class="hidden md:block">
         <ul class="flex space-x-6">
             <li><a href="#about" class="hover:text-gray-300">About</a></li>
-            <li><a href="#schedule" class="hover:text-gray-300">Schedule</a></li>
+            <li><a href="/schedule" class="hover:text-gray-300">Schedule</a></li>
             <li><a href="#location" class="hover:text-gray-300">Location</a></li>
             <li><a href="#contact" class="hover:text-gray-300">Contact</a></li>
         </ul>

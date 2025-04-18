@@ -2,6 +2,7 @@
 	import Logo from '$lib/components/logo/nopenLogo.png';
 	import BackdropSrc from '$lib/components/backdropHero.png';
 	import DarkLogo from '$lib/components/logo/nopenDarkLogo.png';
+	import BackdropWebP from '$lib/components/bgHero.webp'
 </script>
 
 <svelte:head>
@@ -37,7 +38,7 @@
 		<section
 			id="hero"
 			class="relative overflow-hidden bg-cover bg-center"
-			style={`background-image: url('${BackdropSrc}');`}
+			style={`background-image: url('${BackdropWebP}');`}
 		>
 			<div
 				style="height: 80vh"
