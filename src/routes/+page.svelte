@@ -8,7 +8,7 @@
 	<title>Norwegian Open WCS 2025</title>
 </svelte:head>
 
-<div class="flex min-h-screen flex-col bg-[#4F4943] text-white">
+<!-- <div class="flex min-h-screen flex-col bg-[#4F4943] text-white">
 	<header class="flex items-center justify-between px-8 py-6">
 		<div class="logo">
 			<img class="cInvert h-12" src={DarkLogo} alt="Norwegian Open WCS 2025 Logo" />
@@ -31,7 +31,7 @@
 				</svg>
 			</button>
 		</div>
-	</header>
+	</header> -->
 
 	<main class="flex-grow">
 		<section
@@ -131,10 +131,10 @@
 		</section> -->
 	</main>
 
-	<footer class="py-4 text-center text-gray-300">
+	<!-- <footer class="py-4 text-center text-gray-300">
 		<p>© 2025 Norwegian Open WCS | All Rights Reserved</p>
-	</footer>
-</div>
+	</footer> -->
+<!-- </div> -->
 
 <style>
 	/* Optional custom styles */
@@ -154,7 +154,7 @@
 		font-family: 'NorseSmall';
 	} */
 	h2 {
-		font-family: 'NorseSmall';
+		font-family: 'Norse';
 	}
 	.cInvert {
 		filter: invert(100%);
