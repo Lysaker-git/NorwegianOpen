@@ -138,7 +138,7 @@
 
 <style>
 	/* Optional custom styles */
-	@font-face {
+	/* @font-face {
 		font-family: 'NorseBold';
 		src: url('/fonts/Norsebold.otf') format('opentype');
 		font-weight: normal;
@@ -152,7 +152,7 @@
 	}
 	h1 {
 		font-family: 'NorseSmall';
-	}
+	} */
 	h2 {
 		font-family: 'NorseSmall';
 	}
