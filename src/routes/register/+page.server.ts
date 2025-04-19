@@ -6,8 +6,8 @@ import type { Actions } from './$types';
 
 // --- Define Deadlines, Base Prices, Pass Options, Party Price SERVER-SIDE ---
 // MUST MATCH THE CLIENT SIDE
-const YMIR_DEADLINE_STRING_SERVER = '2024-10-31'; // <<< SET YOUR DATE
-const MIDGARD_DEADLINE_STRING_SERVER = '2024-12-31'; // <<< SET YOUR DATE
+const YMIR_DEADLINE_STRING_SERVER = '2025-05-31'; // End of Early Bird - SET YOUR DATE
+const MIDGARD_DEADLINE_STRING_SERVER = '2025-07-31'; // End of Regular - SET YOUR DATE
 
 const ymirDeadlineServer = new Date(YMIR_DEADLINE_STRING_SERVER + 'T23:59:59');
 const midgardDeadlineServer = new Date(MIDGARD_DEADLINE_STRING_SERVER + 'T23:59:59');
@@ -99,6 +99,8 @@ export const actions: Actions = {
         const email = formData.get('Email') as string | null;
         const fullName = formData.get('FullName') as string | null;
         const wsdcId = formData.get('WSDCID') as string | null;
+        const level = formData.get('Level') as string | null
+        const passOption = formData.get('PassOption') as string | null; // Get submitted pass option
         // PassType might be irrelevant now
         const role = formData.get('Role') as string | null;
         const partnerName = formData.get('PartnerName') as string | null;
@@ -106,11 +108,7 @@ export const actions: Actions = {
         const competing = formData.get('Competing') === 'on';
         const acceptedRules = formData.get('AcceptedRules') === 'on';
         const acceptedToC = formData.get('AcceptedToC') === 'on';
-
-        // --- Get NEW Region, Level, and PassOption fields ---
-        const region = formData.get('Region') as 'Nordic' | 'World' | null; // Type hint
-        const level = formData.get('Level') as string | null;
-        const passOption = formData.get('PassOption') as string | null; // Get submitted pass option
+        const hotel = formData.get('Hotel') as string | null;
 
 
         // --- Server-Side Validation ---
