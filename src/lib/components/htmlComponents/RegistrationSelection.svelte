@@ -10,7 +10,7 @@
         <button 
             type="button"
             id="regionNordic"
-            class="flex-grow py-2 px-4 border {selectedRegion === 'Nordic' ? 'bg-indigo-600 text-white border-indigo-700' : 'bg-white text-gray-700 border-gray-300'} rounded-md text-sm font-medium transition-colors shadow-sm hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            class="montserrat-regular flex-grow py-2 px-4 border {selectedRegion === 'Nordic' ? 'bg-indigo-600 text-white border-indigo-700' : 'bg-white text-gray-700 border-gray-300'} rounded-md text-sm font-medium transition-colors shadow-sm hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             on:click={() => selectedRegion = 'Nordic'}
         >
             Nordic (SE, NO, DK, FI, IS)
@@ -19,7 +19,7 @@
         <button 
             type="button"
             id="regionWorld"
-            class="flex-grow py-2 px-4 border {selectedRegion === 'World' ? 'bg-indigo-600 text-white border-indigo-700' : 'bg-white text-gray-700 border-gray-300'} rounded-md text-sm font-medium transition-colors shadow-sm hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            class="montserrat-regular flex-grow py-2 px-4 border {selectedRegion === 'World' ? 'bg-indigo-600 text-white border-indigo-700' : 'bg-white text-gray-700 border-gray-300'} rounded-md text-sm font-medium transition-colors shadow-sm hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             on:click={() => selectedRegion = 'World'}
         >
             Rest of World

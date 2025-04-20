@@ -137,7 +137,7 @@
                     <button 
                         type="button"
                         id="level{levelValue}"
-                        class="flex-grow py-2 px-3 border {selectedLevel === levelValue ? 'bg-indigo-600 text-white border-indigo-700' : 'bg-white text-gray-700 border-gray-300'} rounded-md text-sm font-medium transition-colors shadow-sm hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        class="flex-grow py-2 px-3 border {selectedLevel === levelValue ? 'bg-indigo-600 text-white border-indigo-700' : 'bg-white text-gray-700 border-gray-300'} rounded-md text-sm font-medium transition-colors shadow-sm hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 montserrat-regular"
                         on:click={() => selectedLevel = levelValue}
                     >
                         {levelValue}
