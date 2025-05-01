@@ -37,7 +37,7 @@
 	<main class="flex-grow">
 		<section
 			id="hero"
-			class="relative overflow-hidden bg-cover bg-center"
+			class="relative overflow-hidden bg-cover bg-center pb-20"
 			style={`background-image: url('${BackdropWebP}');`}
 		>
 			<div

@@ -42,14 +42,14 @@
           <!-- Title with ornamental borders -->
           <div class="flex items-center justify-center mb-10">
             <div class="h-px w-16 bg-amber-400"></div>
-            <h1 class="text-4xl md:text-5xl font-bold text-center mx-4 text-amber-400">ABOUT THE EVENT</h1>
+            <h1 class="text-4xl md:text-5xl font-bold text-center mx-4">ABOUT THE EVENT</h1>
             <div class="h-px w-16 bg-amber-400"></div>
           </div>
           
           <!-- Styled banner -->
           <div class="mb-12 flex justify-center">
             <div class="relative">
-              <h2 class="text-2xl md:text-3xl font-bold text-center text-amber-200 border-t-2 border-b-2 border-amber-400 py-4 px-8">
+              <h2 class="text-2xl md:text-3xl font-bold text-center border-t-2 border-b-2 border-amber-400 py-4 px-8">
                 ~ The Saga Begins ~
               </h2>
               <!-- Norse corner decorations -->
@@ -63,7 +63,7 @@
           <!-- Main text -->
           <div class="bg-gray-900/80 backdrop-blur-sm rounded-lg p-6 md:p-10 shadow-xl border border-amber-400/30 transform transition-all hover:shadow-amber-400/20">
             <p class="mb-6 text-lg leading-relaxed">
-              "In the ancient lands where Odin wanders and the echoes of Valhalla still whisper through the fjords, a new legend is about to be born.
+              In the ancient lands where Odin wanders and the echoes of Valhalla still whisper through the fjords, a new legend is about to be born.
             </p>
             <p class="mb-6 text-lg leading-relaxed">
               This October, under the first full moon of fall, Norway shall open its gates to warriors of West Coast Swing from across the nine realms. Under the watchful eyes of Frigg and Freyja, you'll form legendary bonds in Strictly duels, battle in epic Jack & Jill tournaments (yes - rewarded with precious WSDC points!), and delve into ancient wisdom and knowledge, led by the master sages of swing.
@@ -72,7 +72,7 @@
               But the true magic? It lies in the night - when the music flows like mead through the halls of Asgard and every dance becomes a magical tale worthy of the skalds.
             </p>
             <p class="mb-8 text-lg leading-relaxed">
-              Prepare your feet. Ready your hearts. Among the mythical fjords and the ancient forests, warriors and wanderers from all corners of Midgard will unite to honour the unyielding love of West Coast Swing."
+              Prepare your feet. Ready your hearts. Among the mythical fjords and the ancient forests, warriors and wanderers from all corners of Midgard will unite to honour the unyielding love of West Coast Swing.
             </p>
             
             <div class="border-t border-amber-400/30 pt-6 mt-8">
