@@ -10,7 +10,7 @@
     const today = new Date();
 </script>
 
-<div class="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg">
+<div class="max-w-2xl mx-auto p-6 bg-green-50 shadow-md rounded-lg">
     <!-- Success/Error Messages -->
     {#if form?.success}
         <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">

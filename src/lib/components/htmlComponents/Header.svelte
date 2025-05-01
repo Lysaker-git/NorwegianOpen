@@ -56,7 +56,7 @@
 
 <header class="flex items-center justify-between px-8 py-6 relative z-50">
     <div class="logo relative z-10">
-        <a href="/">
+        <a href="/" on:click={handleNavClick}>
             <img class="cInvert h-12" src={DarkLogo} alt="Norwegian Open WCS 2025 Logo" />
         </a>
     </div>
@@ -66,7 +66,7 @@
         <ul class="flex space-x-6">
             <li><a href="/about" class="hover:text-amber-200 transition-colors duration-300">About</a></li>
             <li><a href="/schedule" class="hover:text-amber-200 transition-colors duration-300">Schedule</a></li>
-            <li><a href="#location" class="hover:text-amber-200 transition-colors duration-300">Location</a></li>
+            <li><a href="/location" class="hover:text-amber-200 transition-colors duration-300">Location</a></li>
             <li><a href="#contact" class="hover:text-amber-200 transition-colors duration-300">Contact</a></li>
         </ul>
     </nav>
