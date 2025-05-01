@@ -21,7 +21,7 @@
     });
   </script>
   
-  <div class="relative min-h-screen bg-gradient-to-b from-gray-900 via-blue-900 to-gray-900 text-white overflow-hidden">
+  <div class="relative min-h-screen text-white overflow-hidden">
     <!-- Floating runes background -->
     <div class="absolute inset-0 overflow-hidden opacity-20">
       <div class="rune absolute text-4xl md:text-6xl top-1/4 left-1/4">ᚠ</div>
