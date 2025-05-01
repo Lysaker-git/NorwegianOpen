@@ -41,8 +41,8 @@
             />
             <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-3">
               <p class="text-white font-medium">Scandic Hamar - Exterior</p>
+              <p class="text-xs text-gray-500 mt-1 italic">Copyright: Kyrre Sundal</p>
             </div>
-            <p class="text-xs text-gray-500 mt-1 italic">Copyright: Kyrre Sundal</p>
           </div>
   
           <div class="relative overflow-hidden rounded-lg shadow-lg">
@@ -53,8 +53,8 @@
             />
             <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-3">
               <p class="text-white font-medium">Scandic Hamar - Foyer</p>
+              <p class="text-xs text-gray-500 mt-1 italic">Copyright: Kyle Meyr</p>
             </div>
-            <p class="text-xs text-gray-500 mt-1 italic">Copyright: Kyle Meyr</p>
           </div>
         </div>
       </div>
