@@ -51,7 +51,7 @@
 					<a
 						href="/register"
 						class="mt-10 rounded-md bg-[#A09992] px-6 py-3 text-lg font-semibold text-black hover:bg-[#D4CABC]"
-						>Register Now</a
+						>Register</a
 					>
 				</div>
 			</div>
