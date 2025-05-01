@@ -98,7 +98,7 @@
 <!-- Full-screen Mobile Navigation Menu -->
 {#if isMenuOpen}
 <div 
-    class="fixed inset-0 bg-[#4F4943] z-40 flex md:hidden"
+    class="fixed inset-0 bg-[#4F4943] z-40 flex md:hidden mt-10"
     transition:fade={{ duration: 200 }}
 >
     <nav class="h-full w-full flex flex-col justify-center items-center">
@@ -123,7 +123,7 @@
             </li>
             <li transition:fly={{ y: 20, duration: 300, delay: 200 }}>
                 <a 
-                    href="#location" 
+                    href="/location" 
                     on:click={handleNavClick}
                     class="text-3xl font-bold hover:text-amber-200 transition-colors duration-300"
                 >
