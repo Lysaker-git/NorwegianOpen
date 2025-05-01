@@ -102,7 +102,7 @@
     transition:fade={{ duration: 200 }}
 >
     <nav class="h-full w-full flex flex-col justify-center items-center">
-        <ul class="flex flex-col items-center justify-between h-3/4">
+        <ul class="flex flex-col items-center justify-between h-3/4 text-white">
             <li transition:fly={{ y: 20, duration: 300, delay: 100 }}>
                 <a 
                     href="/about" 

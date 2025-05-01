@@ -80,17 +80,17 @@
   
       <div in:fade={{ duration: 600, delay: 500 }}>
         <div class="max-w-3xl mx-auto mb-16">
-          <h2 class="text-3xl font-bold mb-6 border-b border-gray-300 pb-3text-white " style="font-family: 'NorseBold', sans-serif;">Getting There</h2>
+          <h2 class="text-3xl font-bold mb-6 border-b border-gray-300 pb-3 text-white" style="font-family: 'NorseBold', sans-serif;">Getting There</h2>
   
           <h3 class="font-bold text-xl mb-3" style="font-family: 'NorseBold', sans-serif;">By Train</h3>
-          <p class="text-lg mb-6text-white ">
+          <p class="text-lg mb-6 text-white ">
             Hamar is easily accessible by train from Oslo Airport (Gardermoen) and Oslo Central Station.
             Direct trains run frequently, with a journey time of approximately 44 minutes from the airport
             and 1 hour and 10 minutes from Oslo Central. From Hamar station, Scandic Hamar is a short 10-minute walk or quick taxi ride.
           </p>
   
           <h3 class="font-bold text-xl mb-3" style="font-family: 'NorseBold', sans-serif;">By Car</h3>
-          <p class="text-lg mb-6text-white ">
+          <p class="text-lg mb-6 text-white ">
             If you prefer to drive, Hamar is located approximately 125 km north of Oslo via the E6 highway.
             The hotel offers parking facilities for guests, making it convenient for those arriving by car.
           </p>
