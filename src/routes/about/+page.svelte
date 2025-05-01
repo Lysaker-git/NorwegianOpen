@@ -42,14 +42,14 @@
           <!-- Title with ornamental borders -->
           <div class="flex items-center justify-center mb-10">
             <div class="h-px w-16 bg-amber-400"></div>
-            <h1 class="text-4xl md:text-5xl font-bold text-center mx-4">ABOUT THE EVENT</h1>
+            <h1 class="text-4xl md:text-5xl font-bold text-center mx-4 text-white">ABOUT THE EVENT</h1>
             <div class="h-px w-16 bg-amber-400"></div>
           </div>
           
           <!-- Styled banner -->
           <div class="mb-12 flex justify-center">
             <div class="relative">
-              <h2 class="text-2xl md:text-3xl font-bold text-center border-t-2 border-b-2 border-amber-400 py-4 px-8">
+              <h2 class="text-2xl md:text-3xl font-bold text-center border-t-2 border-b-2 border-amber-400 py-4 px-8 text-white">
                 ~ The Saga Begins ~
               </h2>
               <!-- Norse corner decorations -->
