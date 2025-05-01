@@ -25,7 +25,7 @@
 
     {#if today <= regOpenDate}
         <h1 class="text-4xl text-center">Registration not open yet</h1>
-        <RegistrationCountdown />
+        <!-- <RegistrationCountdown /> -->
     {:else}
         <h1 class="text-2xl font-bold mb-6 text-center">Registration Form</h1>
         <RegistrationForm {form} />
