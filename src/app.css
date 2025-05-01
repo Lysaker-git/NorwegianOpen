@@ -2,15 +2,54 @@
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 
-/* @font-face {
-	font-family: 'Norse';
-	src: url('/static/fonts/Norse.otf') format('opentype');
+@font-face {
+	font-family: 'NorseBold';
+	src: url('$lib/fonts/Norsebold.otf');
 	font-weight: normal;
 	font-style: normal;
 }
 @font-face {
-	font-family: 'NorseBold';
-	src: url('/static/fonts/Norsebold.otf') format('opentype');
-	font-weight: bold;
+	font-family: 'Norse';
+	src: url('$lib/fonts/Norse.otf');
+	font-weight: normal;
 	font-style: normal;
-} */
+}
+
+
+a, p, label, input, legend, span, select, option {
+	font-family: 'Montserrat', sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 500;
+	font-style: normal;
+}
+
+	.montserrat-extrathin {
+		font-family: "Montserrat", sans-serif;
+		font-optical-sizing: auto;
+		font-weight: 100;
+		font-style: normal;
+	}
+	.montserrat-thin {
+		font-family: "Montserrat", sans-serif;
+		font-optical-sizing: auto;
+		font-weight: 300;
+		font-style: normal;
+	}
+	.montserrat-regular {
+		font-family: "Montserrat", sans-serif;
+		font-optical-sizing: auto;
+		font-weight: 500;
+		font-style: normal;
+	}
+	.montserrat-bold {
+		font-family: "Montserrat", sans-serif;
+		font-optical-sizing: auto;
+		font-weight: 700;
+		font-style: normal;
+	}
+	.montserrat-extrabold {
+		font-family: "Montserrat", sans-serif;
+		font-optical-sizing: auto;
+		font-weight: 900;
+		font-style: normal;
+	}

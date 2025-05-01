@@ -14,6 +14,9 @@
 
 
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+
     @font-face {
 		font-family: 'NorseBold';
 		src: url('$lib/fonts/Norsebold.otf');
@@ -26,4 +29,6 @@
 		font-weight: normal;
 		font-style: normal;
     }
+
+
 </style>

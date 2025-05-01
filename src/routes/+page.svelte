@@ -2,6 +2,7 @@
 	import Logo from '$lib/components/logo/nopenLogo.png';
 	import BackdropSrc from '$lib/components/backdropHero.png';
 	import DarkLogo from '$lib/components/logo/nopenDarkLogo.png';
+	import BackdropWebP from '$lib/components/bgHero.webp'
 </script>
 
 <svelte:head>
@@ -37,7 +38,7 @@
 		<section
 			id="hero"
 			class="relative overflow-hidden bg-cover bg-center"
-			style={`background-image: url('${BackdropSrc}');`}
+			style={`background-image: url('${BackdropWebP}');`}
 		>
 			<div
 				style="height: 80vh"
@@ -47,11 +48,11 @@
 					<img class="cInvert max-h-120 mx-auto" src={DarkLogo} alt="Norwegian Open WCS 2025 Logo" />
 					<!-- <h1 class="mb-10 text-4xl font-bold md:text-5xl lg:text-6xl">Norwegian Open 2025</h1> -->
 					<h2 class="mb-10 text-4xl font-bold md:text-3xl lg:text-4xl">Save the dates 2nd of October - 6th of October</h2>
-					<!-- <a
-						href="#register"
+					<a
+						href="/register"
 						class="mt-10 rounded-md bg-[#A09992] px-6 py-3 text-lg font-semibold text-black hover:bg-[#D4CABC]"
 						>Register Now</a
-					> -->
+					>
 				</div>
 			</div>
 		</section>
