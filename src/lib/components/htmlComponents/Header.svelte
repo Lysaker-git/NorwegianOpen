@@ -54,7 +54,7 @@
 
 <svelte:window on:keydown={handleKeydown} />
 
-<header class="flex items-center justify-between px-8 py-6 relative z-50">
+<header class="flex items-center justify-between px-8 py-6 relative z-50 text-white">
     <div class="logo relative z-10">
         <a href="/" on:click={handleNavClick}>
             <img class="cInvert h-12" src={DarkLogo} alt="Norwegian Open WCS 2025 Logo" />
