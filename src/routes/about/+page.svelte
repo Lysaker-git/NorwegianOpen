@@ -33,7 +33,6 @@
     </div>
     
     <!-- Northern lights effect -->
-    <div class="absolute top-0 left-0 w-full h-64 bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-green-500/30 blur-3xl"></div>
     
     <!-- Main content container -->
     <div class="container mx-auto px-4 py-12 relative z-10">
@@ -89,9 +88,6 @@
       </div>
       
       <!-- Bottom decoration -->
-      <div class="mt-16 flex justify-center">
-        <div class="h-px w-1/3 bg-gradient-to-r from-transparent via-amber-400 to-transparent"></div>
-      </div>
     </div>
   </div>
   
