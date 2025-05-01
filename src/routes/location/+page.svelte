@@ -19,7 +19,7 @@
   
   <div class="container mx-auto px-4 md:px-8 py-12">
     {#if isLoaded}
-      <div in:fade={{ duration: 600, delay: 200 }}>
+      <div class="text-white" in:fade={{ duration: 600, delay: 200 }}>
         <h1 class="text-4xl md:text-5xl font-bold mb-8 text-center" style="font-family: 'NorseBold', sans-serif;">Event Location</h1>
   
         <div class="max-w-3xl mx-auto mb-12">
@@ -61,7 +61,7 @@
   
       <div in:fade={{ duration: 600, delay: 400 }}>
         <div class="max-w-3xl mx-auto mb-16">
-          <h2 class="text-3xl font-bold mb-6 border-b border-gray-300 pb-3" style="font-family: 'NorseBold', sans-serif;">Hotel Information</h2>
+          <h2 class="text-white text-3xl font-bold mb-6 border-b border-gray-300 pb-3" style="font-family: 'NorseBold', sans-serif;">Hotel Information</h2>
   
           <div class="bg-gray-100 p-6 rounded-lg text-gray-800 mb-8">
             <h3 class="font-bold text-xl mb-3" style="font-family: 'NorseBold', sans-serif;">Scandic Hamar</h3>
@@ -70,7 +70,7 @@
             <p><a href="https://www.scandichotels.com/hotels/norway/hamar/scandic-hamar" class="text-blue-600 hover:underline" target="_blank" rel="noopener noreferrer">Visit hotel website</a></p>
           </div>
   
-          <p class="text-lg mb-4">
+          <p class="text-lg mb-4 text-white">
             The hotel features modern amenities including a restaurant, bar, and comfortable rooms,
             making it the perfect venue for our dance event. The spacious ballroom will host our main competitions
             and social dancing, while additional rooms will be used for workshops.
@@ -80,17 +80,17 @@
   
       <div in:fade={{ duration: 600, delay: 500 }}>
         <div class="max-w-3xl mx-auto mb-16">
-          <h2 class="text-3xl font-bold mb-6 border-b border-gray-300 pb-3" style="font-family: 'NorseBold', sans-serif;">Getting There</h2>
+          <h2 class="text-3xl font-bold mb-6 border-b border-gray-300 pb-3text-white " style="font-family: 'NorseBold', sans-serif;">Getting There</h2>
   
           <h3 class="font-bold text-xl mb-3" style="font-family: 'NorseBold', sans-serif;">By Train</h3>
-          <p class="text-lg mb-6">
+          <p class="text-lg mb-6text-white ">
             Hamar is easily accessible by train from Oslo Airport (Gardermoen) and Oslo Central Station.
             Direct trains run frequently, with a journey time of approximately 44 minutes from the airport
             and 1 hour and 10 minutes from Oslo Central. From Hamar station, Scandic Hamar is a short 10-minute walk or quick taxi ride.
           </p>
   
           <h3 class="font-bold text-xl mb-3" style="font-family: 'NorseBold', sans-serif;">By Car</h3>
-          <p class="text-lg mb-6">
+          <p class="text-lg mb-6text-white ">
             If you prefer to drive, Hamar is located approximately 125 km north of Oslo via the E6 highway.
             The hotel offers parking facilities for guests, making it convenient for those arriving by car.
           </p>
@@ -99,7 +99,7 @@
   
       <div in:fade={{ duration: 600, delay: 600 }}>
         <div class="max-w-3xl mx-auto">
-          <h2 class="text-3xl font-bold mb-6 border-b border-gray-300 pb-3" style="font-family: 'NorseBold', sans-serif;">Booking Your Stay</h2>
+          <h2 class="text-white text-3xl font-bold mb-6 border-b border-gray-300 pb-3" style="font-family: 'NorseBold', sans-serif;">Booking Your Stay</h2>
   
           <div class="p-4 border-l-4 border-blue-500 bg-blue-50 text-blue-800 mb-8">
             <p class="text-lg font-medium">
@@ -108,13 +108,13 @@
             </p>
           </div>
   
-          <p class="text-lg mb-4">
+          <p class="text-white text-lg mb-4">
             We have negotiated a special rate for event participants. To receive this rate,
             please book your accommodation through our registration system rather than directly with the hotel.
             This ensures you're part of our room block and helps us meet our event commitments.
           </p>
   
-          <p class="text-lg mb-4">
+          <p class="text-white text-lg mb-4">
             Registration will open soon - make sure to follow our social media channels
             for announcements about when you can book your spot at Norwegian Open WCS 2025!
           </p>
