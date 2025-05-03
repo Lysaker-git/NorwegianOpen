@@ -1,9 +1,11 @@
 <script lang="ts">
     import type { ActionData } from './$types';
+    import type { PageData } from '../$types';
     import { REG_OPEN_STRING } from '$lib/components/constants';
     import RegistrationCountdown from '$lib/components/htmlComponents/RegistrationCountdown.svelte';
     import RegistrationForm from '$lib/components/htmlComponents/RegistrationForm.svelte';
     import { onMount } from 'svelte';
+    import MailList from '$lib/components/htmlComponents/MailList.svelte';
   
     export let form: ActionData;
   
@@ -21,7 +23,7 @@
       <div class={`max-w-2xl mx-auto p-6 rounded-lg bg-gray-600 shadow-md transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
         {#if form?.success}
           <div class="p-4 mb-4 text-sm text-green-400 bg-green-800 rounded-lg" role="alert">
-            Registration successful! Please check your email for confirmation.
+            Registration successful!
           </div>
         {/if}
         {#if form?.error && !form?.field}
@@ -33,6 +35,8 @@
         {#if today <= regOpenDate}
           <div class="bg-gray-800 rounded-lg p-6 text-center border border-amber-400/30">
             <h1 class="text-4xl mb-4 text-white">Registration Not Open Yet</h1>
+            <p class="py-2">IF you would like to stay up to date please enter your email below</p>
+            <MailList {form}/>
             <!-- <p class="text-lg text-gray-300">
               Registration will open on {regOpenDate.toLocaleDateString()} at {regOpenDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} CEST.
               Stay tuned for the saga to begin!
