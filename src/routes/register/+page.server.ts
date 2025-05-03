@@ -92,6 +92,34 @@ export async function load() { return {}; }
 
 // --- actions ---
 export const actions: Actions = {
+    mailList: async ({ request }) => {
+        const formData = await request.formData();
+
+        const email = formData.get('Email') as string | null;
+        if (!email /* ... */ ) { return fail(400, { data: Object.fromEntries(formData), field: 'Email', error: '...', missing: true }); }
+
+        const registrationData = {
+            mail: email
+        }
+
+                // --- Insert into Supabase ---
+		const { data, error: dbError } = await supabaseAdmin
+        .from('mailList')
+        .insert([registrationData])
+        .select()
+        .maybeSingle();
+
+        // --- Handle Response ---
+        if (dbError) {
+            console.error("Supabase Admin Insert Error:", dbError);
+            return fail(500, { data: Object.fromEntries(formData), error: `Database error: ${dbError.message}` });
+        }
+
+        return { success: true, insertedId: data?.id };
+
+    },
+
+
 	register: async ({ request }) => {
 		const formData = await request.formData();
 
@@ -100,8 +128,6 @@ export const actions: Actions = {
         const fullName = formData.get('FullName') as string | null;
         const wsdcId = formData.get('WSDCID') as string | null;
         const level = formData.get('Level') as string | null
-        const passOption = formData.get('PassOption') as string | null; // Get submitted pass option
-        // PassType might be irrelevant now
         const role = formData.get('Role') as string | null;
         const partnerName = formData.get('PartnerName') as string | null;
         const country = formData.get('Country') as string | null;
@@ -115,7 +141,7 @@ export const actions: Actions = {
         // (Include checks for region, level, role, country, terms etc.)
         if (!email /* ... */ ) { return fail(400, { data: Object.fromEntries(formData), field: 'Email', error: '...', missing: true }); }
         if (!fullName) { return fail(400, { data: Object.fromEntries(formData), field: 'FullName', error: '...', missing: true }); }
-        if (!region) { return fail(400, { data: Object.fromEntries(formData), field: 'Region', error: 'Region selection is required.', missing: true }); }
+        // if (!region) { return fail(400, { data: Object.fromEntries(formData), field: 'Region', error: 'Region selection is required.', missing: true }); }
         if (!level) { return fail(400, { data: Object.fromEntries(formData), field: 'Level', error: 'Level selection is required.', missing: true }); }
         if (!passOption) { return fail(400, { data: Object.fromEntries(formData), field: 'PassOption', error: 'Pass Option selection is required.', missing: true }); }
         if (!role) { return fail(400, { data: Object.fromEntries(formData), field: 'Role', error: 'Role selection is required.', missing: true }); }
