@@ -20,7 +20,7 @@
     });
 </script>
 
-<div class="countdown text-white">
+<div class="countdown text-white text-xxl">
     <p>Registration opens in:</p>
     <div class="countdown-timer">
         <div class="time-section">
@@ -51,7 +51,7 @@
     .countdown-timer {
         display: flex;
         justify-content: center;
-        gap: 1rem;
+        gap: 4rem;
         margin-top: 0.5rem;
     }
     
@@ -62,7 +62,7 @@
     }
     
     .time {
-        font-size: 1.5rem;
+        font-size: 5rem;
         font-weight: bold;
         font-family: 'Norse';
     }

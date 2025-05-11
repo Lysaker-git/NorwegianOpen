@@ -2,13 +2,19 @@
 	import '../app.css';
 	import Header from '$lib/components/htmlComponents/Header.svelte';
 	import Footer from '$lib/components/htmlComponents/Footer.svelte';
+	import BackdropWebP from '$lib/components/bgHero.webp'
 	let { children } = $props();
 </script>
 
 <div class="flex min-h-screen flex-col bg-[#4F4943]">
-	<Header />
-	{@render children()}
-	<Footer />
+	<div
+	class="relative overflow-hidden bg-cover bg-center"
+	style={`background-image: url('${BackdropWebP}');`}
+	>
+		<Header />
+		{@render children()}
+		<Footer />
+	</div>
 
 </div>
 

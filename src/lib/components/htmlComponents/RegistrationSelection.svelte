@@ -5,7 +5,7 @@
 </script>
 
 <fieldset class="border border-gray-300 p-4 rounded-md">
-    <legend class="text-base font-medium text-gray-900 px-2">1. Select Your Region *</legend>
+    <legend class="text-base font-medium text-white px-2">1. Select Your Region *</legend>
     <div class="mt-2 flex flex-col sm:flex-row sm:gap-4 space-y-2 sm:space-y-0">
         <button 
             type="button"
