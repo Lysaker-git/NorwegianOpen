@@ -20,7 +20,7 @@
     });
 </script>
 
-<div class="countdown">
+<div class="countdown text-white">
     <p>Registration opens in:</p>
     <div class="countdown-timer">
         <div class="time-section">
