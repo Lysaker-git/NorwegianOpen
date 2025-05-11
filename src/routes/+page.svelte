@@ -3,6 +3,7 @@
 	import BackdropSrc from '$lib/components/backdropHero.png';
 	import DarkLogo from '$lib/components/logo/nopenDarkLogo.png';
 	import BackdropWebP from '$lib/components/bgHero.webp'
+	import RegistrationCountdown from '$lib/components/htmlComponents/RegistrationCountdown.svelte';
 </script>
 
 <svelte:head>
@@ -37,15 +38,17 @@
 	<main class="flex-grow">
 		<section
 			id="hero"
-			class="relative overflow-hidden bg-cover bg-center pb-20"
-			style={`background-image: url('${BackdropWebP}');`}
 		>
 			<div
-				style="height: 80vh"
+				style="height: fit-content"
 				class="bg-opacity-50 inset-0 flex h-screen items-center justify-center"
 			>
-				<div class="mx-auto max-w-3xl px-6 py-24 text-center md:py-32 lg:py-48">
-					<img class="cInvert max-h-120 mx-auto" src={DarkLogo} alt="Norwegian Open WCS 2025 Logo" />
+				<div class="mx-auto max-w-3xl px-6 py-2 text-center md:py-8 lg:py-12">
+					<div class="pt-4">
+
+						<RegistrationCountdown />
+					</div>
+					<img class="cInvert max-h-100 mx-auto" src={DarkLogo} alt="Norwegian Open WCS 2025 Logo" />
 					<!-- <h1 class="mb-10 text-4xl font-bold md:text-5xl lg:text-6xl">Norwegian Open 2025</h1> -->
 					<h2 class="mb-10 text-4xl font-bold md:text-3xl lg:text-4xl text-white">Save the dates 2nd of October - 6th of October</h2>
 					<a

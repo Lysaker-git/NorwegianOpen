@@ -5,7 +5,7 @@
 
 </script>
 
-<footer class="py-4 text-center text-gray-300">
+<footer class="py-4 text-center text-gray-300 mt-10">
     <div>
         <ul class="flex justify-center mx-auto gap-5 w-full mb-5">
             <li><a href="https://www.facebook.com/events/1877787939642101/"><Fa icon={faFacebook} /></a></li>
