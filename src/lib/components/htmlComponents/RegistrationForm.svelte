@@ -227,6 +227,15 @@
                 <p class="text-red-600 text-sm mt-1">{form.error}</p> 
             {/if}
         </div>
+
+        <!-- Promo -->
+        <div>
+            <label for="promo" class="block text-sm font-medium text-white">Promo Code</label>
+            <input type="text" id="promo" name="Promo" class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+            {#if form?.field === 'Promo'} 
+                <p class="text-red-600 text-sm mt-1">{form.error}</p> 
+            {/if}
+        </div>
     
         <!-- Competing Checkbox -->
         <div class="flex items-center">
