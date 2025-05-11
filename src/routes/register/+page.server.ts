@@ -13,9 +13,9 @@ const ymirDeadlineServer = new Date(YMIR_DEADLINE_STRING_SERVER + 'T23:59:59');
 const midgardDeadlineServer = new Date(MIDGARD_DEADLINE_STRING_SERVER + 'T23:59:59');
 
 const serverBasePrices = {
-    Ymir: { Nordic: 1700, World: 1900 },
-    Midgard: { Nordic: 1900, World: 2100 },
-    Ragnarok: { Nordic: 2100, World: 2300 }
+    Ymir: { Nordic: 1800, World: 1500 },
+    Midgard: { Nordic: 2000, World: 1700 },
+    Ragnarok: { Nordic: 2200, World: 1900 }
 };
 
 const serverPassOptionsByLevel = {
@@ -24,7 +24,7 @@ const serverPassOptionsByLevel = {
     'Other': ['Regular Pass', 'Party Pass'] // For Intermediate/Novice/Newcomer
 };
 
-const SERVER_PARTY_PASS_PRICE = 1200; // Set your party pass price
+const SERVER_PARTY_PASS_PRICE = 1300; // Set your party pass price
 
 
 // --- Helper Functions Server-Side ---
