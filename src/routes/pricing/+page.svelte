@@ -2,9 +2,9 @@
 <script lang="ts">
 	// --- Pricing Data (Copied from your structure) ---
 	const basePrices = {
-		Ymir: { Nordic: 1700, World: 1900 },      // Early Bird
-		Midgard: { Nordic: 1900, World: 2100 },   // Regular
-		Ragnarok: { Nordic: 2100, World: 2300 }   // Late Bird
+		Ymir: { Nordic: 1800, World: 1500 },      // Early Bird
+		Midgard: { Nordic: 2000, World: 1700 },   // Regular
+		Ragnarok: { Nordic: 2200, World: 1900 }   // Late Bird
 	};
 
 	const passOptionsByLevel = {
