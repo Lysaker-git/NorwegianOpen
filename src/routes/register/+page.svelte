@@ -36,7 +36,7 @@
           <div class="bg-gray-800 rounded-lg p-6 text-center border border-amber-400/30">
             <h1 class="text-4xl mb-4 text-white">Registration Not Open Yet</h1>
             <RegistrationCountdown />
-            <p class="py-2">IF you would like to stay up to date please enter your email below</p>
+            <p class="py-2 text-white">IF you would like to stay up to date please enter your email below</p>
             <MailList {form}/>
             <!-- <p class="text-lg text-gray-300">
               Registration will open on {regOpenDate.toLocaleDateString()} at {regOpenDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} CEST.
