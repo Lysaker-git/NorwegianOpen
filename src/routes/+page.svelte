@@ -50,7 +50,7 @@
 					</div>
 					<img class="cInvert max-h-100 mx-auto" src={DarkLogo} alt="Norwegian Open WCS 2025 Logo" />
 					<!-- <h1 class="mb-10 text-4xl font-bold md:text-5xl lg:text-6xl">Norwegian Open 2025</h1> -->
-					<h2 class="mb-10 text-4xl font-bold md:text-3xl lg:text-4xl text-white">Save the dates 2nd of October - 6th of October</h2>
+					<h2 class="mb-10 text-4xl font-bold md:text-3xl lg:text-4xl text-white">Save the dates 2. of October - 6. of October</h2>
 					<a
 						href="/register"
 						class="mt-10 rounded-md bg-[#A09992] px-6 py-3 text-lg font-semibold text-black hover:bg-[#D4CABC]"
