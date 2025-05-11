@@ -20,7 +20,7 @@
     });
   </script>
   <div class="mx-4">
-      <div class={`max-w-2xl mx-auto p-6 rounded-lg bg-gray-600 shadow-md transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+      <div class={`max-w-2xl mx-auto p-6 rounded-lg transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
         {#if form?.success}
           <div class="p-4 mb-4 text-sm text-green-400 bg-green-800 rounded-lg" role="alert">
             Registration successful!
@@ -47,7 +47,7 @@
           <div class="bg-gray-900 rounded-lg p-8 shadow-lg border border-amber-400/30">
             <div class="flex items-center justify-center mb-6">
               <div class="h-px w-16 bg-amber-400"></div>
-              <h1 class="text-2xl font-bold text-center mx-4">Registration Form</h1>
+              <h1 class="text-2xl font-bold text-center mx-4 text-white">Registration Form</h1>
               <div class="h-px w-16 bg-amber-400"></div>
             </div>
             <RegistrationForm {form} />

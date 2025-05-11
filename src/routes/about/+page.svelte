@@ -61,7 +61,7 @@
           </div>
           
           <!-- Main text -->
-          <div class="bg-gray-400 backdrop-blur-sm rounded-lg p-6 md:p-10 shadow-xl border border-amber-400/30 transform transition-all hover:shadow-amber-400/20">
+          <div class="bg-gray-800 text-white backdrop-blur-sm rounded-lg p-6 md:p-10 shadow-xl border border-amber-400/30 transform transition-all hover:shadow-amber-400/20">
             <p class="mb-6 text-lg leading-relaxed">
               In the ancient lands where Odin wanders and the echoes of Valhalla still whisper through the fjords, a new legend is about to be born.
             </p>
