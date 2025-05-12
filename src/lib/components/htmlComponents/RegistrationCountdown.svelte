@@ -51,7 +51,7 @@
     .countdown-timer {
         display: flex;
         justify-content: center;
-        gap: 4rem;
+        gap: clamp(1rem, 2vw + 0.5rem, 4rem);
         margin-top: 0.5rem;
     }
     
@@ -62,7 +62,7 @@
     }
     
     .time {
-        font-size: 5rem;
+        font-size: clamp(1rem, 6vw + 1rem, 5rem);
         font-weight: bold;
         font-family: 'Norse';
     }

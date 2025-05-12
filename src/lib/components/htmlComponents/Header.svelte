@@ -98,7 +98,7 @@
 <!-- Full-screen Mobile Navigation Menu -->
 {#if isMenuOpen}
 <div 
-    class="fixed inset-0 bg-[#4F4943] z-40 flex md:hidden mt-10"
+    class="fixed inset-0 bg-[#4F4943] z-40 flex md:hidden"
     transition:fade={{ duration: 200 }}
 >
     <nav class="h-full w-full flex flex-col justify-center items-center">
