@@ -65,6 +65,7 @@
     <nav class="hidden md:block">
         <ul class="flex space-x-6">
             <li><a href="/about" class="hover:text-amber-200 transition-colors duration-300">About</a></li>
+            <li><a href="/pricing" class="hover:text-amber-200 transition-colors duration-300">Prices</a></li>
             <li><a href="/schedule" class="hover:text-amber-200 transition-colors duration-300">Schedule</a></li>
             <li><a href="/location" class="hover:text-amber-200 transition-colors duration-300">Location</a></li>
             <li><a href="#contact" class="hover:text-amber-200 transition-colors duration-300">Contact</a></li>
@@ -110,6 +111,15 @@
                     class="text-3xl font-bold hover:text-amber-200 transition-colors duration-300"
                 >
                     About
+                </a>
+            </li>
+            <li transition:fly={{ y: 20, duration: 300, delay: 100 }}>
+                <a 
+                    href="/pricing" 
+                    on:click={handleNavClick}
+                    class="text-3xl font-bold hover:text-amber-200 transition-colors duration-300"
+                >
+                    Prices
                 </a>
             </li>
             <li transition:fly={{ y: 20, duration: 300, delay: 150 }}>

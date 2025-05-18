@@ -1,13 +1,13 @@
-// src/routes/+page.server.ts (adjust path)
+// src/routes/register/+page.server.ts (or your actual path)
 
 import { supabaseAdmin } from '$lib/supabaseAdminClient';
 import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
 
-// --- Define Deadlines, Base Prices, Pass Options, Party Price SERVER-SIDE ---
-// MUST MATCH THE CLIENT SIDE
-const YMIR_DEADLINE_STRING_SERVER = '2025-05-31'; // End of Early Bird - SET YOUR DATE
-const MIDGARD_DEADLINE_STRING_SERVER = '2025-07-31'; // End of Regular - SET YOUR DATE
+// --- Define Deadlines, Base Prices, Pass Options, Hotel Prices SERVER-SIDE ---
+// MUST MATCH THE CLIENT SIDE (or be the source of truth client fetches from)
+const YMIR_DEADLINE_STRING_SERVER = '2025-05-31';
+const MIDGARD_DEADLINE_STRING_SERVER = '2025-07-31';
 
 const ymirDeadlineServer = new Date(YMIR_DEADLINE_STRING_SERVER + 'T23:59:59');
 const midgardDeadlineServer = new Date(MIDGARD_DEADLINE_STRING_SERVER + 'T23:59:59');
@@ -19,27 +19,47 @@ const serverBasePrices = {
 };
 
 const serverPassOptionsByLevel = {
-    'All-Star': ['Regular Pass', 'Judge (Free Pass)', 'Party Pass'],
+    'All-Star': ['Regular Pass', 'Judge (Free Pass)', 'Party Pass'], // Assuming Party Pass is not in your client-side options yet
     'Advanced': ['Regular Pass', 'Judge (20% Discount)', 'Party Pass'],
-    'Other': ['Regular Pass', 'Party Pass'] // For Intermediate/Novice/Newcomer
+    'Other': ['Regular Pass', 'Party Pass', 'Zero to Hero']
 };
 
-const SERVER_PARTY_PASS_PRICE = 1300; // Set your party pass price
+// Add Party Pass Price if it's a standalone option
+// const SERVER_PARTY_PASS_PRICE = 1300; // You have PARTY_PASS_PRICE in client constants
+const SERVER_ZERO_TO_HERO = 1300; // Match client
+
+// SERVER-SIDE HOTEL PRICES (per night) - Match client constants
+const SERVER_HOTEL_PRICES: Record<string, number> = {
+    HotelOptionOne: 1290,
+    HotelOptionTwo: 1490,
+    HotelOptionThree: 1690,
+    HotelOptionFour: 1890,
+};
+
+const HOTEL_MIN_DATE_SERVER = '2025-10-02';
+const HOTEL_MAX_DATE_SERVER = '2025-10-06';
+const SERVER_INTENSIVE_PRICE = 1000;
 
 
 // --- Helper Functions Server-Side ---
 
 function getCurrentTierServer(): 'Ymir' | 'Midgard' | 'Ragnarok' {
     const todayServer = new Date();
-	if (todayServer <= ymirDeadlineServer) return 'Ymir';
-	if (todayServer <= midgardDeadlineServer) return 'Midgard';
-	return 'Ragnarok';
+    if (todayServer <= ymirDeadlineServer) return 'Ymir';
+    if (todayServer <= midgardDeadlineServer) return 'Midgard';
+    return 'Ragnarok';
 }
 
-function getBasePriceServer(tier: 'Ymir' | 'Midgard' | 'Ragnarok', region: 'Nordic' | 'World'): number | null {
+function getBasePriceServer(tier: 'Ymir' | 'Midgard' | 'Ragnarok', region: 'Nordic' | 'World' | null): number | null {
+    if (!region) return null;
     const tierPrices = serverBasePrices[tier];
-    return tierPrices ? tierPrices[region] : null;
+    // Ensure region is a valid key for tierPrices
+    if (tierPrices && (region === 'Nordic' || region === 'World')) {
+        return tierPrices[region];
+    }
+    return null;
 }
+
 
 function getLevelCategoryServer(level: string | null): 'All-Star' | 'Advanced' | 'Other' | null {
     if (!level) return null;
@@ -49,160 +69,298 @@ function getLevelCategoryServer(level: string | null): 'All-Star' | 'Advanced' |
     return null;
 }
 
-function isValidPassOptionForLevel(level: string | null, passOption: string | null): boolean {
-     if (!level || !passOption) return false;
-     const category = getLevelCategoryServer(level);
-     if (!category) return false;
-     const validOptions = serverPassOptionsByLevel[category];
-     return validOptions.includes(passOption);
+function isValidPassOptionForLevelServer(level: string | null, passOption: string | null): boolean {
+    if (!level || !passOption) return false;
+    const category = getLevelCategoryServer(level);
+    if (!category) return false;
+
+    // Handle cases where serverPassOptionsByLevel might not be perfectly synced or has extra options
+    const validOptions = serverPassOptionsByLevel[category];
+    if (!validOptions) return false; // Category not found in server options
+    
+    return validOptions.includes(passOption);
 }
 
-function calculateFinalAmountDueServer(basePrice: number, level: string | null, passOption: string | null): number | null {
-    if (passOption === null || level === null) return null; // Need these
+
+function calculatePassPriceServer(basePrice: number, level: string | null, passOption: string | null): number | null {
+    if (passOption === null || level === null) return null;
 
     switch (passOption) {
         case 'Regular Pass':
             return basePrice;
         case 'Judge (Free Pass)':
-             // Add extra check - only All-Stars should have this option
-             return (getLevelCategoryServer(level) === 'All-Star') ? 0 : null;
+            return (getLevelCategoryServer(level) === 'All-Star') ? 0 : null; // Invalid if not All-Star
         case 'Judge (20% Discount)':
-             // Add extra check - only Advanced should have this option
-            return (getLevelCategoryServer(level) === 'Advanced') ? Math.round(basePrice * 0.80) : null;
-        case 'Party Pass':
-            return SERVER_PARTY_PASS_PRICE;
+            return (getLevelCategoryServer(level) === 'Advanced') ? Math.round(basePrice * 0.80) : null; // Invalid if not Advanced
+        // case 'Party Pass': // If Party Pass is a direct option
+        //     return SERVER_PARTY_PASS_PRICE; 
+        case 'Zero to Hero':
+            return SERVER_ZERO_TO_HERO;
         default:
-            return null; // Invalid option
+            return null; // Invalid pass option
     }
 }
 
+function calculateHotelPriceServer(
+    hotelOption: string | null,
+    checkIn: string | null,
+    checkOut: string | null
+): { price: number; nights: number } {
+    let price = 0;
+    let nights = 0;
+
+    if (hotelOption && hotelOption !== 'None' && hotelOption !== 'HotelOptionNo' &&
+        SERVER_HOTEL_PRICES[hotelOption] !== undefined &&
+        checkIn && checkOut) {
+
+        const startDate = new Date(checkIn);
+        const endDate = new Date(checkOut);
+
+        // Validate dates are within allowed range and checkout is after checkin
+        const minAllowedDate = new Date(HOTEL_MIN_DATE_SERVER);
+        const maxAllowedDate = new Date(HOTEL_MAX_DATE_SERVER);
+
+        if (startDate >= minAllowedDate && endDate <= maxAllowedDate && endDate > startDate) {
+            const timeDiff = endDate.getTime() - startDate.getTime();
+            nights = Math.round(timeDiff / (1000 * 3600 * 24));
+            if (nights > 0) {
+                price = SERVER_HOTEL_PRICES[hotelOption] * nights;
+            } else {
+                nights = 0; // Safety, should be caught by endDate > startDate
+            }
+        } else {
+            // Dates are invalid (out of range or checkout not after checkin)
+            // Consider returning an error or just 0 price/nights
+            nights = 0;
+            price = 0;
+        }
+    }
+    return { price, nights };
+}
+
+
 function calculatePaymentDeadline(): string {
-    // ... same calculation as before ...
     const futureDate = new Date();
-    futureDate.setDate(futureDate.getDate() + 14);
-    const year = futureDate.getFullYear();
-    const month = String(futureDate.getMonth() + 1).padStart(2, '0');
-    const day = String(futureDate.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    futureDate.setDate(futureDate.getDate() + 14); // 14 days from now
+    return futureDate.toISOString().split('T')[0]; // YYYY-MM-DD format
+}
+
+function formDataToPOJO(formData: FormData) {
+    const object: Record<string, any> = {};
+    formData.forEach((value, key) => {
+        // Handle multiple values for the same key (e.g., checkboxes) if necessary
+        if (!object.hasOwnProperty(key)) {
+            object[key] = value;
+        } else {
+            if (!Array.isArray(object[key])) {
+                object[key] = [object[key]];
+            }
+            object[key].push(value);
+        }
+    });
+    return object;
 }
 
 
 // --- load function ---
-export async function load() { return {}; }
+// export async function load() { return {}; } // Not needed for a form-only page usually
 
 // --- actions ---
 export const actions: Actions = {
-    mailList: async ({ request }) => {
+    // mailList action seems fine, omitting for brevity unless changes are needed
+
+    register: async ({ request }) => {
         const formData = await request.formData();
-
-        const email = formData.get('Email') as string | null;
-        if (!email /* ... */ ) { return fail(400, { data: Object.fromEntries(formData), field: 'Email', error: '...', missing: true }); }
-
-        const registrationData = {
-            mail: email
-        }
-
-                // --- Insert into Supabase ---
-		const { data, error: dbError } = await supabaseAdmin
-        .from('mailList')
-        .insert([registrationData])
-        .select()
-        .maybeSingle();
-
-        // --- Handle Response ---
-        if (dbError) {
-            console.error("Supabase Admin Insert Error:", dbError);
-            return fail(500, { data: Object.fromEntries(formData), error: `Database error: ${dbError.message}` });
-        }
-
-        return { success: true, insertedId: data?.id };
-
-    },
-
-
-	register: async ({ request }) => {
-		const formData = await request.formData();
+        const formValues = formDataToPOJO(formData); // Helper to pass back all values on error
 
         // --- Get Data ---
         const email = formData.get('Email') as string | null;
         const fullName = formData.get('FullName') as string | null;
-        const wsdcId = formData.get('WSDCID') as string | null;
-        const level = formData.get('Level') as string | null
+        const wsdcId = formData.get('WSDCID') as string | null; // Optional
+        const region = formData.get('Region') as 'Nordic' | 'World' | null; // Assuming these are the values
+        const level = formData.get('Level') as string | null;
+        const passOption = formData.get('PassOption') as string | null;
+        const addIntensiveServer = formData.get('AddIntensive') === 'on';
         const role = formData.get('Role') as string | null;
-        const partnerName = formData.get('PartnerName') as string | null;
         const country = formData.get('Country') as string | null;
-        const competing = formData.get('Competing') === 'on';
+        const promoCode = formData.get('Promo') as string | null; // Optional
+        const competing = formData.get('Competing') === 'on'; // Checkbox
+
+        const hasPartner = formData.get('HasPartner') === 'on'; // Checkbox
+        const partnerName = formData.get('PartnerName') as string | null; // Conditional
+        const partnerEmail = formData.get('PartnerEmail') as string | null; // Conditional
+
+        const hotelOption = formData.get('Hotel') as string | null;
+        const checkInDate = formData.get('CheckInDate') as string | null; // YYYY-MM-DD
+        const checkOutDate = formData.get('CheckOutDate') as string | null; // YYYY-MM-DD
+
+        const roommateTwin = formData.get('twinRoom') as string | null;
+        const roommateTripleOne = formData.get('tripleRoomOne') as string | null;
+        const roommateTripleTwo = formData.get('tripleRoomTwo') as string | null;
+        const roommateQuatroOne = formData.get('quatroOne') as string | null;
+        const roommateQuatroTwo = formData.get('quatroTwo') as string | null;
+        const roommateQuatroThree = formData.get('quatroThree') as string | null;
+
         const acceptedRules = formData.get('AcceptedRules') === 'on';
         const acceptedToC = formData.get('AcceptedToC') === 'on';
-        const hotel = formData.get('Hotel') as string | null;
-
 
         // --- Server-Side Validation ---
-        // (Include checks for region, level, role, country, terms etc.)
-        if (!email /* ... */ ) { return fail(400, { data: Object.fromEntries(formData), field: 'Email', error: '...', missing: true }); }
-        if (!fullName) { return fail(400, { data: Object.fromEntries(formData), field: 'FullName', error: '...', missing: true }); }
-        // if (!region) { return fail(400, { data: Object.fromEntries(formData), field: 'Region', error: 'Region selection is required.', missing: true }); }
-        if (!level) { return fail(400, { data: Object.fromEntries(formData), field: 'Level', error: 'Level selection is required.', missing: true }); }
-        if (!passOption) { return fail(400, { data: Object.fromEntries(formData), field: 'PassOption', error: 'Pass Option selection is required.', missing: true }); }
-        if (!role) { return fail(400, { data: Object.fromEntries(formData), field: 'Role', error: 'Role selection is required.', missing: true }); }
-        if (!country) { return fail(400, { data: Object.fromEntries(formData), field: 'Country', error: 'Country is required.', missing: true }); }
-        if (!acceptedRules || !acceptedToC) { return fail(400, { data: Object.fromEntries(formData), field: 'Terms', error: '...', missing: true }); }
+        const errors: Record<string, string> = {};
+        if (!email || !/^\S+@\S+\.\S+$/.test(email)) errors.Email = 'A valid email is required.';
+        if (!fullName || fullName.trim() === '') errors.FullName = 'Full name is required.';
+        if (!region) errors.Region = 'Region selection is required.';
+        if (!level) errors.Level = 'Level selection is required.';
+        if (!passOption) errors.PassOption = 'Pass Option selection is required.';
+        if (!role) errors.Role = 'Role selection is required.';
+        if (!country || country.trim() === '') errors.Country = 'Country is required.';
+        if (!acceptedRules || !acceptedToC) errors.Terms = 'You must accept the rules and terms.';
+        if (!hotelOption) errors.Hotel = 'Please select a hotel option (or "No" / "Will stay with someone else").';
 
-        // *** CRITICAL: Validate Pass Option against Level ***
-        if (!isValidPassOptionForLevel(level, passOption)) {
-            return fail(400, { data: Object.fromEntries(formData), field: 'PassOption', error: `Selected pass option '${passOption}' is not valid for level '${level}'.` });
+
+        if (hasPartner) {
+            if (!partnerName || partnerName.trim() === '') errors.PartnerName = "Partner's name is required.";
+            if (!partnerEmail || !/^\S+@\S+\.\S+$/.test(partnerEmail)) errors.PartnerEmail = "A valid partner's email is required.";
+        }
+
+        // Validate hotel dates if a bookable hotel option is selected
+        let hotelNights = 0;
+        if (hotelOption && hotelOption !== 'None' && hotelOption !== 'HotelOptionNo') {
+            if (!checkInDate) errors.CheckInDate = 'Check-in date is required for hotel booking.';
+            if (!checkOutDate) errors.CheckOutDate = 'Check-out date is required for hotel booking.';
+            if (checkInDate && checkOutDate) {
+                const startDate = new Date(checkInDate);
+                const endDate = new Date(checkOutDate);
+                const minD = new Date(HOTEL_MIN_DATE_SERVER);
+                const maxD = new Date(HOTEL_MAX_DATE_SERVER);
+                if (startDate < minD || startDate > maxD) errors.CheckInDate = 'Check-in date is outside the allowed range.';
+                if (endDate < minD || endDate > maxD) errors.CheckOutDate = 'Check-out date is outside the allowed range.';
+                if (endDate <= startDate) errors.CheckOutDate = 'Check-out date must be after check-in date.';
+                if (Object.keys(errors).length === 0) { // Only calculate nights if dates are valid so far
+                     const timeDiff = endDate.getTime() - startDate.getTime();
+                     hotelNights = Math.round(timeDiff / (1000 * 3600 * 24));
+                     if (hotelNights <= 0) {
+                        errors.CheckOutDate = 'Invalid date range for hotel stay (must be at least 1 night).';
+                        hotelNights = 0; // Reset if invalid
+                     }
+                }
+            }
+            // Validate roommate fields based on hotelOption
+            if (hotelOption === 'HotelOptionTwo' && (!roommateTwin || roommateTwin.trim() === '')) {
+                 errors.Roommates = "Roommate name is required for a Twin Room.";
+            } else if (hotelOption === 'HotelOptionThree') {
+                if ((!roommateTripleOne || roommateTripleOne.trim() === '') || (!roommateTripleTwo || roommateTripleTwo.trim() === '')) {
+                    errors.Roommates = "Both roommate names are required for a Triple Room.";
+                }
+            } else if (hotelOption === 'HotelOptionFour') {
+                 if ((!roommateQuatroOne || roommateQuatroOne.trim() === '') || 
+                     (!roommateQuatroTwo || roommateQuatroTwo.trim() === '') || 
+                     (!roommateQuatroThree || roommateQuatroThree.trim() === '')) {
+                    errors.Roommates = "All three roommate names are required for a Quatro Room.";
+                }
+            }
+        }
+        if (hotelOption === 'None' && (!roommateTwin || roommateTwin.trim() === '')) { // 'None' reuses twinRoom field for main guest name
+            errors.Roommates = "Please specify the main guest for the room booking.";
+        }
+
+
+        if (Object.keys(errors).length > 0) {
+            // Find the first field with an error to set `form.field`
+            const firstErrorField = Object.keys(errors)[0];
+            return fail(400, { data: formValues, field: firstErrorField, error: errors[firstErrorField], errors });
+        }
+
+        // *** CRITICAL: Validate Pass Option against Level SERVER-SIDE ***
+        if (!isValidPassOptionForLevelServer(level, passOption)) {
+            return fail(400, { data: formValues, field: 'PassOption', error: `Selected pass option '${passOption}' is not valid for level '${level}'.`, errors });
         }
 
         // --- Calculate Price and Deadline SERVER-SIDE ---
         const currentTierServer = getCurrentTierServer();
-        const basePriceServer = getBasePriceServer(currentTierServer, region);
+        const basePriceNumServer = getBasePriceServer(currentTierServer, region); // region should be validated by now
 
-        if (basePriceServer === null) { // Should not happen if region validation passed
-             return fail(500, { data: Object.fromEntries(formData), error: 'Could not determine base price.' });
+        if (basePriceNumServer === null) {
+            console.error("Server Error: Could not determine base price even after validation.", { currentTierServer, region });
+            return fail(500, { data: formValues, error: 'Server error: Could not determine base price.', errors });
         }
 
-        const finalAmountDueServer = calculateFinalAmountDueServer(basePriceServer, level, passOption);
+        const calculatedPassPriceServer = calculatePassPriceServer(basePriceNumServer, level, passOption);
 
-        if (finalAmountDueServer === null) { // Should not happen if validation passed
-            return fail(500, { data: Object.fromEntries(formData), error: 'Could not calculate final price.' });
+        if (calculatedPassPriceServer === null) {
+            console.error("Server Error: Could not calculate pass price.", { basePriceNumServer, level, passOption });
+            return fail(500, { data: formValues, error: 'Server error: Could not calculate pass price for your selection.', errors });
         }
 
+        const { price: calculatedHotelPriceServer, nights: serverNumberOfNights } = calculateHotelPriceServer(
+            hotelOption,
+            checkInDate,
+            checkOutDate
+        );
+        
+        let intensiveCostServer = addIntensiveServer ? SERVER_INTENSIVE_PRICE : 0;
+
+        // Re-check hotelNights from form if it was validated earlier, or use serverNumberOfNights
+        const finalNumberOfNights = (hotelOption && hotelOption !== 'None' && hotelOption !== 'HotelOptionNo') ? serverNumberOfNights : 0;
+
+
+        const finalAmountDueServer = calculatedPassPriceServer + calculatedHotelPriceServer + intensiveCostServer;
         const paymentDeadlineString = calculatePaymentDeadline();
-
 
         // --- Prepare Data for Supabase ---
         const registrationData = {
             Email: email,
             FullName: fullName,
-            WSDCID: wsdcId,
-            // Passtype: passType, // Maybe store the final chosen passOption here?
-            Role: role,
-            PartnerName: partnerName,
-            Country: country,
+            WSDCID: wsdcId || null,
             Region: region,
             Level: level,
-            PassOption: passOption, // Store the selected pass option
+            PassOption: passOption,
+            AddedIntensive: addIntensiveServer,
+            Role: role,
+            Country: country,
+            PromoCode: promoCode || null,
             Competing: competing,
+            HasPartner: hasPartner,
+            PartnerName: hasPartner ? partnerName : null,
+            PartnerEmail: hasPartner ? partnerEmail : null,
+            HotelOption: hotelOption, // Renamed from HotelRoomType for consistency with form's selectedHotel
+            CheckInDate: (hotelOption && hotelOption !== 'None' && hotelOption !== 'HotelOptionNo' && checkInDate) ? checkInDate : null,
+            CheckOutDate: (hotelOption && hotelOption !== 'None' && hotelOption !== 'HotelOptionNo' && checkOutDate) ? checkOutDate : null,
+            NumberOfNights: finalNumberOfNights > 0 ? finalNumberOfNights : null,
+            
+            // Roommate fields - ensure these align with your DB column names
+            RoommateTwin: (hotelOption === 'HotelOptionTwo' || hotelOption === 'None') ? roommateTwin : null,
+            RoommateTripleOne: hotelOption === 'HotelOptionThree' ? roommateTripleOne : null,
+            RoommateTripleTwo: hotelOption === 'HotelOptionThree' ? roommateTripleTwo : null,
+            RoommateQuatroOne: hotelOption === 'HotelOptionFour' ? roommateQuatroOne : null,
+            RoommateQuatroTwo: hotelOption === 'HotelOptionFour' ? roommateQuatroTwo : null,
+            RoommateQuatroThree: hotelOption === 'HotelOptionFour' ? roommateQuatroThree : null,
+            
             AcceptedRules: acceptedRules,
             AcceptedToC: acceptedToC,
-            AmountDue: finalAmountDueServer, // USE FINAL SERVER CALCULATED PRICE
+            AmountDue: finalAmountDueServer,
             PaymentDeadline: paymentDeadlineString,
-            PriceTier: currentTierServer // Store the tier they registered in
+            PriceTier: currentTierServer,
+            // Gender: null, // You had Gender in schema, but not in form. Add if needed.
+            // PartnerID: null, // You had PartnerID. If this is for linking, logic will be more complex.
         };
 
         // --- Insert into Supabase ---
-		const { data, error: dbError } = await supabaseAdmin
-			.from('RegistrationDB')
-			.insert([registrationData])
-			.select()
+        const { data: insertedData, error: dbError } = await supabaseAdmin
+            .from('RegistrationDB') // Ensure this is your exact table name
+            .insert([registrationData])
+            .select()
             .maybeSingle();
 
         // --- Handle Response ---
-		if (dbError) {
+        if (dbError) {
             console.error("Supabase Admin Insert Error:", dbError);
-            return fail(500, { data: Object.fromEntries(formData), error: `Database error: ${dbError.message}` });
-		}
+            // Check for specific errors, e.g., unique constraint violation on Email if it should be unique
+            if (dbError.code === '23505') { // PostgreSQL unique violation
+                 return fail(409, { data: formValues, field: 'Email', error: 'This email address is already registered.', errors });
+            }
+            return fail(500, { data: formValues, error: `Database error: ${dbError.message}`, errors });
+        }
 
-		return { success: true, insertedId: data?.id };
-	}
+        return { success: true, insertedId: insertedData?.id };
+    }
 };

@@ -6,7 +6,6 @@
     import RegistrationForm from '$lib/components/htmlComponents/RegistrationForm.svelte';
     import { onMount } from 'svelte';
     import MailList from '$lib/components/htmlComponents/MailList.svelte';
-  
     export let form: ActionData;
   
     const regOpenDate = new Date(REG_OPEN_STRING + 'T17:00:00');

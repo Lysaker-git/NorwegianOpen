@@ -21,11 +21,11 @@ const serverBasePrices = {
 const serverPassOptionsByLevel = {
     'All-Star': ['Regular Pass', 'Judge (Free Pass)', 'Party Pass'],
     'Advanced': ['Regular Pass', 'Judge (20% Discount)', 'Party Pass'],
-    'Other': ['Regular Pass', 'Party Pass'] // For Intermediate/Novice/Newcomer
+    'Other': ['Zero to Hero', 'Regular Pass', 'Party Pass'] // For Intermediate/Novice/Newcomer
 };
 
 const SERVER_PARTY_PASS_PRICE = 1200; // Set your party pass price
-
+const SERVER_ZERO_TO_HERO = 1200;
 
 // --- Helper Functions Server-Side ---
 
@@ -71,6 +71,8 @@ function calculateFinalAmountDueServer(basePrice: number, level: string | null, 
             return (getLevelCategoryServer(level) === 'Advanced') ? Math.round(basePrice * 0.80) : null;
         case 'Party Pass':
             return SERVER_PARTY_PASS_PRICE;
+        case 'Zero to Hero':
+            return SERVER_ZERO_TO_HERO;
         default:
             return null; // Invalid option
     }

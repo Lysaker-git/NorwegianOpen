@@ -4,9 +4,9 @@
 
     // Pricing tiers with descriptions
     const tiers = [
-        { name: 'Ymir', title: '❄️ Ymir', subtitle: 'Early Bird', deadline: 'Ends Oct 31st' },
-        { name: 'Midgard', title: '🌍 Midgard', subtitle: 'Regular', deadline: 'Ends Dec 31st' },
-        { name: 'Ragnarok', title: '🔥 Ragnarok', subtitle: 'Late Bird', deadline: 'From Jan 1st' }
+        { name: 'Ymir', title: '❄️ Ymir', subtitle: 'Early Bird', deadline: 'Ends May 29th' },
+        { name: 'Midgard', title: '🌍 Midgard', subtitle: 'Regular', deadline: 'Ends Aug 22nd' },
+        { name: 'Ragnarok', title: '🔥 Ragnarok', subtitle: 'Late Bird', deadline: 'From 23rd Aug' }
     ];
 
     // Data structure for the pricing table rows
@@ -35,17 +35,17 @@
                 {
                     region: 'Nordic',
                     prices: [
-                        { amount: 900, note: 'Free against Judging' },
-                        { amount: 1000, note: 'Free against Judging' },
-                        { amount: 1100, note: 'Free against Judging' }
+                        { amount: 1800, note: 'Free against Judging' },
+                        { amount: 2000, note: 'Free against Judging' },
+                        { amount: 2200, note: 'Free against Judging' }
                     ]
                 },
                 {
                     region: 'World',
                     prices: [
-                        { amount: 750, note: 'Free against Judging' },
-                        { amount: 850, note: 'Free against Judging' },
-                        { amount: 950, note: 'Free against Judging' }
+                        { amount: 1500, note: 'Free against Judging' },
+                        { amount: 1700, note: 'Free against Judging' },
+                        { amount: 1900, note: 'Free against Judging' }
                     ]
                 }
             ]
@@ -95,6 +95,20 @@
             ]
         },
         {
+            level: 'Zero to Hero',
+            levelRowSpan: 1,
+            regions: [
+                {
+                    region: 'All Regions',
+                    prices: [
+                        { amount: 1300 },
+                        { amount: 1300 },
+                        { amount: 1300 }
+                    ]
+                }
+            ]
+        },
+        {
             level: 'Party Pass',
             levelRowSpan: 1,
             regions: [
@@ -113,7 +127,7 @@
 
 <div class="container mx-auto px-4 py-12">
     <h1 class="text-3xl sm:text-4xl font-bold text-center mb-10 text-gray-100 font-[NorseBold]">
-        Pricing Tiers - [Event Name]
+        Pricing Tiers - Norwegian Open 2025
     </h1>
 
     <div class="max-w-4xl mx-auto overflow-x-auto bg-gray-800 shadow-lg rounded-lg border border-gray-700">
@@ -139,6 +153,9 @@
             <tbody class="divide-y divide-gray-700">
                 {#each priceRows as priceRow, rowIndex}
                     {#each priceRow.regions as regionData, regionIndex}
+                        <!-- MODIFICATION: Moved @const here -->
+                        {@const pricesAreUniform = regionData.prices.length > 0 && regionData.prices.every(p => p.amount === regionData.prices[0].amount)}
+                        
                         <tr class={regionIndex % 2 === 1 ? "bg-gray-800/70" : "bg-gray-800"} 
                             class:border-t-2={rowIndex > 0 && regionIndex === 0 && rowIndex < priceRows.length - 1}
                             class:border-gray-600={rowIndex > 0 && regionIndex === 0 && rowIndex < priceRows.length - 1}
@@ -170,18 +187,33 @@
                                 {/if}
                             </td>
                             
-                            {#each regionData.prices as price, tierIndex}
-                                <td class="px-4 py-3 text-center">
+                            {#if pricesAreUniform}
+                                <!-- If prices are uniform, render one cell spanning all tier columns -->
+                                <td class="px-4 py-3 text-center" colspan={tiers.length}>
                                     <span class="text-lg font-semibold text-gray-100">
-                                        {price.amount.toLocaleString()}
+                                        {regionData.prices[0].amount.toLocaleString()}
                                     </span>
                                     <span class="text-xs text-gray-400">{currencySymbol}</span>
                                     
-                                    {#if price.note}
-                                        <div class="text-xs text-blue-300 mt-0.5">{price.note}</div>
+                                    {#if regionData.prices[0].note}
+                                        <div class="text-xs text-blue-300 mt-0.5">{regionData.prices[0].note}</div>
                                     {/if}
                                 </td>
-                            {/each}
+                            {:else}
+                                <!-- Otherwise, render each price cell individually -->
+                                {#each regionData.prices as price, tierIndex}
+                                    <td class="px-4 py-3 text-center">
+                                        <span class="text-lg font-semibold text-gray-100">
+                                            {price.amount.toLocaleString()}
+                                        </span>
+                                        <span class="text-xs text-gray-400">{currencySymbol}</span>
+                                        
+                                        {#if price.note}
+                                            <div class="text-xs text-blue-300 mt-0.5">{price.note}</div>
+                                        {/if}
+                                    </td>
+                                {/each}
+                            {/if}
                         </tr>
                     {/each}
                 {/each}
