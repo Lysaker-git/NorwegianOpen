@@ -12,9 +12,9 @@ export const basePrices = {
 
 // Pass options by level
 export const passOptionsByLevel = {
-    'All-Star': ['Regular Pass', 'Judge (Free Pass)'],
-    'Advanced': ['Regular Pass', 'Judge (20% Discount)'],
-    'Other': ['Zero to Hero', 'Regular Pass']
+    'All-Star': ['Regular Pass', 'Judge (Free Pass)', 'Party Pass'],
+    'Advanced': ['Regular Pass', 'Judge (20% Discount)', 'Party Pass'],
+    'Other': ['Zero to Hero', 'Regular Pass', 'Party Pass']
 };
 
 // Party pass price

@@ -29,51 +29,7 @@
     // Table data structure based on the CSV
     const priceRows: PriceRow[] = [
         {
-            level: 'All-Star',
-            levelRowSpan: 2,
-            regions: [
-                {
-                    region: 'Nordic',
-                    prices: [
-                        { amount: 1800, note: 'Free against Judging' },
-                        { amount: 2000, note: 'Free against Judging' },
-                        { amount: 2200, note: 'Free against Judging' }
-                    ]
-                },
-                {
-                    region: 'World',
-                    prices: [
-                        { amount: 1500, note: 'Free against Judging' },
-                        { amount: 1700, note: 'Free against Judging' },
-                        { amount: 1900, note: 'Free against Judging' }
-                    ]
-                }
-            ]
-        },
-        {
-            level: 'Advanced',
-            levelRowSpan: 2,
-            regions: [
-                {
-                    region: 'Nordic',
-                    prices: [
-                        { amount: 1800, note: '20% discount against judging' },
-                        { amount: 2000, note: '20% discount against judging' },
-                        { amount: 2200, note: '20% discount against judging' }
-                    ]
-                },
-                {
-                    region: 'World',
-                    prices: [
-                        { amount: 1500, note: '20% discount against judging' },
-                        { amount: 1700, note: '20% discount against judging' },
-                        { amount: 1900, note: '20% discount against judging' }
-                    ]
-                }
-            ]
-        },
-        {
-            level: 'Regular',
+            level: 'Full Pass',
             levelRowSpan: 2,
             regions: [
                 {
@@ -115,9 +71,23 @@
                 {
                     region: 'All Regions',
                     prices: [
-                        { amount: 1200 },
+                        { amount: 1200, note: "First 50 passes" },
                         { amount: 1200 },
                         { amount: 1200 }
+                    ]
+                }
+            ]
+        },
+        {
+            level: 'Blues Intensive',
+            levelRowSpan: 1,
+            regions: [
+                {
+                    region: 'All Regions',
+                    prices: [
+                        { amount: 1000 },
+                        { amount: 1000 },
+                        { amount: 1000 }
                     ]
                 }
             ]
@@ -159,7 +129,7 @@
                         <tr class={regionIndex % 2 === 1 ? "bg-gray-800/70" : "bg-gray-800"} 
                             class:border-t-2={rowIndex > 0 && regionIndex === 0 && rowIndex < priceRows.length - 1}
                             class:border-gray-600={rowIndex > 0 && regionIndex === 0 && rowIndex < priceRows.length - 1}
-                            class:bg-gray-900={rowIndex === priceRows.length - 1}>
+                            class:bg-gray-900={(rowIndex === priceRows.length - 1) || pricesAreUniform }>
                             
                             {#if regionIndex === 0}
                                 <td class="px-4 py-3 font-medium text-gray-100 border-r border-gray-700" 
@@ -222,6 +192,7 @@
     </div>
 
     <div class="text-center mt-6 text-xs text-gray-400 max-w-2xl mx-auto">
+        <p class="mb-2">All star gets free pass if they judge during the event, Advanced get 20% discount for judging services</p>
         <p>Prices are shown in {currencySymbol}. Judge options require registration and approval from Event Director.</p>
     </div>
 </div>

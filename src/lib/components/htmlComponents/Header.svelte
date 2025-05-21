@@ -64,11 +64,12 @@
     <!-- Desktop Navigation -->
     <nav class="hidden md:block">
         <ul class="flex space-x-6">
+            <li><a href="/register" class="hover:text-amber-200 transition-colors duration-300">Register</a></li>
             <li><a href="/about" class="hover:text-amber-200 transition-colors duration-300">About</a></li>
             <li><a href="/pricing" class="hover:text-amber-200 transition-colors duration-300">Prices</a></li>
             <li><a href="/schedule" class="hover:text-amber-200 transition-colors duration-300">Schedule</a></li>
             <li><a href="/location" class="hover:text-amber-200 transition-colors duration-300">Location</a></li>
-            <li><a href="#contact" class="hover:text-amber-200 transition-colors duration-300">Contact</a></li>
+            <li><a href="/contact" class="hover:text-amber-200 transition-colors duration-300">Contact</a></li>
         </ul>
     </nav>
     
@@ -104,6 +105,15 @@
 >
     <nav class="h-full w-full flex flex-col justify-center items-center">
         <ul class="flex flex-col items-center justify-between h-3/4 text-white">
+            <li transition:fly={{ y: 20, duration: 300, delay: 100 }}>
+                <a 
+                    href="/register" 
+                    on:click={handleNavClick}
+                    class="text-3xl font-bold hover:text-amber-200 transition-colors duration-300"
+                >
+                    Register
+                </a>
+            </li>
             <li transition:fly={{ y: 20, duration: 300, delay: 100 }}>
                 <a 
                     href="/about" 
@@ -142,7 +152,7 @@
             </li>
             <li transition:fly={{ y: 20, duration: 300, delay: 250 }}>
                 <a 
-                    href="#contact" 
+                    href="/contact" 
                     on:click={handleNavClick}
                     class="text-3xl font-bold hover:text-amber-200 transition-colors duration-300"
                 >
