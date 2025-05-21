@@ -69,6 +69,7 @@
 
     // --- Fixed Price for Party Pass (Example) ---
     const PARTY_PASS_PRICE = 1200; // Set your party pass price
+    const ZERO_TO_HERO = 1200;
 
 
 	// --- Reactive Calculations ---
@@ -133,6 +134,8 @@
                 case 'Party Pass':
                     finalPrice = PARTY_PASS_PRICE;
                     break;
+                case 'Zero to Hero':
+                    finalPrice = ZERO_TO_HERO;
                 default:
                     finalPrice = 'Invalid Pass Option';
             }

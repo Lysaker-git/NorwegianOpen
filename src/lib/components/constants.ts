@@ -12,13 +12,24 @@ export const basePrices = {
 
 // Pass options by level
 export const passOptionsByLevel = {
-    'All-Star': ['Regular Pass', 'Judge (Free Pass)'],
-    'Advanced': ['Regular Pass', 'Judge (20% Discount)'],
-    'Other': ['Regular Pass']
+    'All-Star': ['Regular Pass', 'Judge (Free Pass)', 'Party Pass'],
+    'Advanced': ['Regular Pass', 'Judge (20% Discount)', 'Party Pass'],
+    'Other': ['Zero to Hero', 'Regular Pass', 'Party Pass']
 };
 
 // Party pass price
 export const PARTY_PASS_PRICE = 1200;
+export const ZERO_TO_HERO = 1300;
+export const INTENSIVE = 1000;
 
 // Level options
 export const LEVEL_OPTIONS = ['All-Star', 'Advanced', 'Intermediate', 'Novice', 'Newcomer'];
+
+export const HOTEL_PRICES = {
+    HotelOptionOne: 1290, // Single Room
+    HotelOptionTwo: 1490, // Twin Room
+    HotelOptionThree: 1690, // Triple Room
+    HotelOptionFour: 1890, // Quatro Room
+    None: 0, // No hotel
+    HotelOptionNo: 0 // Selected "No"
+};
