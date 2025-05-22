@@ -250,6 +250,15 @@ export const actions: Actions = {
         const intensiveCostServer = addIntensiveServer ? SERVER_INTENSIVE_PRICE : 0;
         const finalAmountDueServer = calculatedPassPriceServer + intensiveCostServer;
         const paymentDeadlineString = calculatePaymentDeadline();
+        const uniqueUserID = await generateUniqueUserID('userID');
+        if (!uniqueUserID) {
+            // Handle the rare case where a unique ID couldn't be generated
+            console.error("CRITICAL: Could not generate a unique userID for registration.");
+            return fail(500, { data: formValues, error: 'Server error: Could not generate a unique user identifier. Please try again.' });
+            // Removed `errors` from here as it's a general server error, not specific field errors.
+            // If you want to pass back `errors` from earlier validation, you can:
+            // return fail(500, { data: formValues, error: '...', errors });
+        }
 
 
         // --- Determine Registration Status ---
@@ -282,7 +291,7 @@ export const actions: Actions = {
             PaymentDeadline: paymentDeadlineString,
             PriceTier: currentTierServer,
             BasePriceAtRegistration: basePriceNumServer,
-            userID: generateUniqueUserID('userID'), // Consider dynamic userID
+            userID: uniqueUserID, // Consider dynamic userID
             RegistrationStatus: registrationStatus // <--- ADDED NEW FIELD
         };
 
