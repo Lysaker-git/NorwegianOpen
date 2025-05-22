@@ -5,9 +5,9 @@ export const MIDGARD_DEADLINE_STRING = '2025-08-22';
 
 // Pricing tiers
 export const basePrices = {
-    Ymir: { Nordic: 1500, World: 1800 },      // Early Bird prices
-    Midgard: { Nordic: 1700, World: 2000 },   // Regular prices
-    Ragnarok: { Nordic: 1900, World: 2200 }   // Late Bird prices
+    Ymir: { Nordic: 1800, World: 1500 },      // Early Bird prices
+    Midgard: { Nordic: 2000, World: 1700 },   // Regular prices
+    Ragnarok: { Nordic: 2200, World: 1900 }   // Late Bird prices
 };
 
 // Pass options by level
