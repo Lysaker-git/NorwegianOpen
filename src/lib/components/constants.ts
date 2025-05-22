@@ -1,5 +1,5 @@
 // Registration dates
-export const REG_OPEN_STRING = '2025-05-21';
+export const REG_OPEN_STRING = '2025-05-22';
 export const YMIR_DEADLINE_STRING = '2025-05-29'; 
 export const MIDGARD_DEADLINE_STRING = '2025-08-22';
 
