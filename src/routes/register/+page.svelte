@@ -8,7 +8,7 @@
     import MailList from '$lib/components/htmlComponents/MailList.svelte';
     export let form: ActionData;
   
-    const regOpenDate = new Date(REG_OPEN_STRING + 'T17:00:00');
+    const regOpenDate = new Date(REG_OPEN_STRING + 'T19:00:00');
     const today = new Date();
     let isVisible = false;
   
@@ -49,7 +49,7 @@
               <h1 class="text-2xl font-bold text-center mx-4 text-white">Registration Form</h1>
               <div class="h-px w-16 bg-amber-400"></div>
             </div>
-            <!-- <RegistrationForm {form} /> -->
+            <RegistrationForm {form} />
           </div>
         {/if}
       </div>
