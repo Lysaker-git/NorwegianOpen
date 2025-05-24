@@ -61,7 +61,7 @@
                     {#each filteredRegistrations as reg (reg.id)}
                         <tr>
                             <td class="px-4 py-3 whitespace-nowrap text-sm text-amber-400">
-                                <a href="/admin/registrations/{reg.id}" class="hover:text-amber-300">View/Edit</a>
+                                <a href="/admin/registrations/{reg.userID}" class="hover:text-amber-300">View/Edit</a>
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-200">{reg.FullName}</td>
                             <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-300">{reg.Email}</td>
