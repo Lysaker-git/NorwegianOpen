@@ -1,5 +1,29 @@
 import type { PageServerLoad } from './$types';
 import { supabaseAdmin } from '$lib/supabaseAdminClient';
+import type { Actions } from './$types';
+
+export const actions: Actions = {
+    update: async ({ request, params }) => {
+        const { id } = params;
+        const formData = await request.formData();
+        // Convert formData to a plain object
+        const updateData: Record<string, any> = {};
+        for (const [key, value] of formData.entries()) {
+            updateData[key] = value;
+        }
+
+        const { error } = await supabaseAdmin
+            .from('RegistrationDB')
+            .update(updateData)
+            .eq('userID', id);
+
+        if (error) {
+            return { success: false, error: error.message };
+        }
+
+        return { success: true };
+    }
+};
 
 export const load: PageServerLoad = async ({ params }) => {
     const { id } = params;
@@ -8,18 +32,21 @@ export const load: PageServerLoad = async ({ params }) => {
     const { data, error } = await supabaseAdmin
         .from('RegistrationDB') // Your registrations table
         .select(`
-            id,
+            RegistrationStatus,
             FullName,
             Email,
+            WSDCID,
             Level,
+            Role,
             PassOption,
             AmountDue,
-            RegistrationStatus,
-            PaymentDeadline,
             HasPartner,
             PartnerName,
-            userID,
-            created_at
+            PartnerEmail,
+            Competing,
+            PromoCode,
+            AddedIntensive,
+            userID
         `)
         .eq('userID', id)
         .single();
