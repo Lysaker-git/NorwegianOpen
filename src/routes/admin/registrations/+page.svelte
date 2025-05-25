@@ -8,15 +8,30 @@
     let searchTerm = '';
     let filteredRegistrations = data.registrations;
 
+    function normalize(str: string = '') {
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    }
+
     $: {
         if (searchTerm) {
-            const lowerSearchTerm = searchTerm.toLowerCase();
+            const normSearch = normalize(searchTerm);
+
+            // Find all names that match the normalized search term
+            const matchingNames = new Set(
+                data.registrations
+                    .flatMap(reg => [reg.FullName, reg.PartnerName])
+                    .filter(name => name && normalize(name).includes(normSearch))
+            );
+
             filteredRegistrations = data.registrations.filter(reg =>
-                reg.FullName?.toLowerCase().includes(lowerSearchTerm) ||
-                reg.Email?.toLowerCase().includes(lowerSearchTerm) ||
-                reg.userID?.toLowerCase().includes(lowerSearchTerm) ||
-                reg.PassOption?.toLowerCase().includes(lowerSearchTerm) ||
-                reg.RegistrationStatus?.toLowerCase().includes(lowerSearchTerm)
+                reg.FullName?.toLowerCase().includes(normSearch) ||
+                reg.Email?.toLowerCase().includes(normSearch) ||
+                reg.userID?.toLowerCase().includes(normSearch) ||
+                reg.PassOption?.toLowerCase().includes(normSearch) ||
+                reg.RegistrationStatus?.toLowerCase().includes(normSearch) ||
+                reg.PartnerName?.toLowerCase().includes(normSearch) ||
+                matchingNames.has(reg.FullName) ||
+                matchingNames.has(reg.PartnerName)
             );
         } else {
             filteredRegistrations = data.registrations;
@@ -49,23 +64,25 @@
                     <tr>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Name</th>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Email</th>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">UserID</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Partner Name</th>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Pass Option</th>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Amount Due</th>
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Registered</th>
                     </tr>
                 </thead>
                 <tbody class="bg-gray-800 divide-y divide-gray-700">
                     {#each filteredRegistrations as reg (reg.id)}
                         <tr>
                             <td class="px-4 py-3 whitespace-nowrap text-sm text-amber-400">
-                                <a href="/admin/registrations/{reg.id}" class="hover:text-amber-300">View/Edit</a>
+                                    <a
+                                        href={`/admin/registrations/${reg.userID}`}
+                                        class="inline-block px-4 py-2 bg-amber-500 text-gray-900 font-semibold rounded hover:bg-amber-600 transition-colors duration-150"
+                                    >
+                                        View/Edit
+                                    </a>
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-200">{reg.FullName}</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-300">{reg.Email}</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-400">{reg.userID}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-200">{reg.PartnerName || ''}</td>
                             <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-300">{reg.PassOption}</td>
                             <td class="px-4 py-3 whitespace-nowrap text-sm">
                                 {#if reg.RegistrationStatus === 'pendingApproval'}
@@ -83,7 +100,6 @@
                                 {/if}
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-300">{reg.AmountDue?.toLocaleString()} NOK</td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-400">{formatDate(reg.created_at)}</td>
                         </tr>
                     {/each}
                 </tbody>

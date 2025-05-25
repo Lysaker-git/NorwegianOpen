@@ -51,7 +51,6 @@ export const handle: Handle = async ({ event, resolve }) => {
     event.locals.user = user; // Also store user separately
     event.locals.isAdmin = false;
 
-    console.log('[HOOKS] User from getUser():', user ? `User ID: ${user.id}` : 'No user');
 
     if (pathname.startsWith('/admin')) {
         if (pathname === '/admin/login') {
@@ -68,7 +67,7 @@ export const handle: Handle = async ({ event, resolve }) => {
                 }
 
                 if (adminUserRecord) {
-                    console.log('[HOOKS] Logged-in admin is on /admin/login. Redirecting to /admin.');
+                    // console.log('[HOOKS] Logged-in admin is on /admin/login. Redirecting to /admin.');
                     return Response.redirect(`${url.origin}/admin`, 303);
                 }
             }
@@ -76,7 +75,7 @@ export const handle: Handle = async ({ event, resolve }) => {
         }
         else {
             if (!user) {
-                console.log('[HOOKS] No user for protected admin route. Redirecting to /admin/login.');
+                // console.log('[HOOKS] No user for protected admin route. Redirecting to /admin/login.');
                 return Response.redirect(`${url.origin}/admin/login?redirectTo=${pathname}`, 303);
             }
 
@@ -88,7 +87,7 @@ export const handle: Handle = async ({ event, resolve }) => {
                 .maybeSingle();
 
             if (adminCheckError) {
-                console.error('[HOOKS] Admin check DB error for protected route:', adminCheckError.message);
+                // console.error('[HOOKS] Admin check DB error for protected route:', adminCheckError.message);
                 await event.locals.supabase.auth.signOut();
                 event.locals.session = null;
                 event.locals.user = null;
@@ -97,7 +96,7 @@ export const handle: Handle = async ({ event, resolve }) => {
             }
 
             if (!adminUserRecord) {
-                console.log('[HOOKS] User authenticated but not in admin_users_lookup. Signing out & redirecting.');
+                // console.log('[HOOKS] User authenticated but not in admin_users_lookup. Signing out & redirecting.');
                 await event.locals.supabase.auth.signOut();
                 event.locals.session = null;
                 event.locals.user = null;
@@ -105,7 +104,7 @@ export const handle: Handle = async ({ event, resolve }) => {
                 return Response.redirect(`${url.origin}/admin/login?message=not_authorized`, 303);
             }
 
-            console.log('[HOOKS] Admin verified for protected route. Setting locals.isAdmin = true.');
+            // console.log('[HOOKS] Admin verified for protected route. Setting locals.isAdmin = true.');
             event.locals.isAdmin = true;
         }
     }
