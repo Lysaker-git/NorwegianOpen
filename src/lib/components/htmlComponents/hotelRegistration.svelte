@@ -64,11 +64,40 @@
             case 'HotelOptionTwo': return 'Twin Room';
             case 'HotelOptionThree': return 'Triple Room';
             case 'HotelOptionFour': return 'Quatro Room';
-            case 'None': return 'Staying with someone else / Arranged own';
-            case 'HotelOptionNo': return 'No hotel needed';
             default: return 'Selected Hotel';
         }
     }
+
+    function formatPrice(price: number | undefined) {
+        return price ? `${price.toLocaleString()} NOK` : '';
+    }
+
+    const roomOptions = [
+        {
+            key: 'HotelOptionOne',
+            label: 'Single Room',
+            description: 'A private room for one person.',
+            price: HOTEL_PRICES.HotelOptionOne
+        },
+        {
+            key: 'HotelOptionTwo',
+            label: 'Twin Room',
+            description: 'A room for two people. You will need to specify your roommate.',
+            price: HOTEL_PRICES.HotelOptionTwo
+        },
+        {
+            key: 'HotelOptionThree',
+            label: 'Triple Room',
+            description: 'A room for three people. You will need to specify your roommates.',
+            price: HOTEL_PRICES.HotelOptionThree
+        },
+        {
+            key: 'HotelOptionFour',
+            label: 'Quatro Room',
+            description: 'A room for four people. You will need to specify your roommates.',
+            price: HOTEL_PRICES.HotelOptionFour
+        }
+    ];
 </script>
 
 <div class="container mx-auto px-4 py-12">
@@ -97,7 +126,96 @@
                    />
         </div>
 
-        <div>
+        <div class="mb-6">
+            <label class="block text-sm font-medium mb-2">Hotel Option (Prices per night)</label>
+            {#if !selectedHotel}
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {#each roomOptions as option}
+                        <button
+                            type="button"
+                            class="relative bg-gray-900 border border-amber-400/40 rounded-lg p-6 shadow hover:shadow-lg transition-all duration-200 hover:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                            on:click={() => selectedHotel = option.key}
+                        >
+                            <div class="text-lg font-bold text-amber-400 mb-2">{option.label}</div>
+                            <div class="text-gray-200 mb-2">{option.description}</div>
+                            <div class="text-amber-300 font-semibold">{formatPrice(option.price)}</div>
+                        </button>
+                    {/each}
+                </div>
+            {:else}
+                {#each roomOptions.filter(opt => opt.key === selectedHotel) as option}
+                    <div class="relative bg-gray-900 border-2 border-amber-400 rounded-lg p-6 shadow-lg transition-all duration-200">
+                        <!-- X button to deselect -->
+                        <button
+                            type="button"
+                            class="absolute top-2 right-2 text-gray-400 hover:text-red-400 p-1 rounded-full hover:bg-gray-800 transition"
+                            aria-label="Deselect room"
+                            on:click={() => {
+                                selectedHotel = '';
+                                // Clear roommate fields when deselecting
+                                twinRoomMate = '';
+                                tripleRoomMate1 = '';
+                                tripleRoomMate2 = '';
+                                quatroRoomMate1 = '';
+                                quatroRoomMate2 = '';
+                                quatroRoomMate3 = '';
+                            }}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="11" stroke="currentColor" fill="none"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 8l8 8M16 8l-8 8" />
+                            </svg>
+                        </button>
+                        <div class="text-lg font-bold text-amber-400 mb-2">{option.label}</div>
+                        <div class="text-gray-200 mb-2">{option.description}</div>
+                        <div class="text-amber-300 font-semibold mb-4">{formatPrice(option.price)}</div>
+
+                        <!-- Roommate fields inside the card -->
+                        {#if selectedHotel === 'HotelOptionTwo'}
+                            <div class="mt-2">
+                                <label for="twinRoomMate" class="block text-sm font-medium">Name of your roommate *</label>
+                                <input required type="text" id="twinRoomMate" name="Roommate1"
+                                    bind:value={twinRoomMate}
+                                    placeholder="Roommate name"
+                                    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black" />
+                            </div>
+                        {/if}
+                        {#if selectedHotel === 'HotelOptionThree'}
+                            <fieldset class="mt-2 p-2 border border-gray-600 rounded-md space-y-2">
+                                <legend class="text-md font-medium text-white px-1">Names of your roommates *</legend>
+                                <input required type="text" id="tripleRoomMate1" name="Roommate1"
+                                    bind:value={tripleRoomMate1}
+                                    placeholder="Roommate 1 name"
+                                    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black" />
+                                <input required type="text" id="tripleRoomMate2" name="Roommate2"
+                                    bind:value={tripleRoomMate2}
+                                    placeholder="Roommate 2 name"
+                                    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black" />
+                            </fieldset>
+                        {/if}
+                        {#if selectedHotel === 'HotelOptionFour'}
+                            <fieldset class="mt-2 p-2 border border-gray-600 rounded-md space-y-2">
+                                <legend class="text-md font-medium text-white px-1">Names of your roommates *</legend>
+                                <input required type="text" id="quatroRoomMate1" name="Roommate1"
+                                    bind:value={quatroRoomMate1}
+                                    placeholder="Roommate 1 name"
+                                    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black" />
+                                <input required type="text" id="quatroRoomMate2" name="Roommate2"
+                                    bind:value={quatroRoomMate2}
+                                    placeholder="Roommate 2 name"
+                                    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black" />
+                                <input required type="text" id="quatroRoomMate3" name="Roommate3"
+                                    bind:value={quatroRoomMate3}
+                                    placeholder="Roommate 3 name"
+                                    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black" />
+                            </fieldset>
+                        {/if}
+                    </div>
+                {/each}
+            {/if}
+        </div>
+
+        <!-- <div>
             <label for="hotel-selection" class="block text-sm font-medium">Hotel Option (Prices per night)</label>
             <select
                 bind:value={selectedHotel}
@@ -107,16 +225,14 @@
                 class="mt-1 block w-full px-3 py-2 border text-black rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             >
                 <option value="" selected disabled>Select Hotel Option</option>
-                <option value="None">I will stay with someone else / Arrange my own</option>
                 <option value="HotelOptionOne">Single Room ({HOTEL_PRICES.HotelOptionOne?.toLocaleString()} NOK)</option>
                 <option value="HotelOptionTwo">Twin Room ({HOTEL_PRICES.HotelOptionTwo?.toLocaleString()} NOK)</option>
                 <option value="HotelOptionThree">Triple Room ({HOTEL_PRICES.HotelOptionThree?.toLocaleString()} NOK)</option>
                 <option value="HotelOptionFour">Quatro Room ({HOTEL_PRICES.HotelOptionFour?.toLocaleString()} NOK)</option>
-                <option value="HotelOptionNo">No, I do not need a hotel room booked via the event</option>
             </select>
-        </div>
+        </div> -->
 
-        {#if selectedHotel && selectedHotel !== 'None' && selectedHotel !== 'HotelOptionNo'}
+        <!-- {#if selectedHotel && selectedHotel !== 'None' && selectedHotel !== 'HotelOptionNo'}
             <fieldset class="mt-4 p-4 border border-gray-600 rounded-md space-y-4">
                 <legend class="text-md font-medium text-white px-1">Select Dates for Your Stay:</legend>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -204,7 +320,7 @@
                        placeholder="Roommate 3 name"
                        class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black" />
             </fieldset>
-        {/if}
+        {/if} -->
 
         <!-- Hotel Order Summary -->
         {#if selectedHotel}

@@ -30,6 +30,4 @@ export const HOTEL_PRICES = {
     HotelOptionTwo: 1490, // Twin Room
     HotelOptionThree: 1690, // Triple Room
     HotelOptionFour: 1890, // Quatro Room
-    None: 0, // No hotel
-    HotelOptionNo: 0 // Selected "No"
 };
