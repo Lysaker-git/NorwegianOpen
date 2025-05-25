@@ -3,6 +3,9 @@
     import { enhance } from '$app/forms';
     import type { ActionData } from './$types'; // Adjust if this form has its own +page.server.ts action
     import { HOTEL_PRICES } from '$lib/components/constants'; // Ensure HOTEL_PRICES is exported from here
+    import QuatroCarousel from './QuatroCarousel.svelte';
+    import fourOne from '$lib/components/images/scandic/scandicFour/fourOne.webp';
+    import { fade, scale } from 'svelte/transition';
 
     // Props for form feedback (if used as a component in a page with a server action)
     // export let form: ActionData | null = null;
@@ -72,6 +75,30 @@
         return price ? `${price.toLocaleString()} NOK` : '';
     }
 
+    const availableDates = [
+        '2025-10-02',
+        '2025-10-03',
+        '2025-10-04',
+        '2025-10-05',
+        '2025-10-06'
+    ];
+
+    function selectDate(date: string) {
+        if (!checkInDate || (checkInDate && checkOutDate)) {
+            checkInDate = date;
+            checkOutDate = '';
+        } else if (date > checkInDate) {
+            checkOutDate = date;
+        } else {
+            checkInDate = date;
+            checkOutDate = '';
+        }
+    }
+
+    function isInRange(date: string) {
+        return checkInDate && checkOutDate && date > checkInDate && date < checkOutDate;
+    }
+    
     const roomOptions = [
         {
             key: 'HotelOptionOne',
@@ -129,22 +156,46 @@
         <div class="mb-6">
             <label class="block text-sm font-medium mb-2">Hotel Option (Prices per night)</label>
             {#if !selectedHotel}
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {#each roomOptions as option}
+                <div class="grid grid-cols-1 sm:grid-cols-2">
+                {#each roomOptions as option (option.key)}
+                    {#if !selectedHotel || selectedHotel === option.key}
                         <button
                             type="button"
-                            class="relative bg-gray-900 border border-amber-400/40 rounded-lg p-6 shadow hover:shadow-lg transition-all duration-200 hover:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                            class="relative bg-gray-900 border border-amber-400/40 p-6 shadow hover:shadow-lg transition-all duration-200 hover:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
                             on:click={() => selectedHotel = option.key}
+                            in:scale={{ duration: 2500 }}
+                            out:fade={{ duration: 2000 }}
                         >
+                            {#if option.key === 'HotelOptionFour'}
+                            <div
+                                class="absolute inset-0 rounded-lg overflow-hidden z-0"
+                                style="pointer-events: none;"
+                            >
+                                <div
+                                    class="w-full h-full"
+                                    style={`background-image: url('${fourOne}'); background-size: cover; background-position: center; filter: brightness(0.2) blur(2px); position: absolute; inset: 0;`}
+                                ></div>
+                            </div>
+                            <div class="relative z-10">
+                                <div class="text-lg font-bold text-amber-400 mb-2">{option.label}</div>
+                                <div class="text-gray-200 mb-2">{option.description}</div>
+                                <div class="text-amber-300 font-semibold">{formatPrice(option.price)}</div>
+                            </div>
+                        {:else}
                             <div class="text-lg font-bold text-amber-400 mb-2">{option.label}</div>
                             <div class="text-gray-200 mb-2">{option.description}</div>
                             <div class="text-amber-300 font-semibold">{formatPrice(option.price)}</div>
-                        </button>
-                    {/each}
+                        {/if}
+                    </button>
+                    {/if}
+                {/each}
                 </div>
             {:else}
                 {#each roomOptions.filter(opt => opt.key === selectedHotel) as option}
-                    <div class="relative bg-gray-900 border-2 border-amber-400 rounded-lg p-6 shadow-lg transition-all duration-200">
+                    <div class="relative bg-gray-900 border-2 border-amber-400 rounded-lg p-6 shadow-lg transition-all duration-200"
+                        in:scale={{ duration: 2500, start: 0.8 }}
+                        out:fade={{ duration: 2000 }}
+                    >
                         <!-- X button to deselect -->
                         <button
                             type="button"
@@ -194,21 +245,56 @@
                             </fieldset>
                         {/if}
                         {#if selectedHotel === 'HotelOptionFour'}
-                            <fieldset class="mt-2 p-2 border border-gray-600 rounded-md space-y-2">
-                                <legend class="text-md font-medium text-white px-1">Names of your roommates *</legend>
-                                <input required type="text" id="quatroRoomMate1" name="Roommate1"
-                                    bind:value={quatroRoomMate1}
-                                    placeholder="Roommate 1 name"
-                                    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black" />
-                                <input required type="text" id="quatroRoomMate2" name="Roommate2"
-                                    bind:value={quatroRoomMate2}
-                                    placeholder="Roommate 2 name"
-                                    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black" />
-                                <input required type="text" id="quatroRoomMate3" name="Roommate3"
-                                    bind:value={quatroRoomMate3}
-                                    placeholder="Roommate 3 name"
-                                    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black" />
-                            </fieldset>
+                            <div
+                                class="absolute inset-0 rounded-lg overflow-hidden z-0"
+                                style="pointer-events: none;"
+                            >
+                            </div>
+                            <div class="relative z-10">
+                                <div class="mb-4">
+                                    <p class="text-white text-base font-medium mb-2">
+                                        Staying with the family? In our family rooms, there is plenty of space and a pleasant atmosphere for both young and old.
+                                    </p>
+                                    <ul class="text-white text-sm grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1 mb-2 list-disc list-inside">
+                                        <li>Free WiFi</li>
+                                        <li>Bathroom with shower</li>
+                                        <li>Bathroom amenities</li>
+                                        <li>Wooden floors</li>
+                                        <li>Safe (available in some rooms)</li>
+                                        <li>Refrigerator (available in some rooms)</li>
+                                        <li>Table</li>
+                                        <li>Chair(s)</li>
+                                        <li>Non-smoking</li>
+                                        <li>Upper floors</li>
+                                        <li>Easy access</li>
+                                        <li>Blackout curtains</li>
+                                        <li>Bunk bed</li>
+                                        <li>Iron and ironing board</li>
+                                        <li>Desk and chair</li>
+                                        <li>Hairdryer</li>
+                                    </ul>
+                                </div>
+                                
+                                <!-- Carousel -->
+                                <div class="mb-4">
+                                    <QuatroCarousel />
+                                </div>
+                                <fieldset class="mt-2 p-2 border border-gray-600 rounded-md space-y-2">
+                                    <legend class="text-md font-medium text-white px-1">Names of your roommates *</legend>
+                                    <input required type="text" id="tripleRoomMate1" name="Roommate1"
+                                        bind:value={quatroRoomMate1}
+                                        placeholder="Roommate 1 name"
+                                        class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black" />
+                                    <input required type="text" id="tripleRoomMate2" name="Roommate2"
+                                        bind:value={quatroRoomMate2}
+                                        placeholder="Roommate 2 name"
+                                        class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black" />
+                                    <input required type="text" id="tripleRoomMate2" name="Roommate2"
+                                        bind:value={quatroRoomMate3}
+                                        placeholder="Roommate 3 name"
+                                        class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black" />
+                                </fieldset>
+                            </div>
                         {/if}
                     </div>
                 {/each}
@@ -231,6 +317,39 @@
                 <option value="HotelOptionFour">Quatro Room ({HOTEL_PRICES.HotelOptionFour?.toLocaleString()} NOK)</option>
             </select>
         </div> -->
+        {#if selectedHotel}
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-2">Select your stay dates:</label>
+                <div class="flex justify-center gap-0 flex-wrap mb-2">
+                    {#each availableDates as date, i (date)}
+                        <button
+                            type="button"
+                            class={`px-4 py-2 border border-indigo-200
+                                ${i === 0 ? 'rounded-l-2xl' : ''}
+                                ${i === availableDates.length - 1 ? 'rounded-r-2xl' : ''}
+                                ${date === checkInDate || date === checkOutDate
+                                    ? 'bg-indigo-600 text-white font-bold'
+                                    : isInRange(date)
+                                        ? 'bg-indigo-200 text-indigo-800'
+                                        : 'bg-gray-200 text-gray-800 hover:bg-indigo-100'}
+                                ${i !== 0 ? 'border-l-0' : ''}
+                                transition-colors duration-150`}
+                            on:click={() => selectDate(date)}
+                            style="min-width: 90px"
+                        >
+                            {new Date(date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric' })}
+                        </button>
+                    {/each}
+                </div>
+                <div class="mt-2 text-sm text-gray-400">
+                    {#if checkInDate && checkOutDate}
+                        Selected: {new Date(checkInDate).toLocaleDateString()} – {new Date(checkOutDate).toLocaleDateString()}
+                    {:else if checkInDate}
+                        Selected: {new Date(checkInDate).toLocaleDateString()} (choose check-out)
+                    {/if}
+                </div>
+            </div>
+        {/if}
 
         <!-- {#if selectedHotel && selectedHotel !== 'None' && selectedHotel !== 'HotelOptionNo'}
             <fieldset class="mt-4 p-4 border border-gray-600 rounded-md space-y-4">
@@ -266,9 +385,9 @@
                     Hotel stays are available between {new Date(hotelMinDate).toLocaleDateString('en-GB', { weekday: 'long', month: 'long', day: 'numeric' })} and {new Date(hotelMaxDate).toLocaleDateString('en-GB', { weekday: 'long', month: 'long', day: 'numeric' })}.
                 </p>
             </fieldset>
-        {/if}
+        {/if} -->
 
-        {#if selectedHotel === 'None'}
+        <!-- {#if selectedHotel === 'None'}
             <div class="mt-4">
                 <label for="personRoomIsRegisteredOn" class="block text-sm font-medium">
                     If staying with someone who has booked, what is the name on their booking? (Optional)

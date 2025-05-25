@@ -1,11 +1,20 @@
 <script lang="ts">
-    import 
+    import fourOne from '$lib/components/images/scandic/scandicFour/fourOne.webp';
+    import fourTwo from '$lib/components/images/scandic/scandicFour/fourTwo.webp';
+    import fourThree from '$lib/components/images/scandic/scandicFour/fourThree.webp';
+    import fourFour from '$lib/components/images/scandic/scandicFour/fourFour.webp';
+    import fourfive from '$lib/components/images/scandic/scandicFour/fourfive.webp';
+    import fourSix from '$lib/components/images/scandic/scandicFour/fourSix.webp';
+    import fourSeven from '$lib/components/images/scandic/scandicFour/fourSeven.webp';
 
     let images = [
-        '/images/scandicFour/1.jpg',
-        '/images/scandicFour/2.jpg',
-        '/images/scandicFour/3.jpg',
-        '/images/scandicFour/4.jpg'
+        fourOne,
+        fourTwo,
+        fourThree,
+        fourFour,
+        fourfive,
+        fourSix,
+        fourSeven
     ];
     let current = 0;
     function prev() { current = (current - 1 + images.length) % images.length; }
