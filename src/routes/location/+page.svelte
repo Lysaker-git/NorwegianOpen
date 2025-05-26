@@ -3,6 +3,8 @@
     import { fade } from 'svelte/transition';
     import ScandicFront from '$lib/images/ScandicFront.avif';
     import ScandicRoom from '$lib/images/ScandicRoom.avif';
+    import Atrium from '$lib/components/images/scandic/Atrium.webp';
+    import Front from '$lib/components/images/scandic/Front.avif';
   
     let isLoaded = false;
   
@@ -35,7 +37,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
           <div class="relative overflow-hidden rounded-lg shadow-lg">
             <img
-              src={ScandicFront}
+              src={Front}
               alt="Front view of Scandic Hamar hotel"
               class="w-full h-64 md:h-80 object-cover transition-transform duration-500 hover:scale-105"
             />
@@ -47,13 +49,13 @@
   
           <div class="relative overflow-hidden rounded-lg shadow-lg">
             <img
-              src={ScandicRoom}
+              src={Atrium}
               alt="Foyer of Scandic Hamar hotel"
               class="w-full h-64 md:h-80 object-cover transition-transform duration-500 hover:scale-105"
             />
             <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-3">
-              <p class="text-white font-medium">Scandic Hamar - Foyer</p>
-              <p class="text-xs text-gray-500 mt-1 italic">Copyright: Kyle Meyr</p>
+              <p class="text-white font-medium">Scandic Hamar - Atrium</p>
+              <p class="text-xs text-gray-500 mt-1 italic">Copyright: Scandic Hamar</p>
             </div>
           </div>
         </div>
@@ -117,7 +119,7 @@
           </p>
   
           <p class="text-white text-lg mb-4">
-            Registration will open soon - make sure to follow our social media channels
+            Registration is open - make sure to follow our social media channels
             for announcements about when you can book your spot at Norwegian Open WCS 2025!
           </p>
         </div>

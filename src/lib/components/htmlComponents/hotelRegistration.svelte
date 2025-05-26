@@ -3,9 +3,21 @@
     import { enhance } from '$app/forms';
     import type { ActionData } from './$types'; // Adjust if this form has its own +page.server.ts action
     import { HOTEL_PRICES } from '$lib/components/constants'; // Ensure HOTEL_PRICES is exported from here
-    import QuatroCarousel from './QuatroCarousel.svelte';
-    import fourOne from '$lib/components/images/scandic/scandicFour/fourOne.webp';
+    import ImageCarousel from './ImageCarousel.svelte';
     import { fade, scale } from 'svelte/transition';
+
+    import fourOne from '$lib/components/images/scandic/quatro/fourOne.webp';
+    import connectingRoom from '$lib/components/images/scandic/single/connectingRoom.webp';
+    import doublebeds from '$lib/components/images/scandic/single/doublebeds.webp';
+    import triple from '$lib/components/images/scandic/triple/triple.webp';
+
+    const imageModules = import.meta.glob('$lib/components/images/scandic/single/*.webp', { eager: true });
+    const imageModulesTriple = import.meta.glob('$lib/components/images/scandic/triple/*.webp', { eager: true });
+    const imageModulesQuatro = import.meta.glob('$lib/components/images/scandic/quatro/*.webp', { eager: true });
+
+    const quatroImages = Object.values(imageModulesQuatro).map(module => module.default);
+    const singleImages = Object.values(imageModules).map(module => module.default);
+    const tripleImages = Object.values(imageModulesTriple).map(module => module.default);
 
     // Props for form feedback (if used as a component in a page with a server action)
     // export let form: ActionData | null = null;
@@ -17,6 +29,8 @@
     // --- State Variables ---
     let email: string = ''; // To associate with the main registration
     let fullName: string = ''; // For identification with the hotel booking
+    let number: string = '';
+    let notes: string = '';
     let selectedHotel: string = '';
     let checkInDate: string = '';
     let checkOutDate: string = '';
@@ -152,28 +166,54 @@
                    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black"
                    />
         </div>
+        <div>
+            <label for="hotel-number" class="block text-sm font-medium">Telephone number *</label>
+            <input type="text" id="hotel-number" name="number" bind:value={number} required
+                   class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black"
+                   />
+        </div>
+        <div>
+            <label for="hotel-notes" class="block text-sm font-medium">Any remarks *</label>
+            <textarea id="hotel-notes" name="notes" bind:value={notes} required
+                   class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black"
+                   ></textarea>
+        </div>
 
         <div class="mb-6">
             <label class="block text-sm font-medium mb-2">Hotel Option (Prices per night)</label>
             {#if !selectedHotel}
-                <div class="grid grid-cols-1 sm:grid-cols-2">
-                {#each roomOptions as option (option.key)}
-                    {#if !selectedHotel || selectedHotel === option.key}
-                        <button
-                            type="button"
-                            class="relative bg-gray-900 border border-amber-400/40 p-6 shadow hover:shadow-lg transition-all duration-200 hover:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
-                            on:click={() => selectedHotel = option.key}
-                            in:scale={{ duration: 2500 }}
-                            out:fade={{ duration: 2000 }}
-                        >
-                            {#if option.key === 'HotelOptionFour'}
+                {#key 'grid'}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-1"
+                        transition:scale={{ duration: 400 }}>
+                        {#each roomOptions as option (option.key)}
+                            <button
+                                type="button"
+                                class="relative bg-gray-900 border border-amber-400/40 p-6 shadow hover:shadow-lg transition-all duration-200 hover:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                                on:click={() => selectedHotel = option.key}
+                            >
+                        {#if option.key === 'HotelOptionFour'}
                             <div
                                 class="absolute inset-0 rounded-lg overflow-hidden z-0"
                                 style="pointer-events: none;"
                             >
                                 <div
                                     class="w-full h-full"
-                                    style={`background-image: url('${fourOne}'); background-size: cover; background-position: center; filter: brightness(0.2) blur(2px); position: absolute; inset: 0;`}
+                                    style={`background-image: url('${fourOne}'); background-size: cover; background-position: center; filter: brightness(0.15) blur(2px); position: absolute; inset: 0;`}
+                                ></div>
+                            </div>
+                            <div class="relative z-10">
+                                <div class="text-lg font-bold text-amber-400 mb-2">{option.label}</div>
+                                <div class="text-gray-200 mb-2">{option.description}</div>
+                                <div class="text-amber-300 font-semibold">{formatPrice(option.price)}</div>
+                            </div>
+                        {:else if option.key === 'HotelOptionThree'}
+                            <div
+                                class="absolute inset-0 rounded-lg overflow-hidden z-0"
+                                style="pointer-events: none;"
+                            >
+                                <div
+                                    class="w-full h-full"
+                                    style={`background-image: url('${triple}'); background-size: cover; background-position: center; filter: brightness(0.15) blur(2px); position: absolute; inset: 0;`}
                                 ></div>
                             </div>
                             <div class="relative z-10">
@@ -182,20 +222,30 @@
                                 <div class="text-amber-300 font-semibold">{formatPrice(option.price)}</div>
                             </div>
                         {:else}
-                            <div class="text-lg font-bold text-amber-400 mb-2">{option.label}</div>
-                            <div class="text-gray-200 mb-2">{option.description}</div>
-                            <div class="text-amber-300 font-semibold">{formatPrice(option.price)}</div>
+                            <div
+                                class="absolute inset-0 rounded-lg overflow-hidden z-0"
+                                style="pointer-events: none;"
+                            >
+                                <div
+                                    class="w-full h-full"
+                                    style={`background-image: url('${doublebeds}'); background-size: cover; background-position: center; filter: brightness(0.15) blur(2px); position: absolute; inset: 0;`}
+                                ></div>
+                            </div>
+                            <div class="relative z-10">
+                                <div class="text-lg font-bold text-amber-400 mb-2">{option.label}</div>
+                                <div class="text-gray-200 mb-2">{option.description}</div>
+                                <div class="text-amber-300 font-semibold">{formatPrice(option.price)}</div>
+                            </div>
                         {/if}
                     </button>
-                    {/if}
-                {/each}
-                </div>
+                        {/each}
+                    </div>
+                {/key}
             {:else}
-                {#each roomOptions.filter(opt => opt.key === selectedHotel) as option}
-                    <div class="relative bg-gray-900 border-2 border-amber-400 rounded-lg p-6 shadow-lg transition-all duration-200"
-                        in:scale={{ duration: 2500, start: 0.8 }}
-                        out:fade={{ duration: 2000 }}
-                    >
+                {#key selectedHotel}
+                    {#each roomOptions.filter(opt => opt.key === selectedHotel) as option}
+                        <div class="relative bg-gray-900 border-2 border-amber-400 rounded-lg p-6 shadow-lg"
+                            transition:scale={{ duration: 400, start: 0.8 }}>
                         <!-- X button to deselect -->
                         <button
                             type="button"
@@ -222,7 +272,92 @@
                         <div class="text-amber-300 font-semibold mb-4">{formatPrice(option.price)}</div>
 
                         <!-- Roommate fields inside the card -->
+                        {#if selectedHotel === 'HotelOptionOne'}
+                            <div
+                                class="absolute inset-0 rounded-lg overflow-hidden z-0"
+                                style="pointer-events: none;"
+                            >
+                            </div>
+                            <div class="relative z-10">
+                                <div class="mb-4">
+                                    <p class="text-white text-base font-medium mb-2">
+                                        Relax in peaceful surroundings in one of our standard rooms. This is a great place to retreat after an active day.
+                                    </p>
+                                    <ul class="text-white text-sm grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1 mb-2 list-disc list-inside">
+                                        <li>Bathroom with shower</li>
+                                        <li>Bathroom with shower or bathtub</li>
+                                        <li>Table</li>
+                                        <li>Wooden floor</li>
+                                        <li>Bathroom with bathtub (available in some rooms)</li>
+                                        <li>Bathroom with shower and bathtub (available in some rooms)</li>
+                                        <li>Blackout curtains (available in some rooms)</li>
+                                        <li>Chair/chairs</li>
+                                        <li>Easy access</li>
+                                        <li>Free WiFi</li>
+                                        <li>Non-smoking</li>
+                                        <li>Bathroom amenities</li>
+                                        <li>Connecting rooms (available in some rooms)</li>
+                                        <li>Sofa bed (available in some rooms)</li>
+                                        <li>Adjustable beds (available in some rooms)</li>
+                                        <li>Bunk bed (available in some rooms)</li>
+                                        <li>Iron and ironing board</li>
+                                        <li>Desk and chair</li>
+                                        <li>Hair dryer</li>
+                                    </ul>
+                                </div>
+                                
+                                <!-- Carousel -->
+                                <div class="mb-4">
+                                    <ImageCarousel images={singleImages} altText="Quatro Room"/>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <label for="twinRoomMate" class="block text-sm font-medium">Name of your roommate *</label>
+                                <input required type="text" id="twinRoomMate" name="Roommate1"
+                                    bind:value={twinRoomMate}
+                                    placeholder="Roommate name"
+                                    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black" />
+                            </div>
+                        {/if}
                         {#if selectedHotel === 'HotelOptionTwo'}
+                            <div
+                                class="absolute inset-0 rounded-lg overflow-hidden z-0"
+                                style="pointer-events: none;"
+                            >
+                            </div>
+                            <div class="relative z-10">
+                                <div class="mb-4">
+                                    <p class="text-white text-base font-medium mb-2">
+                                        Relax in peaceful surroundings in one of our standard rooms. This is a great place to retreat after an active day.
+                                    </p>
+                                    <ul class="text-white text-sm grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1 mb-2 list-disc list-inside">
+                                        <li>Bathroom with shower</li>
+                                        <li>Bathroom with shower or bathtub</li>
+                                        <li>Table</li>
+                                        <li>Wooden floor</li>
+                                        <li>Bathroom with bathtub (available in some rooms)</li>
+                                        <li>Bathroom with shower and bathtub (available in some rooms)</li>
+                                        <li>Blackout curtains (available in some rooms)</li>
+                                        <li>Chair/chairs</li>
+                                        <li>Easy access</li>
+                                        <li>Free WiFi</li>
+                                        <li>Non-smoking</li>
+                                        <li>Bathroom amenities</li>
+                                        <li>Connecting rooms (available in some rooms)</li>
+                                        <li>Sofa bed (available in some rooms)</li>
+                                        <li>Adjustable beds (available in some rooms)</li>
+                                        <li>Bunk bed (available in some rooms)</li>
+                                        <li>Iron and ironing board</li>
+                                        <li>Desk and chair</li>
+                                        <li>Hair dryer</li>
+                                    </ul>
+                                </div>
+                                
+                                <!-- Carousel -->
+                                <div class="mb-4">
+                                    <ImageCarousel images={singleImages} altText="Quatro Room"/>
+                                </div>
+                            </div>
                             <div class="mt-2">
                                 <label for="twinRoomMate" class="block text-sm font-medium">Name of your roommate *</label>
                                 <input required type="text" id="twinRoomMate" name="Roommate1"
@@ -232,6 +367,44 @@
                             </div>
                         {/if}
                         {#if selectedHotel === 'HotelOptionThree'}
+                            <div
+                                class="absolute inset-0 rounded-lg overflow-hidden z-0"
+                                style="pointer-events: none;"
+                            >
+                            </div>
+                            <div class="relative z-10">
+                                <div class="mb-4">
+                                    <p class="text-white text-base font-medium mb-2">
+                                        Relax in peaceful surroundings in one of our standard rooms. This is a great place to retreat after an active day.
+                                    </p>
+                                    <ul class="text-white text-sm grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1 mb-2 list-disc list-inside">
+                                        <li>Bathroom with shower</li>
+                                        <li>Bathroom with shower or bathtub</li>
+                                        <li>Table</li>
+                                        <li>Wooden floor</li>
+                                        <li>Bathroom with bathtub (available in some rooms)</li>
+                                        <li>Bathroom with shower and bathtub (available in some rooms)</li>
+                                        <li>Blackout curtains (available in some rooms)</li>
+                                        <li>Chair/chairs</li>
+                                        <li>Easy access</li>
+                                        <li>Free WiFi</li>
+                                        <li>Non-smoking</li>
+                                        <li>Bathroom amenities</li>
+                                        <li>Connecting rooms (available in some rooms)</li>
+                                        <li>Sofa bed (available in some rooms)</li>
+                                        <li>Adjustable beds (available in some rooms)</li>
+                                        <li>Bunk bed (available in some rooms)</li>
+                                        <li>Iron and ironing board</li>
+                                        <li>Desk and chair</li>
+                                        <li>Hair dryer</li>
+                                    </ul>
+                                </div>
+                                
+                                <!-- Carousel -->
+                                <div class="mb-4">
+                                    <ImageCarousel images={tripleImages} altText="Quatro Room"/>
+                                </div>
+                            </div>
                             <fieldset class="mt-2 p-2 border border-gray-600 rounded-md space-y-2">
                                 <legend class="text-md font-medium text-white px-1">Names of your roommates *</legend>
                                 <input required type="text" id="tripleRoomMate1" name="Roommate1"
@@ -277,7 +450,7 @@
                                 
                                 <!-- Carousel -->
                                 <div class="mb-4">
-                                    <QuatroCarousel />
+                                    <ImageCarousel images={quatroImages} altText="Quatro Room"/>
                                 </div>
                                 <fieldset class="mt-2 p-2 border border-gray-600 rounded-md space-y-2">
                                     <legend class="text-md font-medium text-white px-1">Names of your roommates *</legend>
@@ -298,8 +471,8 @@
                         {/if}
                     </div>
                 {/each}
-            {/if}
-        </div>
+            {/key}
+        {/if}
 
         <!-- <div>
             <label for="hotel-selection" class="block text-sm font-medium">Hotel Option (Prices per night)</label>
@@ -486,7 +659,7 @@
 
         <div>
             <button type="submit"
-                    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                    class="w-full mt-4 flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
                     disabled={!selectedHotel || (selectedHotel !== 'None' && selectedHotel !== 'HotelOptionNo' && (numberOfNights === 0 || typeof calculatedHotelPrice !== 'number'))}>
                 {#if !selectedHotel}
                     Select Hotel Option

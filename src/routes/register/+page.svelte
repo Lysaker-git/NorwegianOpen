@@ -56,7 +56,7 @@
   </div>
   
   <style global>
-    h1, h2, h3 {
+    h1 {
       font-family: 'NorseBold';
     }
   </style>
