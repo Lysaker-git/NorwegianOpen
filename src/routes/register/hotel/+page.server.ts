@@ -18,15 +18,15 @@ export const actions: Actions = {
 
         // Collect all fields from the form
         const data = {
-            FullName: formData.get('FullName'),
-            Email: formData.get('Email'),
-            HotelOption: formData.get('HotelOption'),
-            CheckInDate: formData.get('CheckInDate'),
-            CheckOutDate: formData.get('CheckOutDate'),
-            Roommates: roommates,
-            SpecialRequests: formData.get('SpecialRequests'),
-            AmountDue: formData.get('CalculatedHotelPrice') ? Number(formData.get('CalculatedHotelPrice')) : null,
-            NumberOfNights: formData.get('NumberOfNights'),
+            fullname: formData.get('FullName'),
+            email: formData.get('Email'),
+            hoteloption: formData.get('HotelOption'),
+            checkindate: formData.get('CheckInDate'),
+            checkoutdate: formData.get('CheckOutDate'),
+            roommates: roommates,
+            specialrequests: formData.get('SpecialRequests'),
+            amountdue: formData.get('CalculatedHotelPrice') ? Number(formData.get('CalculatedHotelPrice')) : null,
+            numberofnights: formData.get('NumberOfNights'),
         };
 
         // Insert into Supabase

@@ -3,8 +3,8 @@
     import { fade } from 'svelte/transition';
     import ScandicFront from '$lib/images/ScandicFront.avif';
     import ScandicRoom from '$lib/images/ScandicRoom.avif';
-    import Atrium from '$lib/components/images/scandic/atrium.webp';
-    import Front from '$lib/components/images/scandic/front.avif';
+    import atrium from '$lib/components/images/scandic/atrium.webp';
+    import front from '$lib/components/images/scandic/front.avif';
   
     let isLoaded = false;
   
@@ -37,7 +37,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
           <div class="relative overflow-hidden rounded-lg shadow-lg">
             <img
-              src={Front}
+              src={front}
               alt="Front view of Scandic Hamar hotel"
               class="w-full h-64 md:h-80 object-cover transition-transform duration-500 hover:scale-105"
             />
@@ -49,7 +49,7 @@
   
           <div class="relative overflow-hidden rounded-lg shadow-lg">
             <img
-              src={Atrium}
+              src={atrium}
               alt="Foyer of Scandic Hamar hotel"
               class="w-full h-64 md:h-80 object-cover transition-transform duration-500 hover:scale-105"
             />

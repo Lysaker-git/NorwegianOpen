@@ -11,6 +11,8 @@
     import doublebeds from '$lib/components/images/scandic/single/doublebeds.webp';
     import triple from '$lib/components/images/scandic/triple/triple.webp';
 
+    import CardComponent from './cardComponent.svelte';
+
     const imageModules = import.meta.glob('$lib/components/images/scandic/single/*.webp', { eager: true });
     const imageModulesTriple = import.meta.glob('$lib/components/images/scandic/triple/*.webp', { eager: true });
     const imageModulesQuatro = import.meta.glob('$lib/components/images/scandic/quatro/*.webp', { eager: true });
@@ -192,50 +194,33 @@
                                 on:click={() => selectedHotel = option.key}
                             >
                         {#if option.key === 'HotelOptionFour'}
-                            <div
-                                class="absolute inset-0 rounded-lg overflow-hidden z-0"
-                                style="pointer-events: none;"
-                            >
-                                <div
-                                    class="w-full h-full"
-                                    style={`background-image: url('${fourOne}'); background-size: cover; background-position: center; filter: brightness(0.15) blur(2px); position: absolute; inset: 0;`}
-                                ></div>
-                            </div>
-                            <div class="relative z-10">
-                                <div class="text-lg font-bold text-amber-400 mb-2">{option.label}</div>
-                                <div class="text-gray-200 mb-2">{option.description}</div>
-                                <div class="text-amber-300 font-semibold">{formatPrice(option.price)}</div>
-                            </div>
+                                <CardComponent option={{
+                                    cardLabel: option.label,
+                                    description: option.description,
+                                    price: option.price,
+                                    image: fourOne
+                                }}/>
                         {:else if option.key === 'HotelOptionThree'}
-                            <div
-                                class="absolute inset-0 rounded-lg overflow-hidden z-0"
-                                style="pointer-events: none;"
-                            >
-                                <div
-                                    class="w-full h-full"
-                                    style={`background-image: url('${triple}'); background-size: cover; background-position: center; filter: brightness(0.15) blur(2px); position: absolute; inset: 0;`}
-                                ></div>
-                            </div>
-                            <div class="relative z-10">
-                                <div class="text-lg font-bold text-amber-400 mb-2">{option.label}</div>
-                                <div class="text-gray-200 mb-2">{option.description}</div>
-                                <div class="text-amber-300 font-semibold">{formatPrice(option.price)}</div>
-                            </div>
+                                <CardComponent option={{
+                                    cardLabel: option.label,
+                                    description: option.description,
+                                    price: option.price,
+                                    image: triple
+                                }}/>
+                        {:else if option.key === 'HotelOptionTwo'}
+                                <CardComponent option={{
+                                    cardLabel: option.label,
+                                    description: option.description,
+                                    price: option.price,
+                                    image: connectingRoom
+                                }}/>
                         {:else}
-                            <div
-                                class="absolute inset-0 rounded-lg overflow-hidden z-0"
-                                style="pointer-events: none;"
-                            >
-                                <div
-                                    class="w-full h-full"
-                                    style={`background-image: url('${doublebeds}'); background-size: cover; background-position: center; filter: brightness(0.15) blur(2px); position: absolute; inset: 0;`}
-                                ></div>
-                            </div>
-                            <div class="relative z-10">
-                                <div class="text-lg font-bold text-amber-400 mb-2">{option.label}</div>
-                                <div class="text-gray-200 mb-2">{option.description}</div>
-                                <div class="text-amber-300 font-semibold">{formatPrice(option.price)}</div>
-                            </div>
+                                <CardComponent option={{
+                                    cardLabel: option.label,
+                                    description: option.description,
+                                    price: option.price,
+                                    image: doublebeds
+                                }}/>
                         {/if}
                     </button>
                         {/each}
@@ -657,6 +642,18 @@
         <input type="hidden" name="CalculatedHotelPrice" value={finalCalculatedHotelPrice} />
         <input type="hidden" name="NumberOfNights" value={selectedHotel !== 'None' && selectedHotel !== 'HotelOptionNo' ? numberOfNights : 0} />
 
+        <p class="text-sm text-gray-400 mb-2 mt-4">
+            <strong>Cancellation Policy:</strong>
+        </p>
+        <p class="text-sm text-gray-400 mb-2">
+            You may cancel your entire reservation free of charge until June 27, 2025.
+        </p>
+        <p class="text-sm text-gray-400 mb-2">
+            You can cancel your reservation 50% off until August 27, 2025. After August 27, 2025, the full price will be charged.
+        </p>        
+        <p class="text-sm text-gray-400 mb-6">
+            The list of guest names and room assignments must be submitted no later than September 15, 2025. After this date the guest list will be final.
+        </p>
         <div>
             <button type="submit"
                     class="w-full mt-4 flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"

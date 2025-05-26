@@ -7,10 +7,13 @@
 
     export let data;
     const dispatch = createEventDispatcher();
+    console.log('Registration data:', data.hotelData);
 
     // Clone registration to allow editing without mutating original
     let registration = { ...data.registration };
     let original = { ...data.registration };
+    let hotelData = data.hotelData || [];
+
 
     // Track which field is being edited
     let editingField: string | null = null;
@@ -281,6 +284,30 @@
                 </button>
             {/if}
         </div>
+        {#if hotelData}
+            <div class="max-w-3xl mx-auto bg-gray-800 rounded-lg shadow-lg p-8 mt-8 relative">
+                <h2 class="text-2xl font-bold text-amber-300 mb-4 font-[NorseBold]">Hotel Registration</h2>
+                    <div class="mb-4 border-b border-gray-700 pb-4">
+                        <div class="flex flex-col md:flex-row md:gap-8">
+                            <div class="flex-1">
+                                <p><span class="font-semibold text-gray-300">Full Name:</span> <span class="text-gray-200">{hotelData.fullname}</span></p>
+                                <p><span class="font-semibold text-gray-300">Email:</span> <span class="text-gray-200">{hotelData.email}</span></p>
+                                <p><span class="font-semibold text-gray-300">Hotel Option:</span> <span class="text-gray-200">{hotelData.hoteloption}</span></p>
+                                <p><span class="font-semibold text-gray-300">Check-in:</span> <span class="text-gray-200">{hotelData.checkindate}</span></p>
+                                <p><span class="font-semibold text-gray-300">Check-out:</span> <span class="text-gray-200">{hotelData.checkoutdate}</span></p>
+                                <p><span class="font-semibold text-gray-300">Roommates:</span> <span class="text-gray-200">{hotelData.roommates}</span></p>
+                                <p><span class="font-semibold text-gray-300">Special Requests:</span> <span class="text-gray-200">{hotelData.specialrequests}</span></p>
+                                <p><span class="font-semibold text-gray-300">Amount Due:</span> <span class="text-gray-200">{hotelData.amountdue} NOK</span></p>
+                                <p><span class="font-semibold text-gray-300">Number of Nights:</span> <span class="text-gray-200">{hotelData.numberofnights}</span></p>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        {:else}
+            <div class="max-w-3xl mx-auto bg-gray-800 rounded-lg shadow-lg p-8 mt-8 text-gray-400 text-center">
+                No hotel registration found for this user.
+            </div>
+        {/if}
 {:else}
     <p class="text-gray-400 text-center mt-8">Registration not found.</p>
 {/if}

@@ -28,8 +28,11 @@ export const actions: Actions = {
 export const load: PageServerLoad = async ({ params }) => {
     const { id } = params;
     console.log(`[LOAD REGISTRATION] Fetching registration for userId: ${id}`);
+
+
+
     // Example: fetch registration from your database
-    const { data, error } = await supabaseAdmin
+    const { data: registration, error } = await supabaseAdmin
         .from('RegistrationDB') // Your registrations table
         .select(`
             RegistrationStatus,
@@ -51,9 +54,36 @@ export const load: PageServerLoad = async ({ params }) => {
         .eq('userID', id)
         .single();
 
+    console.log(`[LOAD REGISTRATION] Fetched data:`, registration);
+    console.log(`[LOAD REGISTRATION] Error:`, error);
+
+
     if (error) {
         return { status: 404, error: 'Registration not found' };
     }
+    console.log(`[LOAD REGISTRATION] Registration data:`, registration.Email);
+    const { data: hotelData, error: hotelError } = await supabaseAdmin
+        .from('HotelRegistration')
+        .select('*')
+        // .or(`email.eq.${registration.Email},roommates.in.${registration.FullName}`)
+        .eq('email', registration.Email)
+        .single();
 
-    return { registration: data };
+    // console.log(`[LOAD HOTEL DATA] Fetched hotel data:`, hotelData);
+    // console.log(`[LOAD HOTEL DATA] Hotel error:`, hotelError);
+
+    // if (hotelError) {
+    //     return { status: 404, hotelError: 'Hotel reg not found' };
+    // }
+    
+    console.log(`[LOAD HOTEL DATA] Hotel data:`, hotelData.email);
+    if (hotelData.email !== registration.Email) {
+        console.warn(`[LOAD HOTEL DATA] Hotel email does not match registration email: ${hotelData.email} !== ${registration.Email}`);
+    }
+    if (hotelData.email === registration.Email) {
+        console.error(`[LOAD HOTEL DATA] Registration Found!`);
+    }
+    console.log('Registration Email:', JSON.stringify(registration.Email));
+    console.log('Hotel Email:', JSON.stringify(hotelData.email));
+    return { registration, hotelData };
 };
