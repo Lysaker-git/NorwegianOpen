@@ -684,7 +684,7 @@
 <style>
     /* You can add specific styles for the hotel form here if needed */
     /* Ensure input text is visible */
-    input[type="text"], input[type="email"], input[type="date"], select {
+    input[type="text"], input[type="email"] {
         color: #1f2937; /* Tailwind gray-800 for dark text */
     }
     ::placeholder {
