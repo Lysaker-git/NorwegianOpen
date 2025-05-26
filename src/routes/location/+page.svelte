@@ -3,8 +3,8 @@
     import { fade } from 'svelte/transition';
     import ScandicFront from '$lib/images/ScandicFront.avif';
     import ScandicRoom from '$lib/images/ScandicRoom.avif';
-    import Atrium from '$lib/components/images/scandic/Atrium.webp';
-    import Front from '$lib/components/images/scandic/Front.avif';
+    import Atrium from '$lib/components/images/scandic/atrium.webp';
+    import Front from '$lib/components/images/scandic/front.avif';
   
     let isLoaded = false;
   
