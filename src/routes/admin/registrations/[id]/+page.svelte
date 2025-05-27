@@ -284,7 +284,7 @@
                 </button>
             {/if}
         </div>
-        {#if hotelData}
+        {#if hotelData && Object.keys(hotelData).length > 0}
             <div class="max-w-3xl mx-auto bg-gray-800 rounded-lg shadow-lg p-8 mt-8 relative">
                 <h2 class="text-2xl font-bold text-amber-300 mb-4 font-[NorseBold]">Hotel Registration</h2>
                     <div class="mb-4 border-b border-gray-700 pb-4">
