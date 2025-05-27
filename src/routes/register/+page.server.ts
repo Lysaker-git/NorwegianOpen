@@ -21,9 +21,9 @@ const serverBasePrices = {
 };
 
 const serverPassOptionsByLevel = {
-    'All-Star': ['Regular Pass', 'Judge (Free Pass)', 'Party Pass'],
-    'Advanced': ['Regular Pass', 'Judge (20% Discount)', 'Party Pass'],
-    'Other': ['Regular Pass', 'Zero to Hero', 'Party Pass']
+    'All-Star': ['Full Pass', 'Judge (Free Pass)', 'Party Pass'],
+    'Advanced': ['Full Pass', 'Judge (20% Discount)', 'Party Pass'],
+    'Other': ['Full Pass', 'Zero to Hero', 'Party Pass']
 };
 
 const SERVER_ZERO_TO_HERO = 1300;
@@ -68,7 +68,7 @@ function isValidPassOptionForLevelServer(level: string | null, passOption: strin
 function calculatePassPriceServer(basePrice: number, level: string | null, passOption: string | null): number | null {
     if (passOption === null || level === null) return null;
     switch (passOption) {
-        case 'Regular Pass':
+        case 'Full Pass':
             return basePrice;
         case 'Judge (Free Pass)':
             return (getLevelCategoryServer(level) === 'All-Star') ? 0 : null;
@@ -231,7 +231,7 @@ export const actions: Actions = {
         // --- Calculate Price and Deadline (No changes here for this feature) ---
         const currentTierServer = getCurrentTierServer();
         let basePriceNumServer: number | null = null;
-        if (passOption === 'Regular Pass' || passOption === 'Judge (20% Discount)') {
+        if (passOption === 'Full Pass' || passOption === 'Judge (20% Discount)') {
             basePriceNumServer = getBasePriceServer(currentTierServer, region);
             if (basePriceNumServer === null) {
                 console.error("Server Error: Could not determine base price for selected pass option.", { currentTierServer, region, passOption });
