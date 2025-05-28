@@ -98,7 +98,7 @@
         'Full Pass': 'You will get acces to all workshops, evening dances, and competitions.',
         'Zero to Hero': `A weekend-long, beginner-friendly track designed for brand-new or less experienced dancers. You'll get guided workshops, personal support, and encouragement to help you feel comfortable on the social floor and ready for the Newcomer Jack & Jill. The program includes fun, confidence-building sessions each day, with a focus on community and empowerment. You can register as a single follow/lead and will be partnered up or put on the waiting list.`,
         'Party Pass': 'Access to evening dances and competitions only.',
-        'Blues Intensive': 'Focused blues dance workshops and events with Joel and Chantelle.'
+        'Blues Intensive': 'Focused blues workshop and events with Joel and Chantelle.'
     };
 </script>
 
