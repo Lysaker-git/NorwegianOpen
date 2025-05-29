@@ -1,10 +1,10 @@
 // src/routes/api/admin/competitions/+server.js
 import { json } from '@sveltejs/kit';
-import { supabaseAdminClient } from '$lib/supabaseServerClient';
+import { supabaseAdmin } from '$lib/supabaseAdminClient';
 
 export async function GET({ request }) {
   try {
-    const { data, error } = await supabaseAdminClient
+    const { data, error } = await supabaseAdmin
       .from('competitions')
       .select('*')
       .order('date', { ascending: false });
@@ -20,7 +20,7 @@ export async function POST({ request }) {
   try {
     const competition = await request.json();
     
-    const { data, error } = await supabaseAdminClient
+    const { data, error } = await supabaseAdmin
       .from('competitions')
       .insert([competition])
       .select();
