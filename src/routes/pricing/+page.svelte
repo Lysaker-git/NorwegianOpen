@@ -79,7 +79,7 @@
             ]
         },
         {
-            level: 'Blues Intensive',
+            level: 'Blues Intensive with Joel & Chantelle',
             levelRowSpan: 1,
             regions: [
                 {
@@ -93,6 +93,13 @@
             ]
         }
     ];
+
+    const passDescriptions = {
+        'Full Pass': 'You will get acces to all workshops, evening dances, and competitions.',
+        'Zero to Hero': `A weekend-long, beginner-friendly track designed for brand-new or less experienced dancers. You'll get guided workshops, personal support, and encouragement to help you feel comfortable on the social floor and ready for the Newcomer Jack & Jill. The program includes fun, confidence-building sessions each day, with a focus on community and empowerment. You can register as a single follow/lead and will be partnered up or put on the waiting list.`,
+        'Party Pass': 'Access to evening dances and competitions only.',
+        'Blues Intensive': 'Focused blues workshop and events with Joel and Chantelle.'
+    };
 </script>
 
 <div class="container mx-auto px-4 py-12">
@@ -195,4 +202,14 @@
         <p class="mb-2">All star gets free pass if they judge during the event, Advanced get 20% discount for judging services</p>
         <p>Prices are shown in {currencySymbol}. Judge options require registration and approval from Event Director.</p>
     </div>
+</div>
+<div class="max-w-3xl mx-auto mt-10 space-y-8">
+    {#each Object.keys(passDescriptions) as passName}
+        <section class="bg-gray-800 rounded-lg shadow p-6">
+            <h2 class="text-xl font-bold text-amber-300 mb-2 font-[NorseBold]">{passName}</h2>
+            <p class="text-gray-300">
+                {passDescriptions[passName]}
+            </p>
+        </section>
+    {/each}
 </div>

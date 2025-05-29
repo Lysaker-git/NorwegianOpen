@@ -6,15 +6,15 @@ export const MIDGARD_DEADLINE_STRING = '2025-08-22';
 // Pricing tiers
 export const basePrices = {
     Ymir: { Nordic: 1800, World: 1500 },      // Early Bird prices
-    Midgard: { Nordic: 2000, World: 1700 },   // Regular prices
+    Midgard: { Nordic: 2000, World: 1700 },   // Full prices
     Ragnarok: { Nordic: 2200, World: 1900 }   // Late Bird prices
 };
 
 // Pass options by level
 export const passOptionsByLevel = {
-    'All-Star': ['Regular Pass', 'Judge (Free Pass)', 'Party Pass'],
-    'Advanced': ['Regular Pass', 'Judge (20% Discount)', 'Party Pass'],
-    'Other': ['Zero to Hero', 'Regular Pass', 'Party Pass']
+    'All-Star': ['Full Pass', 'Judge (Free Pass)', 'Party Pass'],
+    'Advanced': ['Full Pass', 'Judge (20% Discount)', 'Party Pass'],
+    'Other': ['Zero to Hero', 'Full Pass', 'Party Pass']
 };
 
 // Party pass price
@@ -30,6 +30,4 @@ export const HOTEL_PRICES = {
     HotelOptionTwo: 1490, // Twin Room
     HotelOptionThree: 1690, // Triple Room
     HotelOptionFour: 1890, // Quatro Room
-    None: 0, // No hotel
-    HotelOptionNo: 0 // Selected "No"
 };

@@ -255,7 +255,7 @@
                         bind:checked={addIntensive}
                         class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
                 <label for="addIntensive" class="ml-3 block text-sm font-medium text-white">
-                    Add Intensive Workshop with Joel and Chantelle (+{INTENSIVE.toLocaleString('en-US')} NOK)
+                    Add the Blues Intensive with Joel and Chantelle (+{INTENSIVE.toLocaleString('en-US')} NOK)
                 </label>
             </div>
             {#if form?.field === 'AddIntensive'}
@@ -433,7 +433,10 @@
                     Register (Total: {finalPrice.toLocaleString('en-US')} NOK)
                 {/if}
             </button>
-        </div>        
+        </div>
+        <p class="mt-6 text-center text-sm text-gray-400">
+            Once your registration is approved, you will receive a link to book your hotel room.
+        </p>        
     </form>
 </div>
 
