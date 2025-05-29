@@ -161,7 +161,7 @@ const formatPrice = (price: number | null | undefined) => price !== null && pric
 
 
 // Approve and notify function
-export async function approveAndNotify(userID: string): Promise<{ success: boolean; error?: string }> {
+async function approveAndNotify(userID: string): Promise<{ success: boolean; error?: string }> {
     // 1. Fetch registration by userID
     const { data: registration, error: fetchError } = await supabaseAdmin
         .from('RegistrationDB')
