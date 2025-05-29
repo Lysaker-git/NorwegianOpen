@@ -534,6 +534,9 @@
 
         <input type="hidden" name="CalculatedHotelPrice" value={finalCalculatedHotelPrice} />
         <input type="hidden" name="NumberOfNights" value={selectedHotel !== 'None' && selectedHotel !== 'HotelOptionNo' ? numberOfNights : 0} />
+        <input type="hidden" name="HotelOption" value={selectedHotel} />
+        <input type="hidden" name="CheckInDate" value={checkInDate} />
+        <input type="hidden" name="CheckOutDate" value={checkOutDate} />
 
         <p class="text-sm text-gray-400 mb-2 mt-4">
             <strong>Cancellation Policy:</strong>
@@ -542,7 +545,7 @@
             You may cancel your entire reservation free of charge until June 27, 2025.
         </p>
         <p class="text-sm text-gray-400 mb-2">
-            You can cancel your reservation 50% off until August 27, 2025. After August 27, 2025, the full price will be charged.
+            If you cancel between June 27th and August 27th you will have to pay 50% of the full price. Cancellation after August 27th, 2025 will have to paid in full.
         </p>        
         <p class="text-sm text-gray-400 mb-6">
             The list of guest names and room assignments must be submitted no later than September 15, 2025. After this date the guest list will be final.

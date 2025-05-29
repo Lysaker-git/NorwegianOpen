@@ -267,23 +267,6 @@
             </div>
         </div>
         <!-- End Partner Details Card -->
-        <div class="absolute top-4 right-4">
-            {#if isDirty}
-                <button
-                    class="px-6 py-2 bg-amber-500 text-gray-900 font-semibold rounded hover:bg-amber-600 transition-colors duration-150"
-                    on:click={saveAndGoBack}
-                >
-                    Save and Go Back
-                </button>
-            {:else}
-                <button
-                    class="px-6 py-2 bg-gray-700 text-gray-300 font-semibold rounded hover:bg-gray-600 transition-colors duration-150"
-                    on:click={goBack}
-                >
-                    Go Back
-                </button>
-            {/if}
-        </div>
         {#if hotelData && Object.keys(hotelData).length > 0}
             <div class="max-w-3xl mx-auto bg-gray-800 rounded-lg shadow-lg p-8 mt-8 relative">
                 <h2 class="text-2xl font-bold text-amber-300 mb-4 font-[NorseBold]">Hotel Registration</h2>
