@@ -10,8 +10,12 @@
             <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
                 <a href="/admin" class="text-xl font-bold text-amber-400 hover:text-amber-300">Admin Panel</a>
                 <div>
-                    <a href="/admin/registrations" class="px-3 py-2 rounded hover:bg-gray-700">Registrations</a>
-                    <!-- Add more admin links here -->
+                <a href="/admin/registrations" class="px-4 py-2 rounded bg-amber-500 text-gray-900 font-semibold shadow hover:bg-amber-400 transition-colors duration-150 mr-2">
+                    Registrations
+                </a>
+                <a href="/admin/dashboard" class="px-4 py-2 rounded bg-indigo-500 text-white font-semibold shadow hover:bg-indigo-400 transition-colors duration-150">
+                    Dashboard
+                </a>                    <!-- Add more admin links here -->
                     {#if $page.data.session && $page.url.pathname === '/admin'}
                         <form 
                             method="POST" 
@@ -19,7 +23,7 @@
                             class="inline"
                         >
                         <button type="submit" class="ml-4 px-3 py-2 rounded bg-red-600 hover:bg-red-700">
-                            Logout ({$page.data.session.user.email?.split('@')[0]})
+                            Logout <span class="text-xs">({$page.data.session.user.email?.split('@')[0]})</span>
                         </button>
                     </form>
                     {/if}
