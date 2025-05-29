@@ -70,7 +70,7 @@
                 case 'Zero to Hero':
                     passPrice = ZERO_TO_HERO;
                     break;
-                case 'Regular Pass':
+                case 'Full Pass':
                     passPrice = basePrice;
                     break;
                 case 'Judge (Free Pass)':
