@@ -17,6 +17,11 @@
 
     import CardComponent from './cardComponent.svelte';
 
+    export let data: PageData;
+    const { availability } = data;
+
+    console.log('[CLIENT SUBPAGE] Hotel Registration', availability);
+
     const imageModules = import.meta.glob('$lib/components/images/scandic/single/*.webp', { eager: true });
     const imageModulesTriple = import.meta.glob('$lib/components/images/scandic/triple/*.webp', { eager: true });
     const imageModulesQuatro = import.meta.glob('$lib/components/images/scandic/quatro/*.webp', { eager: true });
@@ -218,6 +223,11 @@
             ]
         }
     ];
+
+    $: showLargeRoomWarning = !availability.hasLargeRoomsAvailable && 
+        (selectedHotel === 'HotelOptionThree' || selectedHotel === 'HotelOptionFour');
+
+    $: showNoRoomsWarning = !availability.hasRoomsAvailable;
 </script>
 
 <div class="container mx-auto px-4 py-12">
@@ -267,39 +277,31 @@
                         {#each roomOptions as option (option.key)}
                             <button
                                 type="button"
-                                class="relative cursor-pointer bg-gray-900 border border-amber-400/40 p-6 shadow hover:shadow-lg transition-all duration-200 hover:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                                class="relative cursor-pointer bg-gray-900 border border-amber-400/40 shadow hover:shadow-lg transition-all duration-200 hover:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                                disabled={!availability.hasRoomAvailable || 
+                                (!availability.hasLargeRoomAvailable && 
+                                (selectedHotel === 'HotelOptionThree' || selectedHotel === 'HotelOptionFour'))}
+
                                 on:click={() => selectedHotel = option.key}
                             >
-                        {#if option.key === 'HotelOptionFour'}
+                            <div class="card-content">
                                 <CardComponent option={{
                                     cardLabel: option.label,
                                     description: option.description,
                                     price: option.price,
-                                    image: fourOne
+                                    image: option.key === 'HotelOptionFour' ? fourOne :
+                                        option.key === 'HotelOptionThree' ? triple :
+                                        option.key === 'HotelOptionTwo' ? connectingRoom :
+                                        doublebeds
                                 }}/>
-                        {:else if option.key === 'HotelOptionThree'}
-                                <CardComponent option={{
-                                    cardLabel: option.label,
-                                    description: option.description,
-                                    price: option.price,
-                                    image: triple
-                                }}/>
-                        {:else if option.key === 'HotelOptionTwo'}
-                                <CardComponent option={{
-                                    cardLabel: option.label,
-                                    description: option.description,
-                                    price: option.price,
-                                    image: connectingRoom
-                                }}/>
-                        {:else}
-                                <CardComponent option={{
-                                    cardLabel: option.label,
-                                    description: option.description,
-                                    price: option.price,
-                                    image: doublebeds
-                                }}/>
-                        {/if}
-                    </button>
+                            </div>
+
+                            {#if (!availability.hasRoomAvailable) || (!availability.hasLargeRoomAvailable && (option.key === 'HotelOptionThree' || option.key === 'HotelOptionFour'))}
+                                <div class="sold-out-overlay">
+                                    <span class="sold-out-text">Sold Out</span>
+                                </div>
+                            {/if}
+                            </button>
                         {/each}
                     </div>
                 {/key}
@@ -534,6 +536,9 @@
 
         <input type="hidden" name="CalculatedHotelPrice" value={finalCalculatedHotelPrice} />
         <input type="hidden" name="NumberOfNights" value={selectedHotel !== 'None' && selectedHotel !== 'HotelOptionNo' ? numberOfNights : 0} />
+        <input type="hidden" name="HotelOption" value={selectedHotel} />
+        <input type="hidden" name="CheckInDate" value={checkInDate} />
+        <input type="hidden" name="CheckOutDate" value={checkOutDate} />
 
         <p class="text-sm text-gray-400 mb-2 mt-4">
             <strong>Cancellation Policy:</strong>
@@ -542,7 +547,7 @@
             You may cancel your entire reservation free of charge until June 27, 2025.
         </p>
         <p class="text-sm text-gray-400 mb-2">
-            You can cancel your reservation 50% off until August 27, 2025. After August 27, 2025, the full price will be charged.
+            If you cancel between June 27th and August 27th you will have to pay 50% of the full price. Cancellation after August 27th, 2025 will have to paid in full.
         </p>        
         <p class="text-sm text-gray-400 mb-6">
             The list of guest names and room assignments must be submitted no later than September 15, 2025. After this date the guest list will be final.
@@ -579,5 +584,48 @@
     }
     ::placeholder {
         color: #6b7280; /* Tailwind gray-500 */
+    }
+
+    .card-content {
+        position: relative;
+        transition: filter 0.3s ease;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Ensure the button takes full width and height */
+    button[type="button"] {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sold-out-overlay {
+        position: absolute;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.85);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        overflow: hidden;
+    }
+
+    .sold-out .card-content {
+        filter: blur(4px);
+    }
+
+    .sold-out-text {
+        color: white;
+        font-size: 2rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        transform: rotate(-30deg);
+        padding: 0.5rem 3rem;
     }
 </style>

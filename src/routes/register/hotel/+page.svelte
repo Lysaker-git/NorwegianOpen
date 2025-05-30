@@ -7,6 +7,9 @@
     import { onMount } from 'svelte';
     import MailList from '$lib/components/htmlComponents/MailList.svelte';
     export let form: ActionData;
+    export let data: PageData;
+
+    console.log('[CLIENT PAGE] Hotel Registration', data);
   
     const regOpenDate = new Date(REG_OPEN_STRING + 'T19:00:00');
     const today = new Date();
@@ -37,13 +40,13 @@
               <h1 class="text-2xl font-bold text-center mx-4 text-white">Hotel Registration</h1>
               <div class="h-px w-16 bg-amber-400"></div>
             </div>
-            <HotelRegistration {form} />
+            <HotelRegistration {form} {data} />
           </div>
       </div>
   </div>
   
   <style global>
-    h1, h2, h3 {
+    h1 {
       font-family: 'NorseBold';
     }
   </style>
