@@ -14,7 +14,7 @@ export function getCurrentTier(
     if (currentDate <= ymirDeadline) {
         return 'Ymir';
     } else if (currentDate <= midgardDeadline) {
-        return 'Ragnarok';
+        return 'Midgard';
     } else {
         return 'Ragnarok';
     }

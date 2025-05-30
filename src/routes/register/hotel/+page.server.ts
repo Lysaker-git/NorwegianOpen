@@ -4,6 +4,37 @@ import { supabaseAdmin } from '$lib/supabaseAdminClient';
 import transporter from '$lib/emailClient.server';
 import { GOOGLE_EMAIL } from '$env/static/private';
 import { redirect } from '@sveltejs/kit';
+import { paymentInfo } from '$lib/components/constants';
+
+
+export const load: PageServerLoad = async () => {
+    const { data: hotelRegistration, error } = await supabaseAdmin
+        .from('HotelRegistration')
+        .select('hoteloption');
+
+    if (error) {
+        console.error('Error fetching hotel options:', error);
+        return { error: 'Failed to load hotel availability'};
+    }
+
+    const roomCounts = {
+        total: hotelRegistration?.length || 0,
+        largeRooms: hotelRegistration?.filter (reg => 
+            reg.hoteloption === 'HotelOptionThree' || reg.hoteloption === 'HotelOptionFour'
+        ).length || 0,
+    }
+
+    const availability = {
+        hasRoomAvailable: roomCounts.total < 10,
+        hasLargeRoomAvailable: roomCounts.largeRooms < 0,
+    }
+    console.log('[SERVER LOAD] Hotel Availability:', availability, roomCounts);
+
+    return {
+        availability,
+        roomCounts
+    };
+}
 
 // Add this after your imports
 interface HotelEmailDetails {
@@ -41,16 +72,12 @@ function generateHotelConfirmationEmail(details: HotelEmailDetails): string {
     const eventName = "Norwegian Open WCS 2025";
     const paymentDeadline = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
     const currencySymbol = "NOK";
-    const paymentInfo = {
-        accountName: "Norwegian Open WCS",
-        iban: "NO74 4910 2039 490",
-        swift: "SNOWNO22",
-        bankName: "Sparebank 1 NordNorge",
-        bankAddress: "Storgata 65, 9008 Tromsø, Norway"
-    };
+
+    const backgroundImageUrl = 'https://raw.githubusercontent.com/Lysaker-git/NorwegianOpen/refs/heads/main/src/lib/components/backdropHero.png'; // Ensure this URL is correct and public
+
 
     const styles = {
-        body: `font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 20px;`,
+        body: `font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; line-height: 1.6; color: ${textColor}; background-color: ${backgroundColor}; margin: 0; padding: 20px 0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; background-image: url('${backgroundImageUrl}'); background-repeat: no-repeat; background-position: center top; background-size: cover;`,
         container: `max-width: 600px; margin: 0 auto; background: #fff; border: 1px solid #ddd; border-radius: 5px;`,
         header: `background: #0A2342; color: #fff; padding: 20px; text-align: center; border-radius: 5px 5px 0 0;`,
         content: `padding: 20px;`,
@@ -61,6 +88,14 @@ function generateHotelConfirmationEmail(details: HotelEmailDetails): string {
         footer: `text-align: center; padding: 20px; color: #666; font-size: 14px;`
     };
 
+    const vmlBackground = `
+        <!--[if gte mso 9]>
+        <v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="t">
+            <v:fill type="tile" src="${backgroundImageUrl}" color="${backgroundColor}" />
+        </v:background>
+        <![endif]-->
+    `;
+
     return `
     <!DOCTYPE html>
     <html>
@@ -69,6 +104,7 @@ function generateHotelConfirmationEmail(details: HotelEmailDetails): string {
         <title>Hotel Booking Confirmation - ${eventName}</title>
     </head>
     <body style="${styles.body}">
+        ${vmlBackground}
         <div style="${styles.container}">
             <div style="${styles.header}">
                 <h1>Hotel Booking Confirmation</h1>
@@ -90,6 +126,7 @@ function generateHotelConfirmationEmail(details: HotelEmailDetails): string {
                     <div style="${styles.detail}"><span style="${styles.highlight}">Amount Due:</span> ${details.amountdue} NOK</div>
                     <div style="${styles.detail}"><span style="${styles.highlight}">Payment Deadline:</span> ${paymentDeadline}</div>
                     <div style="${styles.detail}"><span style="${styles.highlight}">Account Name:</span> ${paymentInfo.accountName}</div>
+                    <div style="${styles.detail}"><span style="${styles.highlight}">Account Number:</span> ${paymentInfo.accountNumber}</div>
                     <div style="${styles.detail}"><span style="${styles.highlight}">IBAN:</span> ${paymentInfo.iban}</div>
                     <div style="${styles.detail}"><span style="${styles.highlight}">SWIFT/BIC:</span> ${paymentInfo.swift}</div>
                     <div style="${styles.detail}"><span style="${styles.highlight}">Bank Name:</span> ${paymentInfo.bankName}</div>
@@ -114,6 +151,24 @@ function generateHotelConfirmationEmail(details: HotelEmailDetails): string {
 export const actions: Actions = {
     bookHotel: async ({ request, url }) => {
         const formData = await request.formData();
+        const paymentDeadline = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+        const { data: hotelRegistrations } = await supabaseAdmin
+            .from('HotelRegistration')
+            .select('hoteloption');
+
+        const totalRooms = hotelRegistrations?.length || 0;
+        const largeRooms = hotelRegistrations?.filter(reg => 
+            reg.hoteloption === 'HotelOptionThree' || 
+            reg.hoteloption === 'HotelOptionFour'
+        ).length || 0;
+
+        // Check limits
+        if (totalRooms >= 90) {
+            return fail(400, { error: 'Sorry, all rooms are currently booked.' });
+        }
+
+
 
         // Gather roommate fields (adjust names as per your form)
         const roommates = [
@@ -132,11 +187,19 @@ export const actions: Actions = {
             hoteloption: formData.get('HotelOption')?.toString() || null,
             checkindate: formData.get('CheckInDate')?.toString() || null,
             checkoutdate: formData.get('CheckOutDate')?.toString() || null,
+            paymentdeadline: paymentDeadline,
             roommates: roommates,
             specialrequests: formData.get('SpecialRequests')?.toString() || null,
             amountdue: formData.get('CalculatedHotelPrice') ? Number(formData.get('CalculatedHotelPrice')) : null,
             numberofnights: formData.get('NumberOfNights')?.toString() || null,
         };
+
+        if ((data.hoteloption === 'HotelOptionThree' || data.hoteloption === 'HotelOptionFour') && 
+            largeRooms >= 70) {
+            return fail(400, { 
+                error: 'Sorry, all triple and quadro rooms are currently booked. Please select a different room type.' 
+            });
+        }
 
         // Insert into Supabase
         const { error } = await supabaseAdmin
@@ -171,8 +234,4 @@ export const actions: Actions = {
         await sendMail(message);
         throw redirect(303, `${url.origin}/register/success`);
     }
-};
-
-export const load: PageServerLoad = async () => {
-    return {};
 };

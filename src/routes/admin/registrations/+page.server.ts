@@ -4,6 +4,8 @@ import type { PageServerLoad } from './$types';
 import { error as SvelteKitError } from '@sveltejs/kit'; // To throw errors
 import transporter from '$lib/emailClient.server';
 import { GOOGLE_EMAIL } from '$env/static/private';
+import { paymentInfo } from '$lib/components/constants';
+import { colorPalette } from '$lib/components/constants';
 
 export const load: PageServerLoad = async ({ locals }) => {
     // The layout.server.ts should already protect this, but double-check
@@ -68,39 +70,28 @@ interface RegistrationDetailsForEmail {
 function generateRegistrationApprovedEmailHtml(details: RegistrationDetailsForEmail): string {
     const eventName = "Norwegian Open WCS 2025";
     const currencySymbol = "NOK";
-    const paymentInfo = {
-        accountName: "Norwegian Open WCS",
-        iban: "NO74 4910 2039 490",
-        swift: "SNOWNO22",
-        bankName: "Sparebank 1 NordNorge",
-        bankAddress: "Storgata 65, 9008 Tromsø, Norway"
-    };
 
     const primaryColor = '#0A2342';
-    const accentColor = '#FFD700';
-    const textColor = '#333333';
-    const backgroundColor = '#f4f4f7';
-    const borderColor = '#ddddde';
 
     const styles = {
-        body: `font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; line-height: 1.6; color: ${textColor}; background-color: ${backgroundColor}; margin: 0; padding: 20px 0;`,
-        container: `max-width: 600px; margin: 20px auto; background-color: #fff; border: 1px solid ${borderColor}; border-radius: 5px; overflow: hidden;`,
-        header: `background-color: ${primaryColor}; color: #fff; padding: 25px 20px; text-align: center;`,
+        body: `font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; line-height: 1.6; color: ${colorPalette.textColor}; background-color: ${colorPalette.backgroundColor}; margin: 0; padding: 20px 0;`,
+        container: `max-width: 600px; margin: 20px auto; background-color: #fff; border: 1px solid ${colorPalette.borderColor}; border-radius: 5px; overflow: hidden;`,
+        header: `background-color: ${colorPalette.primaryColor}; color: #fff; padding: 25px 20px; text-align: center;`,
         headerH1: `margin: 0; font-size: 28px; color: #fff; font-weight: bold;`,
         content: `padding: 25px 30px;`,
-        h2: `color: ${primaryColor}; font-size: 22px; margin-top: 25px; margin-bottom: 15px; border-bottom: 1px solid ${borderColor}; padding-bottom: 8px; font-weight: bold;`,
-        p: `margin-bottom: 16px; font-size: 15px; color: ${textColor};`,
-        th: `text-align: left; padding: 10px 8px; border-bottom: 1px solid ${borderColor}; color: #555; font-weight: normal; width: 35%; font-size: 14px;`,
-        td: `text-align: left; padding: 10px 8px; border-bottom: 1px solid ${borderColor}; color: ${textColor}; font-size: 14px; font-weight: bold;`,
-        paymentBox: `margin: 25px 0; padding: 20px; border: 1px solid ${primaryColor}; border-radius: 4px; background-color: #F0F5FA;`,
-        paymentH3: `font-size: 20px; color: ${primaryColor}; margin-top: 0; margin-bottom: 15px; text-align: center; font-weight: bold;`,
+        h2: `color: ${colorPalette.primaryColor}; font-size: 22px; margin-top: 25px; margin-bottom: 15px; border-bottom: 1px solid ${colorPalette.borderColor}; padding-bottom: 8px; font-weight: bold;`,
+        p: `margin-bottom: 16px; font-size: 15px; color: ${colorPalette.textColor};`,
+        th: `text-align: left; padding: 10px 8px; border-bottom: 1px solid ${colorPalette.borderColor}; color: #555; font-weight: normal; width: 35%; font-size: 14px;`,
+        td: `text-align: left; padding: 10px 8px; border-bottom: 1px solid ${colorPalette.borderColor}; color: ${colorPalette.textColor}; font-size: 14px; font-weight: bold;`,
+        paymentBox: `margin: 25px 0; padding: 20px; border: 1px solid ${colorPalette.primaryColor}; border-radius: 4px; background-color: #F0F5FA;`,
+        paymentH3: `font-size: 20px; color: ${colorPalette.primaryColor}; margin-top: 0; margin-bottom: 15px; text-align: center; font-weight: bold;`,
         paymentItem: `font-size: 15px; margin-bottom: 6px;`,
-        paymentTotal: `font-weight: bold; color: ${primaryColor}; font-size: 17px; margin-top: 10px;`,
+        paymentTotal: `font-weight: bold; color: ${colorPalette.primaryColor}; font-size: 17px; margin-top: 10px;`,
         footer: `text-align: center; padding: 20px; font-size: 12px; color: #dddddd; background-color: rgba(10, 35, 66, 0.75);`
     };
 
-const paymentDeadline = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-const formatPrice = (price: number | null | undefined) => price !== null && price !== undefined ? `${price.toLocaleString()} ${currencySymbol}` : 'N/A';
+    const paymentDeadline = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+    const formatPrice = (price: number | null | undefined) => price !== null && price !== undefined ? `${price.toLocaleString()} ${currencySymbol}` : 'N/A';
 
     return `
     <!DOCTYPE html>
@@ -127,11 +118,12 @@ const formatPrice = (price: number | null | undefined) => price !== null && pric
                     <div style="${styles.paymentItem}"><strong>Amount Due:</strong> <span style="${styles.paymentTotal}">${formatPrice(details.AmountDue)}</span></div>
                     <div style="${styles.paymentItem}"><strong>Payment Deadline:</strong> ${paymentDeadline}</div>
                     <div style="${styles.paymentItem}"><strong>Account Name:</strong> ${paymentInfo.accountName}</div>
+                    <div style="${styles.paymentItem}"><strong>Account Number:</strong> ${paymentInfo.accountNumber}</div>
                     <div style="${styles.paymentItem}"><strong>IBAN:</strong> ${paymentInfo.iban}</div>
                     <div style="${styles.paymentItem}"><strong>SWIFT/BIC:</strong> ${paymentInfo.swift}</div>
                     <div style="${styles.paymentItem}"><strong>Bank Name:</strong> ${paymentInfo.bankName}</div>
                     <div style="${styles.paymentItem}"><strong>Bank Address:</strong> ${paymentInfo.bankAddress}</div>
-                    <div style="font-size:13px; color:#555; margin-top:10px;">
+                    <div style="font-size:18px; color:#555; margin-top:10px;">
                         Please include your <strong>name</strong> like this: <strong>${details.FullName} NOW25</strong> in the payment reference.
                     </div>
                 </div>
@@ -155,7 +147,7 @@ const formatPrice = (price: number | null | undefined) => price !== null && pric
                     </p>
                     <p style="text-align: center;">
                         <a href="https://norwegianopen.no/register/hotel" 
-                        style="display: inline-block; background-color: ${primaryColor}; color: #ffffff; 
+                        style="display: inline-block; background-color: ${colorPalette.primaryColor}; color: #FFFFFF; 
                                 padding: 12px 25px; text-decoration: none; border-radius: 5px; 
                                 font-weight: bold; margin-top: 10px;">
                             Book Your Hotel Room
@@ -170,7 +162,7 @@ const formatPrice = (price: number | null | undefined) => price !== null && pric
                     </p>
                     <p style="text-align: center;">
                         <a href="https://norwegianopen.no/participants/${details.userID}" 
-                        style="display: inline-block; background-color: ${primaryColor}; color: #ffffff; 
+                        style="display: inline-block; background-color: ${colorPalette.primaryColor}; color: #FFFFFF; 
                                 padding: 12px 25px; text-decoration: none; border-radius: 5px; 
                                 font-weight: bold; margin-top: 10px;">
                             View Registration Details
@@ -182,34 +174,35 @@ const formatPrice = (price: number | null | undefined) => price !== null && pric
                 <p style="${styles.p}">We look forward to seeing you at the event!</p>
                 <p style="${styles.p}">Warm regards,<br>The ${eventName} Team</p>
             </div>
-            <div style="${styles.footer}">
-                <p style="color:#FFFFFF">© ${new Date().getFullYear()} ${eventName}. All rights reserved.</p>
-            </div>
+
             <div style="${styles.paymentBox.replace('#F0F5FA', '#0A2342')}">
-                <h3 style="${styles.paymentH3.replace(primaryColor, '#FFD700')}">🎉 What's Coming Up! 🎉</h3>
+                <h3 style="${styles.paymentH3.replace(primaryColor, '#FFD700')}">🎉 Valhalla is calling! 🎉</h3>
                 <div style="color: #fff; line-height: 1.6;">
                     <p style="margin-bottom: 12px;">
-                        Get ready for an incredible extended weekend! We kick off with our amazing Thursday pre-party - 
-                        the perfect way to start your Norwegian Open experience and meet dancers from around the world.
+                        Like the great feasts of Valhalla, our journey begins with Thor's Thursday gathering - 
+                        where dancers from all Nine Worlds come together to share in the joy of West Coast Swing.
                     </p>
                     <p style="margin-bottom: 12px;">
-                        Friday begins with our exclusive Blues Intensive - a unique opportunity to deepen your connection 
-                        to the music with our world-class instructors. As the evening unfolds, witness the electricity of 
-                        our Strictly Competition, where partnerships come alive under the spotlight!
+                        As Freya's day dawns, we delve into the mystic arts of Blues with our Valkyrie instructors. 
+                        When night falls, witness warriors of the dance as they join forces in our 
+                        Strictly Competition, their movements as precise as Odin's spear!
                     </p>
                     <p style="margin-bottom: 12px;">
-                        Sunday brings special moments with our Newcomer Jack & Jill - your chance to shine if you're just 
-                        starting your competition journey! Then, join us for our cozy social gathering where stories 
-                        are shared, friendships are forged, and memories are made.
+                        Sun's day welcomes new warriors to Midgard with our Newcomer Jack & Jill - 
+                        where fresh souls begin their saga. Later, we gather in our great hall where 
+                        tales are told and bonds are forged in the firelight.
                     </p>
                     <p style="margin-bottom: 12px; font-style: italic;">
-                        And for those who can't get enough (we know who you are! 😉), the dancing continues until Monday 
-                        morning. Because at Norwegian Open, we believe the best moments happen when the night meets the dawn...
+                        And like the eternal dance of Sol across the sky, our revelry continues until Mani yields to morning. 
+                        For at Norwegian Open, we dance until Heimdall sounds the dawn... 🌅
                     </p>
                     <p style="color: #FFD700; font-weight: bold; margin-top: 20px; text-align: center;">
-                        Your spot is secured - now it's time to get excited! 💃🕺
+                        Your place in Valhalla is secured - prepare for glory! ⚔️ 💃
                     </p>
                 </div>
+            </div>
+                <div style="${styles.footer}">
+                <p style="color:#FFFFFF">© ${new Date().getFullYear()} ${eventName}. All rights reserved.</p>
             </div>
         </div>
     </body>
