@@ -237,8 +237,12 @@
 
     <form method="POST" action="?/bookHotel" use:enhance class="space-y-6 max-w-xl mx-auto bg-gray-800 p-6 md:p-8 rounded-lg shadow-xl border border-gray-700 text-white">
         <p class="text-sm text-gray-400 mb-6">
-            If you wish to book a hotel room through us, please complete the form below.
-            This can be done separately from your main event registration.
+            Booking a hotel room can be done directly with the hotel, or through us.
+            Booking thorugh us will give you a discount! There is a limited number of rooms available at the discounted price.
+        </p>   
+        <p class="text-sm text-gray-400 mb-6">
+            If you wish to book your room through us, please fill in the form below.
+            After submitting the form, you will receive a confirmation email with the details of your booking.            
         </p>
 
         <div>

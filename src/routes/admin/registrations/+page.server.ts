@@ -70,6 +70,8 @@ interface RegistrationDetailsForEmail {
 function generateRegistrationApprovedEmailHtml(details: RegistrationDetailsForEmail): string {
     const eventName = "Norwegian Open WCS 2025";
     const currencySymbol = "NOK";
+    const backgroundImageUrl = 'https://raw.githubusercontent.com/Lysaker-git/NorwegianOpen/refs/heads/main/src/lib/components/backdropHero.png'; // Ensure this URL is correct and public
+
 
     const primaryColor = '#0A2342';
 
@@ -92,6 +94,7 @@ function generateRegistrationApprovedEmailHtml(details: RegistrationDetailsForEm
 
     const paymentDeadline = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
     const formatPrice = (price: number | null | undefined) => price !== null && price !== undefined ? `${price.toLocaleString()} ${currencySymbol}` : 'N/A';
+
 
     const vmlBackground = `
         <!--[if gte mso 9]>
@@ -120,7 +123,7 @@ function generateRegistrationApprovedEmailHtml(details: RegistrationDetailsForEm
                     Your registration for <strong>${eventName}</strong> has been <span style="color: #28a745; font-weight: bold;">APPROVED</span>!
                 </p>
                 <p style="${styles.p}">
-                    Please complete your payment to secure your spot. Your registration details are below.
+                    Please complete your payment to secure your spot. Payment information and your registration details are below.
                 </p>
                 <div style="${styles.paymentBox}">
                     <h3 style="${styles.paymentH3}">Payment Information</h3>
@@ -185,28 +188,35 @@ function generateRegistrationApprovedEmailHtml(details: RegistrationDetailsForEm
             </div>
 
             <div style="${styles.paymentBox.replace('#F0F5FA', '#0A2342')}">
-                <h3 style="${styles.paymentH3.replace(primaryColor, '#FFD700')}">🎉 Valhalla is calling! 🎉</h3>
+                <h3 style="${styles.paymentH3.replace(primaryColor, '#FFD700')}">Your place in Valhalla is secured – prepare for glory!</h3>
                 <div style="color: #fff; line-height: 1.6;">
                     <p style="margin-bottom: 12px;">
-                        Like the great feasts of Valhalla, our journey begins with Thor's Thursday gathering - 
-                        where dancers from all Nine Worlds come together to share in the joy of West Coast Swing.
+                        Thursday - Preparty:
+                        <br>
+                        The journey begins on Thor's day, where dancers from all Nine Worlds can come together and share the joy of West Coast Swing.
                     </p>
                     <p style="margin-bottom: 12px;">
-                        As Freya's day dawns, we delve into the mystic arts of Blues with our Valkyrie instructors. 
-                        When night falls, witness warriors of the dance as they join forces in our 
-                        Strictly Competition, their movements as precise as Odin's spear!
+			            Friday - Blues Intensive and Strictly Competition:
+                        <br>
+                        As Frigg’s day dawns, we dive into the mystic arts of blues with our master warriors of swing. 
+			            When night falls, witness warriors of the dance as they battle it out and forge legendary bonds. 
                     </p>
                     <p style="margin-bottom: 12px;">
-                        Sun's day welcomes new warriors to Midgard with our Newcomer Jack & Jill - 
-                        where fresh souls begin their saga. Later, we gather in our great hall where 
-                        tales are told and bonds are forged in the firelight.
+			            Saturday - Jack and Jill Competitions (Novice to All-star) and Pro Show:
+                        <br>
+                        As Saturn’s day rises, the great battles of the Jack & Jill tournaments begins. 
+			            Warriors of WCS will face off and fight for precious WSDC points under the watchful eyes of the gods.
+                    </p>                        
+                    <p style="margin-bottom: 12px;">
+			            Sunday - Newcomer Jack and Jill and Social Gathering:
+                        <br>
+                        On Sun’s day in Valhalla our newest warriors battle in the Newcomer Jack & Jill. Later, we have opportunities to connect through a social gathering. 
                     </p>
                     <p style="margin-bottom: 12px; font-style: italic;">
-                        And like the eternal dance of Sol across the sky, our revelry continues until Mani yields to morning. 
-                        For at Norwegian Open, we dance until Heimdall sounds the dawn... 🌅
+			            And like in the eternal battle, we dance until Heimdall sounds the dawn on moon's day. 
                     </p>
                     <p style="color: #FFD700; font-weight: bold; margin-top: 20px; text-align: center;">
-                        Your place in Valhalla is secured - prepare for glory! ⚔️ 💃
+                        🌿⚔️✨ Valhalla is calling! 🌿⚔️✨
                     </p>
                 </div>
             </div>
@@ -301,7 +311,7 @@ export const actions = {
                             html: emailHtml
                         };
 
-                        try {
+                        try {   
                             await new Promise((resolve, reject) => {
                                 transporter.sendMail(message, (err, info) => {
                                     if (err) {
