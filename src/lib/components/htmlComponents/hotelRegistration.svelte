@@ -310,10 +310,9 @@
                     {#each roomOptions.filter(opt => opt.key === selectedHotel) as option}
                         <div class="relative bg-gray-900 border-2 border-amber-400 rounded-lg p-6 shadow-lg"
                             transition:scale={{ duration: 400, start: 0.8 }}>
-                        <!-- X button to deselect -->
-                        <button
+                        <!-- X button to deselect -->                        <button
                             type="button"
-                            class="absolute top-2 right-2 text-gray-400 hover:text-red-400 p-1 rounded-full hover:bg-gray-800 transition"
+                            class="absolute top-2 right-2 z-20 inline-flex items-center justify-center w-8 h-8 text-gray-400 hover:text-red-400 hover:bg-gray-800/50 rounded-full transition-colors"
                             aria-label="Deselect room"
                             on:click={() => {
                                 selectedHotel = '';
@@ -593,10 +592,8 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-    }
-
-    /* Ensure the button takes full width and height */
-    button[type="button"] {
+    }    /* Style for card buttons */
+    button[type="button"]:not([aria-label="Deselect room"]) {
         width: 100%;
         height: 100%;
         display: flex;

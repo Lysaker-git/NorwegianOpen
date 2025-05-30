@@ -93,6 +93,14 @@ function generateRegistrationApprovedEmailHtml(details: RegistrationDetailsForEm
     const paymentDeadline = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
     const formatPrice = (price: number | null | undefined) => price !== null && price !== undefined ? `${price.toLocaleString()} ${currencySymbol}` : 'N/A';
 
+    const vmlBackground = `
+        <!--[if gte mso 9]>
+        <v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="t">
+            <v:fill type="tile" src="${backgroundImageUrl}"/>
+        </v:background>
+        <![endif]-->
+    `;
+
     return `
     <!DOCTYPE html>
     <html lang="en">
@@ -101,6 +109,7 @@ function generateRegistrationApprovedEmailHtml(details: RegistrationDetailsForEm
         <title>Registration Approved - ${eventName}</title>
     </head>
     <body style="${styles.body}">
+        ${vmlBackground}
         <div style="${styles.container}">
             <div style="${styles.header}">
                 <h1 style="${styles.headerH1}">${eventName}</h1>

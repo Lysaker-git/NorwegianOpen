@@ -25,8 +25,8 @@ export const load: PageServerLoad = async () => {
     }
 
     const availability = {
-        hasRoomAvailable: roomCounts.total < 10,
-        hasLargeRoomAvailable: roomCounts.largeRooms < 0,
+        hasRoomAvailable: roomCounts.total < 90,
+        hasLargeRoomAvailable: roomCounts.largeRooms < 70,
     }
     console.log('[SERVER LOAD] Hotel Availability:', availability, roomCounts);
 
@@ -72,6 +72,10 @@ function generateHotelConfirmationEmail(details: HotelEmailDetails): string {
     const eventName = "Norwegian Open WCS 2025";
     const paymentDeadline = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
     const currencySymbol = "NOK";
+    const textColor = '#333333';    // Main text
+    const lightTextColor = '#555555';// Lighter text for less emphasis
+    const backgroundColor = '#f4f4f7';// Light grey page background
+
 
     const backgroundImageUrl = 'https://raw.githubusercontent.com/Lysaker-git/NorwegianOpen/refs/heads/main/src/lib/components/backdropHero.png'; // Ensure this URL is correct and public
 
@@ -91,7 +95,7 @@ function generateHotelConfirmationEmail(details: HotelEmailDetails): string {
     const vmlBackground = `
         <!--[if gte mso 9]>
         <v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="t">
-            <v:fill type="tile" src="${backgroundImageUrl}" color="${backgroundColor}" />
+            <v:fill type="tile" src="${backgroundImageUrl}"/>
         </v:background>
         <![endif]-->
     `;
@@ -150,88 +154,146 @@ function generateHotelConfirmationEmail(details: HotelEmailDetails): string {
 
 export const actions: Actions = {
     bookHotel: async ({ request, url }) => {
-        const formData = await request.formData();
-        const paymentDeadline = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+        console.log('[SERVER]', 'Starting hotel booking process');
+        try {
+            const formData = await request.formData();
+            const paymentDeadline = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+            console.log('[SERVER]', 'Form data received');
 
-        const { data: hotelRegistrations } = await supabaseAdmin
-            .from('HotelRegistration')
-            .select('hoteloption');
+            // Validate required fields
+            const requiredFields = ['FullName', 'Email', 'HotelOption', 'CheckInDate', 'CheckOutDate', 'NumberOfNights'];
+            for (const field of requiredFields) {
+                if (!formData.get(field)) {
+                    return fail(400, { 
+                        error: `Missing required field: ${field}`,
+                        field: field.toLowerCase()
+                    });
+                }
+            }
 
-        const totalRooms = hotelRegistrations?.length || 0;
-        const largeRooms = hotelRegistrations?.filter(reg => 
-            reg.hoteloption === 'HotelOptionThree' || 
-            reg.hoteloption === 'HotelOptionFour'
-        ).length || 0;
+            // Check hotel availability
+            const { data: hotelRegistrations, error: fetchError } = await supabaseAdmin
+                .from('HotelRegistration')
+                .select('hoteloption');
 
-        // Check limits
-        if (totalRooms >= 90) {
-            return fail(400, { error: 'Sorry, all rooms are currently booked.' });
-        }
+            if (fetchError) {
+                console.error('Error fetching hotel registrations:', fetchError);
+                return fail(500, { error: 'Failed to check hotel availability. Please try again.' });
+            }
 
+            const totalRooms = hotelRegistrations?.length || 0;
+            const largeRooms = hotelRegistrations?.filter(reg => 
+                reg.hoteloption === 'HotelOptionThree' || 
+                reg.hoteloption === 'HotelOptionFour'
+            ).length || 0;
 
+            // Check room limits
+            if (totalRooms >= 90) {
+                return fail(400, { error: 'Sorry, all rooms are currently booked.' });
+            }
 
-        // Gather roommate fields (adjust names as per your form)
-        const roommates = [
-            formData.get('Roommate1'),
-            formData.get('Roommate2'),
-            formData.get('Roommate3')
-        ]
-        .filter(Boolean) // Remove empty/null
-        .join(', '); // Or use JSON.stringify([...]) for array storage
+            // Gather and validate roommate fields based on room type
+            const hotelOption = formData.get('HotelOption')?.toString();
+            const roommates = [];
+            
+            if (hotelOption === 'HotelOptionTwo') {
+                if (!formData.get('Roommate1')) {
+                    return fail(400, { error: 'Twin room requires one roommate name', field: 'roommate1' });
+                }
+                roommates.push(formData.get('Roommate1'));
+            } else if (hotelOption === 'HotelOptionThree') {
+                if (!formData.get('Roommate1') || !formData.get('Roommate2')) {
+                    return fail(400, { error: 'Triple room requires two roommate names', field: 'roommate' });
+                }
+                roommates.push(formData.get('Roommate1'), formData.get('Roommate2'));
+            } else if (hotelOption === 'HotelOptionFour') {
+                if (!formData.get('Roommate1') || !formData.get('Roommate2') || !formData.get('Roommate3')) {
+                    return fail(400, { error: 'Quatro room requires three roommate names', field: 'roommate' });
+                }
+                roommates.push(formData.get('Roommate1'), formData.get('Roommate2'), formData.get('Roommate3'));
+            }
 
+            // Prepare data for database
+            const data = {
+                fullname: formData.get('FullName')?.toString() || null,
+                email: formData.get('Email')?.toString() || null,
+                hoteloption: hotelOption || null,
+                checkindate: formData.get('CheckInDate')?.toString() || null,
+                checkoutdate: formData.get('CheckOutDate')?.toString() || null,
+                paymentdeadline: paymentDeadline,
+                roommates: roommates.filter(Boolean).join(', '),
+                specialrequests: formData.get('SpecialRequests')?.toString() || null,
+                amountdue: formData.get('CalculatedHotelPrice') ? Number(formData.get('CalculatedHotelPrice')) : null,
+                numberofnights: formData.get('NumberOfNights')?.toString() || null,
+            };
 
-        // Collect all fields from the form
-        const data = {
-            fullname: formData.get('FullName')?.toString() || null,
-            email: formData.get('Email')?.toString() || null,
-            hoteloption: formData.get('HotelOption')?.toString() || null,
-            checkindate: formData.get('CheckInDate')?.toString() || null,
-            checkoutdate: formData.get('CheckOutDate')?.toString() || null,
-            paymentdeadline: paymentDeadline,
-            roommates: roommates,
-            specialrequests: formData.get('SpecialRequests')?.toString() || null,
-            amountdue: formData.get('CalculatedHotelPrice') ? Number(formData.get('CalculatedHotelPrice')) : null,
-            numberofnights: formData.get('NumberOfNights')?.toString() || null,
-        };
+            // Check large room availability
+            if ((data.hoteloption === 'HotelOptionThree' || data.hoteloption === 'HotelOptionFour') && 
+                largeRooms >= 70) {
+                return fail(400, { 
+                    error: 'Sorry, all triple and quadro rooms are currently booked. Please select a different room type.' 
+                });
+            }            // Insert into Supabase
+            console.log('[SERVER]', 'Attempting database insert');
+            const { error: insertError } = await supabaseAdmin
+                .from('HotelRegistration')
+                .insert([data]);
 
-        if ((data.hoteloption === 'HotelOptionThree' || data.hoteloption === 'HotelOptionFour') && 
-            largeRooms >= 70) {
-            return fail(400, { 
-                error: 'Sorry, all triple and quadro rooms are currently booked. Please select a different room type.' 
+            if (insertError) {
+                console.error('[SERVER]', 'Database insert error:', insertError);
+                return fail(400, { error: insertError.message });
+            }
+            console.log('[SERVER]', 'Database insert successful');
+            
+            // Send confirmation email            console.log('[SERVER]', 'Starting email process');
+            let emailSuccess = true;
+            
+            if (!data.email) {
+                console.error('[SERVER]', 'Missing email address for confirmation');
+                emailSuccess = false;
+            } else {
+                console.log('[SERVER]', 'Preparing email message');
+                const message = {
+                    from: GOOGLE_EMAIL,
+                    to: data.email,
+                    subject: 'Hotel Booking Confirmation - Norwegian Open WCS 2025',
+                    html: generateHotelConfirmationEmail(data)
+                } as const;                try {
+                    console.log('[SERVER]', 'Attempting to send email');
+                    await new Promise((resolve, reject) => {
+                        transporter.sendMail(message, (err, info) => {
+                            if (err) {
+                                console.error('[SERVER]', 'Email sending error:', err);
+                                reject(err);
+                            } else {
+                                console.log('[SERVER]', 'Email sent successfully');
+                                resolve(info);
+                            }
+                        });
+                    });
+                } catch (emailError) {
+                    console.error('[SERVER]', 'Failed to send confirmation email:', emailError);
+                    emailSuccess = false;
+                }
+            }
+
+            console.log('[SERVER]', 'All operations complete, preparing redirect');            
+            const redirectUrl = emailSuccess ? 
+                `${url.origin}/register/success` : 
+                `${url.origin}/register/success?email=failed`;
+            console.log('[SERVER]', 'Redirecting to:', redirectUrl);
+            throw redirect(303, redirectUrl);        } catch (error) {
+            // Check if the error is a Redirect object (it has status and location properties)
+            if (error && typeof error === 'object' && 'status' in error && 'location' in error) {
+                console.log('[SERVER]', 'Handling redirect response');
+                throw error; // Re-throw redirect response
+            }
+
+            // Handle all other errors
+            console.error('[SERVER]', 'Unexpected error in bookHotel:', error);
+            return fail(500, { 
+                error: 'An unexpected error occurred. Please try again or contact support.' 
             });
         }
-
-        // Insert into Supabase
-        const { error } = await supabaseAdmin
-            .from('HotelRegistration')
-            .insert([data]);
-
-        if (error) {
-            return fail(400, { error: error.message });
-        }
-
-        // Send confirmation email
-        const message = {
-            from: GOOGLE_EMAIL,
-            to: data.email,
-            subject: 'Hotel Booking Confirmation - Norwegian Open WCS 2025',
-            html: generateHotelConfirmationEmail(data)
-        }
-
-        const sendMail = async (message) =>  {
-            return new Promise((resolve, reject) => {
-                transporter.sendMail(message, (err, info) => {
-                    if (err) {
-                        console.error('Email error:', err);
-                        reject(err);
-                    } else {
-                        resolve(info);
-                    }
-                })
-            })
-        }
-
-        await sendMail(message);
-        throw redirect(303, `${url.origin}/register/success`);
     }
 };
