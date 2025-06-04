@@ -22,6 +22,7 @@ export const load: PageServerLoad = async ({ locals }) => {
             Level,
             Role,
             PassOption,
+            AddedIntensive,
             AmountDue,
             RegistrationStatus,
             PaymentDeadline,
@@ -202,15 +203,15 @@ function generateRegistrationApprovedEmailHtml(details: RegistrationDetailsForEm
 			            When night falls, witness warriors of the dance as they battle it out and forge legendary bonds. 
                     </p>
                     <p style="margin-bottom: 12px;">
-			            Saturday - Jack and Jill Competitions (Novice to All-star) and Pro Show:
+			            Saturday - Jack and Jill Competitions (Newcomer to All-star) and Pro Show:
                         <br>
                         As Saturn’s day rises, the great battles of the Jack & Jill tournaments begins. 
 			            Warriors of WCS will face off and fight for precious WSDC points under the watchful eyes of the gods.
                     </p>                        
                     <p style="margin-bottom: 12px;">
-			            Sunday - Newcomer Jack and Jill and Social Gathering:
+			            Sunday - Social Gathering:
                         <br>
-                        On Sun’s day in Valhalla our newest warriors battle in the Newcomer Jack & Jill. Later, we have opportunities to connect through a social gathering. 
+                        On Sun’s day in Valhalla we have opportunities to connect through a social gathering. 
                     </p>
                     <p style="margin-bottom: 12px; font-style: italic;">
 			            And like in the eternal battle, we dance until Heimdall sounds the dawn on moon's day. 

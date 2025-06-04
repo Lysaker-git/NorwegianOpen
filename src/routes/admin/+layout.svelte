@@ -13,9 +13,13 @@
                 <a href="/admin/registrations" class="px-4 py-2 rounded bg-amber-500 text-gray-900 font-semibold shadow hover:bg-amber-400 transition-colors duration-150 mr-2">
                     Registrations
                 </a>
+                <a href="/admin/dashboard/hotels" class="px-4 py-2 rounded bg-amber-500 text-gray-900 font-semibold shadow hover:bg-amber-400 transition-colors duration-150 mr-2">
+                    Hotel Registrations
+                </a>
                 <a href="/admin/dashboard" class="px-4 py-2 rounded bg-indigo-500 text-white font-semibold shadow hover:bg-indigo-400 transition-colors duration-150">
                     Dashboard
-                </a>                    <!-- Add more admin links here -->
+                </a>                    
+                <!-- Add more admin links here -->
                     {#if $page.data.session && $page.url.pathname === '/admin'}
                         <form 
                             method="POST" 

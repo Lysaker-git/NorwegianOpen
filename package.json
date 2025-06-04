@@ -50,6 +50,8 @@
 		"@fortawesome/free-brands-svg-icons": "^6.7.2",
 		"@supabase/ssr": "^0.6.1",
 		"@supabase/supabase-js": "^2.49.4",
+		"@types/d3": "^7.4.3",
+		"d3": "^7.9.0",
 		"dotenv": "^16.5.0",
 		"esbuild": "^0.25.4",
 		"fa-svelte": "^3.1.0",

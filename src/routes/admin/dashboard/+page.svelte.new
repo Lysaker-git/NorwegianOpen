@@ -1,0 +1,273 @@
+<script lang="ts">
+    import { browser } from '$app/environment';
+    import { onMount } from 'svelte';
+    import * as d3 from 'd3';
+    export let data;
+
+    let nordicChartContainer: HTMLDivElement;
+    let worldChartContainer: HTMLDivElement;
+    let nordicPassChartContainer: HTMLDivElement;
+    let worldPassChartContainer: HTMLDivElement;
+
+    const levels = ['Newcomer', 'Novice', 'Intermediate', 'Advanced', 'All-Star'];
+    const colors = d3.scaleOrdinal()
+        .domain(levels)
+        .range(['#f59e0b', '#d97706', '#b45309', '#92400e', '#78350f']);
+
+    onMount(() => {
+        if (browser) {
+            drawLevelChart(nordicChartContainer, data.nordicLevelCounts, 'Nordic Registrations by Level');
+            drawLevelChart(worldChartContainer, data.worldLevelCounts, 'World Registrations by Level');
+            drawPassChart(nordicPassChartContainer, data.nordicPassCounts, 'Nordic Pass Distribution');
+            drawPassChart(worldPassChartContainer, data.worldPassCounts, 'World Pass Distribution');
+        }
+    });
+
+    function drawLevelChart(container: HTMLDivElement, data: Record<string, number>, title: string) {
+        // Clear any existing chart
+        d3.select(container).selectAll("*").remove();
+
+        // Prepare the data
+        const chartData = levels.map(level => ({
+            level,
+            count: data[level] || 0
+        }));
+
+        // Set dimensions
+        const margin = { top: 40, right: 20, bottom: 40, left: 40 };
+        const width = container.clientWidth - margin.left - margin.right;
+        const height = 300 - margin.top - margin.bottom;
+
+        // Create SVG
+        const svg = d3.select(container)
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        // Add title
+        svg.append("text")
+            .attr("x", width / 2)
+            .attr("y", -margin.top / 2)
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .style("fill", "#f59e0b")
+            .text(title);
+
+        // Create scales
+        const x = d3.scaleBand()
+            .range([0, width])
+            .padding(0.1)
+            .domain(levels);
+
+        const y = d3.scaleLinear()
+            .range([height, 0])
+            .domain([0, d3.max(chartData, d => d.count) || 0]);
+
+        // Add bars
+        svg.selectAll(".bar")
+            .data(chartData)
+            .enter()
+            .append("rect")
+            .attr("class", "bar")
+            .attr("x", d => x(d.level)!)
+            .attr("width", x.bandwidth())
+            .attr("y", d => y(d.count))
+            .attr("height", d => height - y(d.count))
+            .attr("fill", d => colors(d.level))
+            .on("mouseover", function(event, d) {
+                d3.select(this).attr("opacity", 0.8);
+                
+                // Show tooltip
+                svg.append("text")
+                    .attr("class", "tooltip")
+                    .attr("x", x(d.level)! + x.bandwidth() / 2)
+                    .attr("y", y(d.count) - 5)
+                    .attr("text-anchor", "middle")
+                    .style("fill", "#f59e0b")
+                    .text(d.count);
+            })
+            .on("mouseout", function(event, d) {
+                d3.select(this).attr("opacity", 1);
+                svg.selectAll(".tooltip").remove();
+            });
+
+        // Add X axis
+        svg.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(x))
+            .selectAll("text")
+            .style("fill", "#9ca3af")
+            .style("font-size", "12px");
+
+        // Add Y axis
+        svg.append("g")
+            .call(d3.axisLeft(y).ticks(5))
+            .selectAll("text")
+            .style("fill", "#9ca3af")
+            .style("font-size", "12px");
+
+        // Add grid lines
+        svg.append("g")
+            .attr("class", "grid")
+            .call(d3.axisLeft(y)
+                .ticks(5)
+                .tickSize(-width)
+                .tickFormat(() => '')
+            )
+            .style("stroke", "#374151")
+            .style("stroke-opacity", "0.1");
+    }
+
+    function drawPassChart(container: HTMLDivElement, data: Record<string, number>, title: string) {
+        // Clear any existing chart
+        d3.select(container).selectAll("*").remove();
+
+        // Prepare the data
+        const chartData = Object.entries(data || {}).map(([type, count]) => ({
+            type,
+            count: count || 0
+        }));
+
+        // Set dimensions
+        const margin = { top: 40, right: 20, bottom: 60, left: 40 };
+        const width = container.clientWidth - margin.left - margin.right;
+        const height = 300 - margin.top - margin.bottom;
+
+        // Create SVG
+        const svg = d3.select(container)
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        // Add title
+        svg.append("text")
+            .attr("x", width / 2)
+            .attr("y", -margin.top / 2)
+            .attr("text-anchor", "middle")
+            .style("font-size", "16px")
+            .style("fill", "#f59e0b")
+            .text(title);
+
+        // Create scales
+        const x = d3.scaleBand()
+            .range([0, width])
+            .padding(0.1)
+            .domain(chartData.map(d => d.type));
+
+        const y = d3.scaleLinear()
+            .range([height, 0])
+            .domain([0, d3.max(chartData, d => d.count) || 0]);
+
+        // Create color scale for pass types
+        const passColors = d3.scaleOrdinal()
+            .domain(chartData.map(d => d.type))
+            .range(['#f59e0b', '#d97706', '#b45309', '#92400e', '#78350f', '#fbbf24']);
+
+        // Add bars
+        svg.selectAll(".bar")
+            .data(chartData)
+            .enter()
+            .append("rect")
+            .attr("class", "bar")
+            .attr("x", d => x(d.type)!)
+            .attr("width", x.bandwidth())
+            .attr("y", d => y(d.count))
+            .attr("height", d => height - y(d.count))
+            .attr("fill", d => passColors(d.type))
+            .on("mouseover", function(event, d) {
+                d3.select(this).attr("opacity", 0.8);
+                
+                // Show tooltip
+                svg.append("text")
+                    .attr("class", "tooltip")
+                    .attr("x", x(d.type)! + x.bandwidth() / 2)
+                    .attr("y", y(d.count) - 5)
+                    .attr("text-anchor", "middle")
+                    .style("fill", "#f59e0b")
+                    .text(d.count);
+            })
+            .on("mouseout", function(event, d) {
+                d3.select(this).attr("opacity", 1);
+                svg.selectAll(".tooltip").remove();
+            });
+
+        // Add X axis
+        svg.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(x))
+            .selectAll("text")
+            .style("fill", "#9ca3af")
+            .style("font-size", "12px")
+            .attr("transform", "rotate(-45)")
+            .style("text-anchor", "end");
+
+        // Add Y axis
+        svg.append("g")
+            .call(d3.axisLeft(y).ticks(5))
+            .selectAll("text")
+            .style("fill", "#9ca3af")
+            .style("font-size", "12px");
+
+        // Add grid lines
+        svg.append("g")
+            .attr("class", "grid")
+            .call(d3.axisLeft(y)
+                .ticks(5)
+                .tickSize(-width)
+                .tickFormat(() => '')
+            )
+            .style("stroke", "#374151")
+            .style("stroke-opacity", "0.1");
+    }
+</script>
+
+<h1 class="text-2xl font-bold mb-6">Admin Dashboard</h1>
+
+{#if data.error}
+    <p class="text-red-500">{data.error}</p>
+{:else}
+    <!-- Existing stats table -->
+    <table class="min-w-full bg-gray-800 rounded shadow mb-8 border border-gray-700">
+        <!-- ... existing table content ... -->
+    </table>
+
+    <div class="grid gap-8 mb-8">
+        <!-- Nordic charts -->
+        <div class="space-y-8">
+            <div class="bg-gray-800 p-6 rounded-lg shadow">
+                <div bind:this={nordicChartContainer} class="w-full"></div>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg shadow">
+                <div bind:this={nordicPassChartContainer} class="w-full"></div>
+            </div>
+        </div>
+        
+        <!-- World charts -->
+        <div class="space-y-8">
+            <div class="bg-gray-800 p-6 rounded-lg shadow">
+                <div bind:this={worldChartContainer} class="w-full"></div>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg shadow">
+                <div bind:this={worldPassChartContainer} class="w-full"></div>
+            </div>
+        </div>
+    </div>
+{/if}
+
+<style>
+    :global(.bar:hover) {
+        cursor: pointer;
+    }
+    
+    :global(.grid line) {
+        stroke-dasharray: 2,2;
+    }
+    
+    :global(.grid path) {
+        stroke-width: 0;
+    }
+</style>

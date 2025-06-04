@@ -47,7 +47,8 @@ export const load: PageServerLoad = async ({ params }) => {
             Competing,
             PromoCode,
             AddedIntensive,
-            userID
+            userID,
+            comments
         `)
         .eq('userID', id)
         .single();

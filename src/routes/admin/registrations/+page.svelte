@@ -1,11 +1,28 @@
 <!-- src/routes/admin/registrations/+page.svelte -->
 <script lang="ts">
     import type { PageData } from './$types';
-    import { onMount } from 'svelte';
+
+    interface Registration {
+        id: any;
+        FullName: string | null;
+        Email: string | null;
+        Level: string | null;
+        Role: string | null;
+        PassOption: string | null;
+        AddedIntensive: boolean;
+        AmountDue: number | null;
+        RegistrationStatus: string;
+        PaymentDeadline: string | null;
+        HasPartner: boolean;
+        PartnerName: string | null;
+        userID: string;
+        created_at: string;
+    }
 
     let isSaving = false;
-
-    export let data: PageData; // `registrations` will be in data.registrations
+    
+    export let data: PageData & { registrations: Registration[] };
+    
 
     let searchTerm = '';
     let filteredRegistrations = data.registrations;
@@ -91,6 +108,7 @@ async function saveChanges() {
                 reg.Email?.toLowerCase().includes(normSearch) ||
                 reg.userID?.toLowerCase().includes(normSearch) ||
                 reg.PassOption?.toLowerCase().includes(normSearch) ||
+                reg.AddedIntensive?.toString().toLowerCase().includes(normSearch) ||
                 reg.RegistrationStatus?.toLowerCase().includes(normSearch) ||
                 reg.PartnerName?.toLowerCase().includes(normSearch) ||
                 matchingNames.has(reg.FullName) ||
@@ -130,6 +148,7 @@ async function saveChanges() {
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Partner Name</th>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Role</th>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Pass Option</th>
+                        <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Intensive</th>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
                         <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Amount Due</th>
                     </tr>
@@ -149,6 +168,8 @@ async function saveChanges() {
                             <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-200">{reg.PartnerName || ''}</td>
                             <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-300">{reg.Role}</td>
                             <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-300">{reg.PassOption}</td>
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-300">
+                                {reg.AddedIntensive ? 'Yes' : 'No'}
                             <td class="px-4 py-3 whitespace-nowrap text-sm">
                                 <select
                                     class="bg-gray-700 text-gray-100 rounded px-2 py-1"
