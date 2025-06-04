@@ -1,5 +1,6 @@
 <script lang="ts">
     import { page } from '$app/stores';
+    import { paymentInfo } from '$lib/components/constants';
     
     export let data;
     const { registration, hotelData } = data;
@@ -50,7 +51,45 @@
                 <span class="text-gray-300">{registration.userID}</span>
             </div>
         </div>
-    </div>    {#if registration.HasPartner}
+    </div>    
+    
+    <!-- Payment Information Block -->
+    <div class="max-w-3xl mx-auto bg-gray-800 rounded-lg shadow-lg p-8 mt-8">
+        <h2 class="text-2xl font-bold text-amber-300 mb-4 font-[NorseBold]">Payment Information</h2>
+        <div class="mb-4 border-b border-gray-700 pb-4">            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex-1 space-y-4">
+                    <div class="flex flex-col">
+                        <span class="text-sm text-gray-400 mb-1">Account Name</span>
+                        <span class="text-gray-100 font-medium">{paymentInfo.accountName}</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-sm text-gray-400 mb-1">Account Number</span>
+                        <span class="text-gray-100 font-medium">{paymentInfo.accountNumber}</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-sm text-gray-400 mb-1">IBAN</span>
+                        <span class="text-gray-100 font-medium">{paymentInfo.iban}</span>
+                    </div>
+                </div>
+                <div class="flex-1 space-y-4">
+                    <div class="flex flex-col">
+                        <span class="text-sm text-gray-400 mb-1">SWIFT/BIC</span>
+                        <span class="text-gray-100 font-medium">{paymentInfo.swift}</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-sm text-gray-400 mb-1">Bank Name</span>
+                        <span class="text-gray-100 font-medium">{paymentInfo.bankName}</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-sm text-gray-400 mb-1">Bank Address</span>
+                        <span class="text-gray-100 font-medium">{paymentInfo.bankAddress}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {#if registration.HasPartner}
         <div class="max-w-3xl mx-auto bg-gray-800 rounded-lg shadow-lg p-8 mt-8">
             <h2 class="text-2xl font-bold text-amber-300 mb-4 font-[NorseBold]">Partner Details</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
