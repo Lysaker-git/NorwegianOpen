@@ -4,6 +4,11 @@
     import * as d3 from 'd3';
     export let data;
 
+    const INCOME_GOAL = 380000; // NOK
+    const calculateProgress = (amount: number) => (amount / INCOME_GOAL) * 100;
+    const getProgressColor = (amount: number) => amount >= INCOME_GOAL ? 'bg-green-500' : 'bg-red-500';
+    const getTextColor = (amount: number) => amount >= INCOME_GOAL ? 'text-green-400' : 'text-red-400';
+
     let nordicChartContainer: HTMLDivElement;
     let worldChartContainer: HTMLDivElement;
     let nordicPassChartContainer: HTMLDivElement;
@@ -31,6 +36,14 @@
         title: string;
         type: ChartType;
         container: HTMLDivElement;
+    }
+
+    interface LevelBreakdown {
+        total: number;
+        leaders: number;
+        followers: number;
+        attending: number;
+        waitingList: number;
     }
 
     onMount(() => {
@@ -240,7 +253,252 @@
 {#if data.error}
     <p class="text-red-500">{data.error}</p>
 {:else}
-    <table class="min-w-full bg-gray-800 rounded shadow mb-8 border border-gray-700">
+    <!-- Income Overview Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+        <!-- Total Income Card -->
+        <div class="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6">
+            <h3 class="text-lg font-semibold text-amber-400 mb-2">Total Income</h3>
+            <div class="text-2xl font-bold mb-2 {getTextColor(data.totalIncome)}">
+                {data.totalIncome.toLocaleString('no-NO')} NOK
+            </div>
+            {#if data.potentialIncome > 0}
+                <div class="text-sm text-gray-400 mb-4">
+                    Potential: +{data.potentialIncome.toLocaleString('no-NO')} NOK
+                </div>
+            {/if}
+            <div class="relative pt-1">
+                <div class="flex mb-2 items-center justify-between">
+                    <div>
+                        <span class="text-xs font-semibold inline-block text-gray-400">
+                            Progress to {INCOME_GOAL.toLocaleString('no-NO')} NOK
+                        </span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs font-semibold inline-block {getTextColor(data.totalIncome)}">
+                            {Math.round(calculateProgress(data.totalIncome))}%
+                        </span>
+                    </div>
+                </div>
+                <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-gray-700">
+                    <div
+                        class="transition-all duration-500 {getProgressColor(data.totalIncome)}"
+                        style="width: {Math.min(calculateProgress(data.totalIncome), 100)}%"
+                    ></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nordic Income Card -->
+        <div class="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6">
+            <h3 class="text-lg font-semibold text-amber-400 mb-2">Nordic Income</h3>
+            <div class="text-2xl font-bold mb-2 text-gray-200">
+                {data.totalNordicIncome.toLocaleString('no-NO')} NOK
+            </div>
+            {#if data.potentialNordicIncome > 0}
+                <div class="text-sm text-gray-400 mb-2">
+                    Potential: +{data.potentialNordicIncome.toLocaleString('no-NO')} NOK
+                </div>
+            {/if}
+            <div class="text-sm text-gray-400">
+                {Math.round((data.totalNordicIncome / data.totalIncome) * 100)}% of confirmed income
+            </div>
+        </div>
+
+        <!-- World Income Card -->
+        <div class="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6">
+            <h3 class="text-lg font-semibold text-amber-400 mb-2">World Income</h3>
+            <div class="text-2xl font-bold mb-2 text-gray-200">
+                {data.totalWorldIncome.toLocaleString('no-NO')} NOK
+            </div>
+            {#if data.potentialWorldIncome > 0}
+                <div class="text-sm text-gray-400 mb-2">
+                    Potential: +{data.potentialWorldIncome.toLocaleString('no-NO')} NOK
+                </div>
+            {/if}
+            <div class="text-sm text-gray-400">
+                {Math.round((data.totalWorldIncome / data.totalIncome) * 100)}% of confirmed income
+            </div>
+        </div>
+    </div>
+
+    <!-- Registrations by Level Cards -->
+    <div class="mb-8">
+        <h3 class="text-xl font-semibold text-amber-400 text-center py-4">
+            Registrations by Level
+        </h3>
+
+        <!-- Role Balance Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <!-- Approved Registrations Balance -->
+            <div class="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6 relative overflow-hidden">
+                <div class="relative z-10">
+                    <h4 class="text-lg font-semibold text-amber-400 mb-4">Approved Registrations</h4>
+                    
+                    {#if data.registrationsByRole}
+                        {@const approvedStatuses = ['approved', 'paymentReceived', 'checkedIn']}
+                        {@const totalApprovedLeaders = (data.registrationsByRole.Leader || [])
+                            .filter(reg => approvedStatuses.includes(reg.status))
+                            .length}
+                        
+                        {@const totalApprovedFollowers = (data.registrationsByRole.Follower || [])
+                            .filter(reg => approvedStatuses.includes(reg.status))
+                            .length}
+                        
+                        {@const totalApproved = totalApprovedLeaders + totalApprovedFollowers}
+                        {@const leadersPercentage = (totalApprovedLeaders / totalApproved) * 100 || 0}
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <div class="text-emerald-400 font-semibold mb-1">Leaders</div>
+                                <div class="text-2xl font-bold text-emerald-400">{totalApprovedLeaders}</div>
+                                <div class="text-sm text-emerald-400/80">{Math.round(leadersPercentage)}%</div>
+                            </div>
+                            <div>
+                                <div class="text-sky-400 font-semibold mb-1">Followers</div>
+                                <div class="text-2xl font-bold text-sky-400">{totalApprovedFollowers}</div>
+                                <div class="text-sm text-sky-400/80">{Math.round(100 - leadersPercentage)}%</div>
+                            </div>
+                        </div>
+                    {/if}
+                </div>
+                
+                <!-- Background color bars -->
+                <div class="absolute inset-0 z-0 flex">
+                    {#if data.registrationsByRole}
+                        {@const approvedStatuses = ['approved', 'paymentReceived', 'checkedIn']}
+                        {@const totalApprovedLeaders = (data.registrationsByRole.Leader || [])
+                            .filter(reg => approvedStatuses.includes(reg.status))
+                            .length}
+                        
+                        {@const totalApprovedFollowers = (data.registrationsByRole.Follower || [])
+                            .filter(reg => approvedStatuses.includes(reg.status))
+                            .length}
+                        
+                        {@const totalApproved = totalApprovedLeaders + totalApprovedFollowers}
+                        {@const leadersPercentage = (totalApprovedLeaders / totalApproved) * 100 || 0}
+                        
+                        <div class="h-full bg-emerald-500/10" style="width: {leadersPercentage}%"></div>
+                        <div class="h-full bg-sky-500/10" style="width: {100 - leadersPercentage}%"></div>
+                    {/if}
+                </div>
+            </div>
+
+            <!-- Waiting List Balance -->
+            <div class="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6 relative overflow-hidden">
+                <div class="relative z-10">
+                    <h4 class="text-lg font-semibold text-amber-400 mb-4">Waiting List</h4>
+                    
+                    {#if data.registrationsByRole}
+                        {@const waitingStatuses = ['waitingList', 'pendingApproval']}
+                        {@const totalWaitingLeaders = (data.registrationsByRole.Leader || [])
+                            .filter(reg => waitingStatuses.includes(reg.status))
+                            .length}
+                        
+                        {@const totalWaitingFollowers = (data.registrationsByRole.Follower || [])
+                            .filter(reg => waitingStatuses.includes(reg.status))
+                            .length}
+                        
+                        {@const totalWaiting = totalWaitingLeaders + totalWaitingFollowers}
+                        {@const waitingLeadersPercentage = (totalWaitingLeaders / totalWaiting) * 100 || 0}
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <div class="text-emerald-400 font-semibold mb-1">Leaders</div>
+                                <div class="text-2xl font-bold text-emerald-400">{totalWaitingLeaders}</div>
+                                <div class="text-sm text-emerald-400/80">{Math.round(waitingLeadersPercentage)}%</div>
+                            </div>
+                            <div>
+                                <div class="text-sky-400 font-semibold mb-1">Followers</div>
+                                <div class="text-2xl font-bold text-sky-400">{totalWaitingFollowers}</div>
+                                <div class="text-sm text-sky-400/80">{Math.round(100 - waitingLeadersPercentage)}%</div>
+                            </div>
+                        </div>
+                    {/if}
+                </div>
+                
+                <!-- Background color bars -->
+                <div class="absolute inset-0 z-0 flex">
+                    {#if data.registrationsByRole}
+                        {@const waitingStatuses = ['waitingList', 'pendingApproval']}
+                        {@const totalWaitingLeaders = (data.registrationsByRole.Leader || [])
+                            .filter(reg => waitingStatuses.includes(reg.status))
+                            .length}
+                        
+                        {@const totalWaitingFollowers = (data.registrationsByRole.Follower || [])
+                            .filter(reg => waitingStatuses.includes(reg.status))
+                            .length}
+                        
+                        {@const totalWaiting = totalWaitingLeaders + totalWaitingFollowers}
+                        {@const waitingLeadersPercentage = (totalWaitingLeaders / totalWaiting) * 100 || 0}
+                        
+                        <div class="h-full bg-emerald-500/10" style="width: {waitingLeadersPercentage}%"></div>
+                        <div class="h-full bg-sky-500/10" style="width: {100 - waitingLeadersPercentage}%"></div>
+                    {/if}
+                </div>
+            </div>
+        </div>
+
+        <!-- Level Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+            {#each levels as level}
+                <div class="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6">
+                    <h4 class="text-lg font-semibold text-amber-400 mb-4 text-center">{level}</h4>
+                    
+                    <!-- Roles Section with Status -->
+                    <div class="mb-4">
+                        <div class="text-sm font-semibold text-gray-400 mb-2">Roles</div>
+                        <div class="space-y-3">
+                            <!-- Leaders -->
+                            <div>
+                                <div class="text-emerald-400 font-semibold mb-1">Leaders</div>
+                                <div class="ml-3 space-y-0.5">
+                                    <div class="text-green-400 text-sm">
+                                        Approved: <span class="font-bold">
+                                            {(data.nordicLevelCounts[level]?.leaders || 0) + (data.worldLevelCounts[level]?.leaders || 0) -
+                                            ((data.nordicLevelCounts[level]?.leadersWaiting || 0) + (data.worldLevelCounts[level]?.leadersWaiting || 0))}
+                                        </span>
+                                    </div>
+                                    <div class="text-yellow-400 text-sm">
+                                        Waiting: <span class="font-bold">
+                                            {(data.nordicLevelCounts[level]?.leadersWaiting || 0) + (data.worldLevelCounts[level]?.leadersWaiting || 0)}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Followers -->
+                            <div>
+                                <div class="text-sky-400 font-semibold mb-1">Followers</div>
+                                <div class="ml-3 space-y-0.5">
+                                    <div class="text-green-400 text-sm">
+                                        Approved: <span class="font-bold">
+                                            {(data.nordicLevelCounts[level]?.followers || 0) + (data.worldLevelCounts[level]?.followers || 0) -
+                                            ((data.nordicLevelCounts[level]?.followersWaiting || 0) + (data.worldLevelCounts[level]?.followersWaiting || 0))}
+                                        </span>
+                                    </div>
+                                    <div class="text-yellow-400 text-sm">
+                                        Waiting: <span class="font-bold">
+                                            {(data.nordicLevelCounts[level]?.followersWaiting || 0) + (data.worldLevelCounts[level]?.followersWaiting || 0)}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Total Section -->
+                    <div class="pt-3 border-t border-gray-700">
+                        <div class="text-sm font-semibold text-gray-400 mb-1">Total Registrations</div>
+                        <div class="text-xl font-bold text-gray-200">
+                            {((data.nordicLevelCounts[level]?.total || 0) + (data.worldLevelCounts[level]?.total || 0)).toLocaleString()}
+                        </div>
+                    </div>
+                </div>
+            {/each}
+        </div>
+    </div>
+
+    <!-- <table class="min-w-full bg-gray-800 rounded shadow mb-8 border border-gray-700">
         <thead class="bg-gray-900">
             <tr>
                 <th class="px-4 py-3 text-left font-semibold text-amber-400 border-b border-gray-700">Category</th>
@@ -250,7 +508,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="border-t border-gray-700 hover:bg-gray-700/30">
+            <tr class="border-t border-gray-700 align-top hover:bg-gray-700/30">
                 <td class="px-4 py-3 font-semibold">Income (NOK)</td>
                 <td class="px-4 py-3">{data.totalIncome.toLocaleString('no-NO')}</td>
                 <td class="px-4 py-3">{data.totalNordicIncome.toLocaleString('no-NO')}</td>
@@ -263,26 +521,66 @@
                         {#each Object.entries(
                             Object.entries(data.nordicLevelCounts ?? {})
                                 .concat(Object.entries(data.worldLevelCounts ?? {}))
-                                .reduce((acc, [level, count]) => {
-                                    acc[level] = (acc[level] || 0) + count;
+                                .reduce((acc, [level, breakdown]) => {
+                                    if (!acc[level]) {
+                                        acc[level] = {
+                                            total: 0,
+                                            leaders: 0,
+                                            followers: 0,
+                                            attending: 0,
+                                            waitingList: 0
+                                        };
+                                    }
+                                    acc[level].total += breakdown.total;
+                                    acc[level].leaders += breakdown.leaders;
+                                    acc[level].followers += breakdown.followers;
+                                    acc[level].attending += breakdown.attending;
+                                    acc[level].waitingList += breakdown.waitingList;
                                     return acc;
                                 }, {})
-                        ) as [level, count]}
-                            <li class="mb-1">{level}: <span class="font-bold">{count}</span></li>
+                        ) as [level, breakdown]}
+                            <li class="mb-3">
+                                <div class="font-bold text-amber-400">{level}</div>
+                                <div class="ml-4 text-sm">
+                                    <div>Total: <span class="font-bold">{breakdown.total}</span></div>
+                                    <div class="text-emerald-400">Leaders: <span class="font-bold">{breakdown.leaders}</span></div>
+                                    <div class="text-sky-400">Followers: <span class="font-bold">{breakdown.followers}</span></div>
+                                    <div class="text-green-400">Attending: <span class="font-bold">{breakdown.attending}</span></div>
+                                    <div class="text-yellow-400">Waiting List: <span class="font-bold">{breakdown.waitingList}</span></div>
+                                </div>
+                            </li>
                         {/each}
                     </ul>
                 </td>
                 <td class="px-4 py-3">
                     <ul>
-                        {#each Object.entries(data.nordicLevelCounts ?? {}) as [level, count]}
-                            <li class="mb-1">{level}: <span class="font-bold">{count}</span></li>
+                        {#each Object.entries(data.nordicLevelCounts ?? {}) as [level, breakdown]}
+                            <li class="mb-3">
+                                <div class="font-bold text-amber-400">{level}</div>
+                                <div class="ml-4 text-sm">
+                                    <div>Total: <span class="font-bold">{breakdown.total}</span></div>
+                                    <div class="text-emerald-400">Leaders: <span class="font-bold">{breakdown.leaders}</span></div>
+                                    <div class="text-sky-400">Followers: <span class="font-bold">{breakdown.followers}</span></div>
+                                    <div class="text-green-400">Attending: <span class="font-bold">{breakdown.attending}</span></div>
+                                    <div class="text-yellow-400">Waiting List: <span class="font-bold">{breakdown.waitingList}</span></div>
+                                </div>
+                            </li>
                         {/each}
                     </ul>
                 </td>
                 <td class="px-4 py-3">
                     <ul>
-                        {#each Object.entries(data.worldLevelCounts ?? {}) as [level, count]}
-                            <li class="mb-1">{level}: <span class="font-bold">{count}</span></li>
+                        {#each Object.entries(data.worldLevelCounts ?? {}) as [level, breakdown]}
+                            <li class="mb-3">
+                                <div class="font-bold text-amber-400">{level}</div>
+                                <div class="ml-4 text-sm">
+                                    <div>Total: <span class="font-bold">{breakdown.total}</span></div>
+                                    <div class="text-emerald-400">Leaders: <span class="font-bold">{breakdown.leaders}</span></div>
+                                    <div class="text-sky-400">Followers: <span class="font-bold">{breakdown.followers}</span></div>
+                                    <div class="text-green-400">Attending: <span class="font-bold">{breakdown.attending}</span></div>
+                                    <div class="text-yellow-400">Waiting List: <span class="font-bold">{breakdown.waitingList}</span></div>
+                                </div>
+                            </li>
                         {/each}
                     </ul>
                 </td>
@@ -350,35 +648,9 @@
                 </td>
             </tr>
         </tbody>
-    </table>
+    </table> -->
 
-    <div class="grid gap-8 mb-8">
-        <!-- Nordic charts -->
-        <div class="space-y-8">
-            <div class="bg-gray-800 p-6 rounded-lg shadow">
-                <div bind:this={nordicChartContainer} class="w-full"></div>
-            </div>
-            <div class="bg-gray-800 p-6 rounded-lg shadow">
-                <div bind:this={nordicPassChartContainer} class="w-full"></div>
-            </div>
-            <div class="bg-gray-800 p-6 rounded-lg shadow">
-                <div bind:this={nordicTierChartContainer} class="w-full"></div>
-            </div>
-        </div>
-        
-        <!-- World charts -->
-        <div class="space-y-8">
-            <div class="bg-gray-800 p-6 rounded-lg shadow">
-                <div bind:this={worldChartContainer} class="w-full"></div>
-            </div>
-            <div class="bg-gray-800 p-6 rounded-lg shadow">
-                <div bind:this={worldPassChartContainer} class="w-full"></div>
-            </div>
-            <div class="bg-gray-800 p-6 rounded-lg shadow">
-                <div bind:this={worldTierChartContainer} class="w-full"></div>
-            </div>
-        </div>
-    </div>
+
 {/if}
 
 <style>

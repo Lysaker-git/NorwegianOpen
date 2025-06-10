@@ -106,6 +106,8 @@ async function saveChanges() {
             filteredRegistrations = data.registrations.filter(reg =>
                 reg.FullName?.toLowerCase().includes(normSearch) ||
                 reg.Email?.toLowerCase().includes(normSearch) ||
+                reg.Level?.toLowerCase().includes(normSearch) ||
+                reg.Role?.toLowerCase().includes(normSearch) ||
                 reg.userID?.toLowerCase().includes(normSearch) ||
                 reg.PassOption?.toLowerCase().includes(normSearch) ||
                 reg.AddedIntensive?.toString().toLowerCase().includes(normSearch) ||

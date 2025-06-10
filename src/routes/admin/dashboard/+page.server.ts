@@ -1,13 +1,26 @@
 import type { PageServerLoad } from './$types';
 import { supabaseAdmin } from '$lib/supabaseAdminClient';
 
+interface LevelBreakdown {
+    total: number;
+    leaders: number;
+    followers: number;
+    attending: number;
+    waitingList: number;
+    leadersWaiting: number;
+    followersWaiting: number;
+}
+
 interface ChartData {
     error?: string;
     totalIncome: number;
+    potentialIncome: number;
     totalNordicIncome: number;
+    potentialNordicIncome: number;
     totalWorldIncome: number;
-    nordicLevelCounts: Record<string, number>;
-    worldLevelCounts: Record<string, number>;
+    potentialWorldIncome: number;
+    nordicLevelCounts: Record<string, LevelBreakdown>;
+    worldLevelCounts: Record<string, LevelBreakdown>;
     nordicRoleCounts: Record<string, number>;
     worldRoleCounts: Record<string, number>;
     nordicPassCounts: Record<string, number>;
@@ -20,20 +33,27 @@ interface ChartData {
     worldTierIncome: Record<string, number>;
     nordicRegionCounts: Record<string, number>;
     worldRegionCounts: Record<string, number>;
+    registrationsByRole: {
+        Leader: { status: string }[];
+        Follower: { status: string }[];
+    };
 }
 
 export const load: PageServerLoad<ChartData> = async ({ locals }) => {
     // Fetch all registrations
     const { data: registrations, error } = await supabaseAdmin
         .from('RegistrationDB')
-        .select('AmountDue, Level, Region, Role, PassOption, PriceTier');
+        .select('AmountDue, Level, Region, Role, PassOption, PriceTier, RegistrationStatus');
 
     if (error) {
         return {
             error: 'Failed to fetch registrations',
             totalIncome: 0,
+            potentialIncome: 0,
             totalNordicIncome: 0,
+            potentialNordicIncome: 0,
             totalWorldIncome: 0,
+            potentialWorldIncome: 0,
             nordicLevelCounts: {},
             worldLevelCounts: {},
             nordicRoleCounts: {},
@@ -47,12 +67,28 @@ export const load: PageServerLoad<ChartData> = async ({ locals }) => {
             nordicTierIncome: {},
             worldTierIncome: {},
             nordicRegionCounts: {},
-            worldRegionCounts: {}
+            worldRegionCounts: {},
+            registrationsByRole: {
+                Leader: [],
+                Follower: []
+            }
         };
     }
+    console.log('[SERVER LOAD]' , registrations)
 
     const nordicRegs = registrations.filter(reg => reg.Region === 'Nordic');
     const worldRegs = registrations.filter(reg => reg.Region === 'World');
+
+    console.log('[SERVER LOAD] Nordic Registrations:', nordicRegs.length);
+    console.log('[SERVER LOAD] World Registrations:', worldRegs.length);
+
+
+    // Helper function to determine attendance status
+    function getAttendanceStatus(status: string) {
+        if (['paymentReceived', 'checkedIn', 'approved'].includes(status)) return 'attending';
+        if (['waitingList', 'pendingApproval'].includes(status)) return 'waitingList';
+        return 'other';
+    }
 
     // Normalize pass names
     function normalizePassOption(pass: string) {
@@ -70,15 +106,124 @@ export const load: PageServerLoad<ChartData> = async ({ locals }) => {
         return normalized;
     }
 
-    // Calculate total income by region
+    // Initialize level breakdowns
+    function createLevelBreakdown(): LevelBreakdown {
+        return {
+            total: 0,
+            leaders: 0,
+            followers: 0,
+            attending: 0,
+            waitingList: 0,
+            leadersWaiting: 0,
+            followersWaiting: 0
+        };
+    }
+
+    // Calculate level breakdowns for Nordic registrations
+    const nordicLevelCounts: Record<string, LevelBreakdown> = {};
+    for (const reg of nordicRegs) {
+        if (!reg.Level) continue;
+        
+        if (!nordicLevelCounts[reg.Level]) {
+            nordicLevelCounts[reg.Level] = createLevelBreakdown();
+        }
+        
+        nordicLevelCounts[reg.Level].total++;
+        
+        const status = getAttendanceStatus(reg.RegistrationStatus);
+        
+        if (reg.Role === 'Leader') {
+            nordicLevelCounts[reg.Level].leaders++;
+            if (status === 'attending') {
+                nordicLevelCounts[reg.Level].attending++;
+            } else if (status === 'waitingList') {
+                nordicLevelCounts[reg.Level].waitingList++;
+                nordicLevelCounts[reg.Level].leadersWaiting++;
+            }
+        } else if (reg.Role === 'Follower') {
+            nordicLevelCounts[reg.Level].followers++;
+            if (status === 'attending') {
+                nordicLevelCounts[reg.Level].attending++;
+            } else if (status === 'waitingList') {
+                nordicLevelCounts[reg.Level].waitingList++;
+                nordicLevelCounts[reg.Level].followersWaiting++;
+            }
+        }
+    }
+
+    // Calculate level breakdowns for World registrations
+    const worldLevelCounts: Record<string, LevelBreakdown> = {};
+    for (const reg of worldRegs) {
+        if (!reg.Level) continue;
+        
+        if (!worldLevelCounts[reg.Level]) {
+            worldLevelCounts[reg.Level] = createLevelBreakdown();
+        }
+        
+        worldLevelCounts[reg.Level].total++;
+        
+        const status = getAttendanceStatus(reg.RegistrationStatus);
+        
+        if (reg.Role === 'Leader') {
+            worldLevelCounts[reg.Level].leaders++;
+            if (status === 'attending') {
+                worldLevelCounts[reg.Level].attending++;
+            } else if (status === 'waitingList') {
+                worldLevelCounts[reg.Level].waitingList++;
+                worldLevelCounts[reg.Level].leadersWaiting++;
+            }
+        } else if (reg.Role === 'Follower') {
+            worldLevelCounts[reg.Level].followers++;
+            if (status === 'attending') {
+                worldLevelCounts[reg.Level].attending++;
+            } else if (status === 'waitingList') {
+                worldLevelCounts[reg.Level].waitingList++;
+                worldLevelCounts[reg.Level].followersWaiting++;
+            }
+        }
+    }
+
+    // Helper function to check if status is confirmed
+    function isConfirmedStatus(status: string) {
+        return ['approved', 'checkedIn', 'paymentReceived'].includes(status);
+    }
+
+    // Calculate total income by region with confirmed/potential split
     const totalNordicIncome = nordicRegs.reduce((sum, reg) => {
         const amount = parseFloat(reg.AmountDue);
-        return sum + (isNaN(amount) ? 0 : amount);
+        if (isConfirmedStatus(reg.RegistrationStatus)) {
+            return sum + (isNaN(amount) ? 0 : amount);
+        }
+        return sum;
     }, 0);
+
+    const potentialNordicIncome = nordicRegs.reduce((sum, reg) => {
+        const amount = parseFloat(reg.AmountDue);
+        if (!isConfirmedStatus(reg.RegistrationStatus)) {
+            return sum + (isNaN(amount) ? 0 : amount);
+        }
+        return sum;
+    }, 0);
+
     const totalWorldIncome = worldRegs.reduce((sum, reg) => {
         const amount = parseFloat(reg.AmountDue);
-        return sum + (isNaN(amount) ? 0 : amount);
+        if (isConfirmedStatus(reg.RegistrationStatus)) {
+            return sum + (isNaN(amount) ? 0 : amount);
+        }
+        return sum;
     }, 0);
+
+    const potentialWorldIncome = worldRegs.reduce((sum, reg) => {
+        const amount = parseFloat(reg.AmountDue);
+        if (!isConfirmedStatus(reg.RegistrationStatus)) {
+            return sum + (isNaN(amount) ? 0 : amount);
+        }
+        return sum;
+    }, 0);
+
+    // Calculate total confirmed and potential income
+    const totalIncome = totalNordicIncome + totalWorldIncome;
+    const potentialIncome = potentialNordicIncome + potentialWorldIncome;
 
     // Calculate income and counts by pass type
     const nordicPassCounts: Record<string, number> = {};
@@ -122,52 +267,6 @@ export const load: PageServerLoad<ChartData> = async ({ locals }) => {
         }
     }
 
-    // Calculate level counts by region
-    const nordicLevelCounts: Record<string, number> = {};
-    const worldLevelCounts: Record<string, number> = {};
-
-    for (const reg of nordicRegs) {
-        if (reg.Level) {
-            nordicLevelCounts[reg.Level] = (nordicLevelCounts[reg.Level] || 0) + 1;
-        }
-    }
-
-    for (const reg of worldRegs) {
-        if (reg.Level) {
-            worldLevelCounts[reg.Level] = (worldLevelCounts[reg.Level] || 0) + 1;
-        }
-    }
-
-    const nordicRoleCounts: Record<string, number> = {};
-    for (const reg of nordicRegs) {
-        if (reg.Role) {
-            nordicRoleCounts[reg.Role] = (nordicRoleCounts[reg.Role] || 0) + 1;
-        }
-    }
-    const worldRoleCounts: Record<string, number> = {};
-    for (const reg of worldRegs) {
-        if (reg.Role) {
-            worldRoleCounts[reg.Role] = (worldRoleCounts[reg.Role] || 0) + 1;
-        }
-    }
-    const nordicRegionCounts: Record<string, number> = {};
-    for (const reg of nordicRegs) {
-        if (reg.Region) {
-            nordicRegionCounts[reg.Region] = (nordicRegionCounts[reg.Region] || 0) + 1;
-        }
-    }
-    const worldRegionCounts: Record<string, number> = {};
-    for (const reg of worldRegs) {
-        if (reg.Region) {
-            worldRegionCounts[reg.Region] = (worldRegionCounts[reg.Region] || 0) + 1;
-        }
-    }
-
-    // Calculate total income
-    const totalIncome = registrations.reduce((sum, reg) => {
-        const amount = parseFloat(reg.AmountDue);
-        return sum + (isNaN(amount) ? 0 : amount);
-    }, 0);
     // Count per level
     const levelCounts: Record<string, number> = {};
     for (const reg of registrations) {
@@ -176,29 +275,68 @@ export const load: PageServerLoad<ChartData> = async ({ locals }) => {
         }
     }
 
-    const roleCounts: Record<string, number> = {};
-    for (const reg of registrations) {
+    // Calculate role counts for Nordic registrations
+    const nordicRoleCounts: Record<string, number> = {};
+    for (const reg of nordicRegs) {
         if (reg.Role) {
-            roleCounts[reg.Role] = (roleCounts[reg.Role] || 0) + 1;
+            nordicRoleCounts[reg.Role] = (nordicRoleCounts[reg.Role] || 0) + 1;
         }
     }
 
-    const regionCounts: Record<string, number> = {};
-    for (const reg of registrations) {
-        if (reg.Region) {
-            regionCounts[reg.Region] = (regionCounts[reg.Region] || 0) + 1;
+    // Calculate role counts for World registrations
+    const worldRoleCounts: Record<string, number> = {};
+    for (const reg of worldRegs) {
+        if (reg.Role) {
+            worldRoleCounts[reg.Role] = (worldRoleCounts[reg.Role] || 0) + 1;
         }
-    } 
+    }
+
+    // Calculate region counts for Nordic registrations
+    const nordicRegionCounts: Record<string, number> = {};
+    for (const reg of nordicRegs) {
+        if (reg.Region) {
+            nordicRegionCounts[reg.Region] = (nordicRegionCounts[reg.Region] || 0) + 1;
+        }
+    }
+
+    // Calculate region counts for World registrations
+    const worldRegionCounts: Record<string, number> = {};
+    for (const reg of worldRegs) {
+        if (reg.Region) {
+            worldRegionCounts[reg.Region] = (worldRegionCounts[reg.Region] || 0) + 1;
+        }
+    }
+
+    // Create registrationsByRole data structure
+    const registrationsByRole = {
+        Leader: [] as { status: string }[],
+        Follower: [] as { status: string }[]
+    };
+
+    // Populate registrationsByRole from both Nordic and World registrations
+    [...nordicRegs, ...worldRegs].forEach(reg => {
+        if (reg.Role === 'Leader') {
+            registrationsByRole.Leader.push({
+                status: reg.RegistrationStatus
+            });
+        } else if (reg.Role === 'Follower') {
+            registrationsByRole.Follower.push({
+                status: reg.RegistrationStatus
+            });
+        }
+    });
+
     return {
         totalIncome,
+        potentialIncome,
         totalNordicIncome,
+        potentialNordicIncome,
         totalWorldIncome,
+        potentialWorldIncome,
         nordicLevelCounts,
         worldLevelCounts,
         nordicRoleCounts,
         worldRoleCounts,
-        nordicRegionCounts,
-        worldRegionCounts,
         nordicPassCounts,
         worldPassCounts,
         nordicPassIncome,
@@ -207,8 +345,8 @@ export const load: PageServerLoad<ChartData> = async ({ locals }) => {
         worldTierCounts,
         nordicTierIncome,
         worldTierIncome,
-        levelCounts,
-        roleCounts,
-        regionCounts
+        nordicRegionCounts,
+        worldRegionCounts,
+        registrationsByRole
     };
 };
