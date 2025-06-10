@@ -36,58 +36,81 @@
             <!-- Registration Status -->
             <div class="flex items-center gap-2">
                 <span class="font-semibold text-gray-400">Status:</span>
+                {#if registration.RegistrationStatus === 'paymentReceived'}
+            
+                <span class="text-gray-300">
+                    Paid
+                </span>
+                {:else}
                 <span class="text-gray-300">
                     {statusLabels[registration.RegistrationStatus] || registration.RegistrationStatus}
                 </span>
+                {/if}
             </div>
             <!-- Amount Due -->
             <div class="flex items-center gap-2">
                 <span class="font-semibold text-gray-400">Amount Due:</span>
+                {#if registration.RegistrationStatus === 'paymentReceived'}
+                
+                <span class="text-gray-300">0 NOK (Paid: {registration.AmountDue?.toLocaleString()} NOK)</span>
+                {:else}
                 <span class="text-gray-300">{registration.AmountDue?.toLocaleString()} NOK</span>
+                {/if}
             </div>
             <!-- User ID -->
-            <div class="flex items-center gap-2">
+            <!-- <div class="flex items-center gap-2">
                 <span class="font-semibold text-gray-400">User ID:</span>
                 <span class="text-gray-300">{registration.userID}</span>
-            </div>
+            </div> -->
         </div>
     </div>    
     
-    <!-- Payment Information Block -->
-    <div class="max-w-3xl mx-auto bg-gray-800 rounded-lg shadow-lg p-8 mt-8">
-        <h2 class="text-2xl font-bold text-amber-300 mb-4 font-[NorseBold]">Payment Information</h2>
-        <div class="mb-4 border-b border-gray-700 pb-4">            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="flex-1 space-y-4">
-                    <div class="flex flex-col">
-                        <span class="text-sm text-gray-400 mb-1">Account Name</span>
-                        <span class="text-gray-100 font-medium">{paymentInfo.accountName}</span>
+    {#if registration.RegistrationStatus === 'paymentReceived'}
+        <div class="max-w-3xl mx-auto bg-gray-800 rounded-lg shadow-lg p-8 mt-8">
+            <h2 class="text-2xl font-bold text-amber-300 mb-4 font-[NorseBold]">Payment Status</h2>
+            <p class="text-gray-200">Your payment has been received successfully.</p>
+        </div>
+    {:else}
+        <div class="max-w-3xl mx-auto bg-gray-800 rounded-lg shadow-lg p-8 mt-8">
+            <h2 class="text-2xl font-bold text-amber-300 mb-4 font-[NorseBold]">Payment Status</h2>
+            <p class="text-gray-200">Your payment is pending. Please complete the payment to finalize your registration.</p>
+        </div>
+        <div class="max-w-3xl mx-auto bg-gray-800 rounded-lg shadow-lg p-8 mt-8">
+            <h2 class="text-2xl font-bold text-amber-300 mb-4 font-[NorseBold]">Payment Information</h2>
+            <div class="mb-4 border-b border-gray-700 pb-4">            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex-1 space-y-4">
+                        <div class="flex flex-col">
+                            <span class="text-sm text-gray-400 mb-1">Account Name</span>
+                            <span class="text-gray-100 font-medium">{paymentInfo.accountName}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-sm text-gray-400 mb-1">Account Number</span>
+                            <span class="text-gray-100 font-medium">{paymentInfo.accountNumber}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-sm text-gray-400 mb-1">IBAN</span>
+                            <span class="text-gray-100 font-medium">{paymentInfo.iban}</span>
+                        </div>
                     </div>
-                    <div class="flex flex-col">
-                        <span class="text-sm text-gray-400 mb-1">Account Number</span>
-                        <span class="text-gray-100 font-medium">{paymentInfo.accountNumber}</span>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="text-sm text-gray-400 mb-1">IBAN</span>
-                        <span class="text-gray-100 font-medium">{paymentInfo.iban}</span>
-                    </div>
-                </div>
-                <div class="flex-1 space-y-4">
-                    <div class="flex flex-col">
-                        <span class="text-sm text-gray-400 mb-1">SWIFT/BIC</span>
-                        <span class="text-gray-100 font-medium">{paymentInfo.swift}</span>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="text-sm text-gray-400 mb-1">Bank Name</span>
-                        <span class="text-gray-100 font-medium">{paymentInfo.bankName}</span>
-                    </div>
-                    <div class="flex flex-col">
-                        <span class="text-sm text-gray-400 mb-1">Bank Address</span>
-                        <span class="text-gray-100 font-medium">{paymentInfo.bankAddress}</span>
+                    <div class="flex-1 space-y-4">
+                        <div class="flex flex-col">
+                            <span class="text-sm text-gray-400 mb-1">SWIFT/BIC</span>
+                            <span class="text-gray-100 font-medium">{paymentInfo.swift}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-sm text-gray-400 mb-1">Bank Name</span>
+                            <span class="text-gray-100 font-medium">{paymentInfo.bankName}</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-sm text-gray-400 mb-1">Bank Address</span>
+                            <span class="text-gray-100 font-medium">{paymentInfo.bankAddress}</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    {/if}
+    <!-- Payment Information Block -->
 
     {#if registration.HasPartner}
         <div class="max-w-3xl mx-auto bg-gray-800 rounded-lg shadow-lg p-8 mt-8">

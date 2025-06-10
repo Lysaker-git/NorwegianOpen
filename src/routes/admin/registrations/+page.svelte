@@ -17,9 +17,12 @@
         PartnerName: string | null;
         userID: string;
         created_at: string;
+        paymentConfirmationSent?: boolean;
     }
 
     let isSaving = false;
+    let isSendingConfirmations = false;
+    let isSendingTestMail = false;
     
     export let data: PageData & { registrations: Registration[] };
     
@@ -124,6 +127,67 @@ async function saveChanges() {
         if (!dateString) return 'N/A';
         return new Date(dateString).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
     }
+
+    async function sendPaymentConfirmations(userID: string) {
+        if (isSendingTestMail) return;
+        
+        isSendingTestMail = true;
+        
+        try {
+            const formData = new FormData();
+            formData.append('userIDs', JSON.stringify([userID]));
+
+            const res = await fetch('?/sendPaymentConfirmation', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await res.json();
+            console.log('Test payment confirmation result:', result); // Debugging line to check the result
+
+            if (result.status === 200) {
+                location.reload();
+            } else {
+                alert(`Failed to send payment confirmation: ${result.error || 'Unknown error'}`);
+            }
+        } catch (error) {
+            console.error('Error sending test payment confirmation:', error);
+            alert(`Failed to send payment confirmation: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        } finally {
+            isSendingTestMail = false;
+        }
+    }
+
+    async function sendTestPaymentConfirmation(userID: string) {
+        if (isSendingTestMail) return;
+        
+        isSendingTestMail = true;
+        
+        try {
+            const formData = new FormData();
+            formData.append('userIDs', JSON.stringify([userID]));
+
+            const res = await fetch('?/sendPaymentConfirmation', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await res.json();
+            console.log('Test payment confirmation result:', result); // Debugging line to check the result
+
+            if (result.status === 200) {
+                alert('Test payment confirmation email sent successfully!');
+                location.reload();
+            } else {
+                alert(`Failed to send test payment confirmation: ${result.error || 'Unknown error'}`);
+            }
+        } catch (error) {
+            console.error('Error sending test payment confirmation:', error);
+            alert(`Failed to send test payment confirmation: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        } finally {
+            isSendingTestMail = false;
+        }
+    }
 </script>
 
 <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
@@ -158,13 +222,36 @@ async function saveChanges() {
                 <tbody class="bg-gray-800 divide-y divide-gray-700">
                     {#each filteredRegistrations as reg (reg.id)}
                         <tr>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm text-amber-400">
+                            <td class="px-4 py-3 whitespace-nowrap text-sm text-amber-400 flex gap-2">
                                     <a
                                         href={`/admin/registrations/${reg.userID}`}
-                                        class="inline-block px-4 py-2 bg-amber-500 text-gray-900 font-semibold rounded hover:bg-amber-600 transition-colors duration-150"
+                                        class="grid place-items-center px-4 py-2 bg-amber-500 text-gray-900 font-semibold rounded hover:bg-amber-600 transition-colors duration-150"
                                     >
                                         View/Edit
-                                    </a>
+                                    </a>                                    
+                                    {#if reg.RegistrationStatus === 'paymentReceived' && !reg.paymentConfirmationSent}
+                                        <button
+                                            class="grid place-items-center text-xs px-2 py-1.5 bg-blue-500 text-white font-medium rounded hover:bg-blue-600 transition-colors duration-150 items-start gap-1 w-fit"
+                                            on:click={() => sendPaymentConfirmations(reg.userID)}
+                                            disabled={isSendingTestMail}
+                                        >
+                                            {#if !isSendingTestMail}
+                                                <!-- <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                                </svg> -->
+                                                <p class=" break-words w-full">
+                                                    Send Payment <br> Confirmation
+                                                </p>
+                                                {:else}
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 flex-shrink-0 mt-0.5 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m0 14v1m8-9h1m-14 0H4m16.364 6.364l-.707-.707M6.343 6.343l-.707-.707M19.071 19.071l-.707-.707M5.636 18.364l-.707-.707"/>
+                                                </svg>
+                                                <p class="leading-none break-words w-full">
+                                                    Sending...
+                                                </p>
+                                            {/if}
+                                        </button>
+                                    {/if}
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-200">{reg.FullName}</td>
                             <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-200">{reg.PartnerName || ''}</td>
@@ -185,7 +272,11 @@ async function saveChanges() {
                                     <option value="checkedIn">Checked In</option>
                                 </select>
                             </td>
-                            <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-300">{reg.AmountDue?.toLocaleString()} NOK</td>
+                            {#if reg.RegistrationStatus === 'paymentReceived' || reg.RegistrationStatus === 'checkedIn'}
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-300">0 NOK</td>
+                            {:else}
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-300">{reg.AmountDue?.toLocaleString()} NOK</td>
+                            {/if}
                         </tr>
                     {/each}
                 </tbody>
@@ -207,6 +298,25 @@ async function saveChanges() {
             {isSaving ? 'Saving...' : 'Save'}
         </button>
     </div>
+
+    <!-- Payment Confirmation Button -->
+    {#if filteredRegistrations.some(reg => reg.RegistrationStatus === 'paymentReceived' && !reg.paymentConfirmationSent)}
+        <div class="mt-4">
+            <button
+                class="px-6 py-2 rounded bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 transition"
+                on:click={sendPaymentConfirmations}
+                disabled={isSendingConfirmations}
+            >
+                {isSendingConfirmations ? 'Sending...' : 'Send Payment Confirmations'}
+            </button>
+            <span class="ml-2 text-sm text-gray-400">
+                {filteredRegistrations.filter(reg => 
+                    reg.RegistrationStatus === 'paymentReceived' && !reg.paymentConfirmationSent
+                ).length} confirmation(s) pending
+            </span>
+        </div>
+    {/if}
+    
     {#if sendApprovedMail}
         {#if emailsToApprove.length > 0}
             <div class="mt-4 p-4 rounded bg-gray-700 text-gray-100 shadow">

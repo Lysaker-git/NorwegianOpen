@@ -7,7 +7,25 @@ import { GOOGLE_EMAIL } from '$env/static/private';
 import { paymentInfo } from '$lib/components/constants';
 import { colorPalette } from '$lib/components/constants';
 
-export const load: PageServerLoad = async ({ locals }) => {
+interface Registration {
+    id: any;
+    FullName: string | null;
+    Email: string | null;
+    Level: string | null;
+    Role: string | null;
+    PassOption: string | null;
+    AddedIntensive: boolean;
+    AmountDue: number | null;
+    RegistrationStatus: string;
+    PaymentDeadline: string | null;
+    HasPartner: boolean;
+    PartnerName: string | null;
+    userID: string;
+    created_at: string;
+    paymentConfirmationSent?: boolean;
+}
+
+export const load = (async ({ locals }) => {
     // The layout.server.ts should already protect this, but double-check
     if (!locals.isAdmin) {
         throw SvelteKitError(403, 'Forbidden: You do not have access to this page.');
@@ -29,7 +47,8 @@ export const load: PageServerLoad = async ({ locals }) => {
             HasPartner,
             PartnerName,
             userID,
-            created_at
+            created_at,
+            paymentConfirmationSent
         `)
         .order('created_at', { ascending: true }); // Show newest first
 
@@ -39,9 +58,9 @@ export const load: PageServerLoad = async ({ locals }) => {
     }
 
     return {
-        registrations: registrations || []
+        registrations: (registrations || []) as Registration[]
     };
-};
+}) satisfies PageServerLoad;
 
 interface RegistrationDetailsForEmail {
     Email: string | null;
@@ -229,6 +248,89 @@ function generateRegistrationApprovedEmailHtml(details: RegistrationDetailsForEm
     </html>`;
 }
 
+function generatePaymentConfirmationEmailHtml(details: RegistrationDetailsForEmail): string {
+    const eventName = "Norwegian Open WCS 2025";
+    const baseUrl = 'https://norwegianopen.no';
+    const qrCodeData = details.userID || '';
+    const qrCodeImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrCodeData)}`;
+
+    const styles = {
+        body: `font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; line-height: 1.6; color: ${colorPalette.textColor}; background-color: ${colorPalette.backgroundColor}; margin: 0; padding: 20px 0;`,
+        container: `max-width: 600px; margin: 20px auto; background-color: #fff; border: 1px solid ${colorPalette.borderColor}; border-radius: 5px; overflow: hidden;`,
+        header: `background-color: ${colorPalette.primaryColor}; color: #fff; padding: 25px 20px; text-align: center;`,
+        headerH1: `margin: 0; font-size: 28px; color: #fff; font-weight: bold;`,
+        content: `padding: 25px 30px;`,
+        h2: `color: ${colorPalette.primaryColor}; font-size: 22px; margin-top: 25px; margin-bottom: 15px; border-bottom: 1px solid ${colorPalette.borderColor}; padding-bottom: 8px; font-weight: bold;`,
+        p: `margin-bottom: 16px; font-size: 15px; color: ${colorPalette.textColor};`,
+        table: `width: 100%; border-collapse: collapse; margin-bottom: 20px;`,
+        th: `text-align: left; padding: 10px 8px; border-bottom: 1px solid ${colorPalette.borderColor}; color: #555; font-weight: normal; width: 35%;`,
+        td: `text-align: left; padding: 10px 8px; border-bottom: 1px solid ${colorPalette.borderColor}; color: ${colorPalette.textColor};`,
+        qrContainer: `text-align: center; margin: 25px 0; padding: 20px; border: 1px solid ${colorPalette.primaryColor}; border-radius: 4px; background-color: #F0F5FA;`,
+        footer: `text-align: center; padding: 20px; font-size: 12px; color: #fff; background-color: rgba(10, 35, 66, 0.75);`
+    };
+
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Payment Confirmed - ${eventName}</title>
+    </head>
+    <body style="${styles.body}">
+        <div style="${styles.container}">
+            <div style="${styles.header}">
+                <h1 style="${styles.headerH1}">${eventName}</h1>
+            </div>
+            <div style="${styles.content}">
+                <h2 style="${styles.h2}">Payment Confirmed for ${details.FullName || 'Dancer'}!</h2>
+                <p style="${styles.p}">
+                    Thank you for your payment! Your spot at <strong>${eventName}</strong> is now <span style="color: #28a745; font-weight: bold;">SECURED</span>!
+                </p>
+                
+                <div style="${styles.qrContainer}">
+                    <h3 style="margin-top: 0; color: ${colorPalette.primaryColor};">Your Check-in QR Code</h3>
+                    <p style="margin-bottom: 20px;">
+                        Use this QR code for quick access to your registration details and check-in at the event.
+                    </p>
+                    <div style="display: inline-block; background: white; padding: 10px;">
+                        <img src="${qrCodeImageUrl}" alt="Check-in QR Code" style="max-width: 200px; height: auto;"/>
+                    </div>
+                    <p style="margin-top: 15px; font-size: 14px; color: #666;">
+                        Your registration ID: ${details.userID}
+                    </p>
+                </div>
+
+                <h2 style="${styles.h2}">Registration Details:</h2>
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="${styles.table}">
+                    <tr><th style="${styles.th}">Full Name:</th><td style="${styles.td}">${details.FullName || 'N/A'}</td></tr>
+                    <tr><th style="${styles.th}">Email:</th><td style="${styles.td}">${details.Email || 'N/A'}</td></tr>
+                    <tr><th style="${styles.th}">Region:</th><td style="${styles.td}">${details.Region || 'N/A'}</td></tr>
+                    <tr><th style="${styles.th}">Level:</th><td style="${styles.td}">${details.Level || 'N/A'}</td></tr>
+                    <tr><th style="${styles.th}">Pass Option:</th><td style="${styles.td}">${details.PassOption || 'N/A'}</td></tr>
+                    <tr><th style="${styles.th}">Role:</th><td style="${styles.td}">${details.Role || 'N/A'}</td></tr>
+                </table>
+
+                <p style="${styles.p}">
+                    Important: Save this email or take a screenshot of your QR code - you'll need it for check-in!
+                </p>
+
+                <p style="${styles.p}">
+                    Looking forward to dancing with you at ${eventName}!
+                </p>
+
+                <p style="${styles.p}">
+                    Best regards,<br>
+                    The ${eventName} Team
+                </p>
+            </div>
+            <div style="${styles.footer}">
+                <p style="color:#FFFFFF">© ${new Date().getFullYear()} ${eventName}. All rights reserved.</p>
+            </div>
+        </div>
+    </body>
+    </html>`;
+}
+
 import { json } from '@sveltejs/kit';
 import type { Actions } from './$types';
 
@@ -329,21 +431,107 @@ export const actions = {
                         }
                     }
                 }
-            }
-
-            return {
-                body: { 
-                    success: true,
-                    message: 'Updates completed successfully'
-                }
+            }            return {
+                status: 200,
+                success: true,
+                message: 'Updates completed successfully'
             };
         } catch (error: any) {
             console.error('Update error:', error);
             return {
-                body: {
-                    success: false,
-                    error: error.message || 'Unknown error occurred'
+                success: false,
+                error: error.message || 'Unknown error occurred'
+            };
+        }
+    },
+    
+    sendPaymentConfirmation: async ({ request }) => {
+        const formData = await request.formData();
+        const userIDs = JSON.parse(formData.get('userIDs') as string);
+
+        try {
+            for (const userID of userIDs) {
+                // Fetch registration details
+                const { data: registration, error: fetchError } = await supabaseAdmin
+                    .from('RegistrationDB')
+                    .select('*')
+                    .eq('userID', userID)
+                    .single();
+
+                if (fetchError || !registration) {
+                    console.error('Error fetching registration:', fetchError);
+                    continue;
                 }
+
+                // Generate email HTML
+                const emailHtml = generatePaymentConfirmationEmailHtml({
+                    Email: registration.Email,
+                    FullName: registration.FullName,
+                    WSDCID: registration.WSDCID,
+                    Region: registration.Region,
+                    Level: registration.Level,
+                    PassOption: registration.PassOption,
+                    AddedIntensive: registration.AddedIntensive,
+                    Role: registration.Role,
+                    userID: registration.userID,
+                    Country: registration.Country,
+                    Competing: registration.Competing,
+                    HasPartner: registration.HasPartner,
+                    PromoCode: registration.PromoCode,
+                    PartnerName: registration.PartnerName,
+                    PartnerEmail: registration.PartnerEmail,
+                    AmountDue: registration.AmountDue,
+                    PaymentDeadline: registration.PaymentDeadline,
+                    PriceTier: registration.PriceTier,
+                    RegistrationStatus: 'paymentReceived',
+                    PassPrice: registration.PassPrice,
+                    IntensivePrice: registration.IntensivePrice,
+                    BasePriceAtRegistration: registration.BasePriceAtRegistration
+                });
+
+                // Send the email if we have an email address
+                if (registration.Email) {
+                    const message = {
+                        from: GOOGLE_EMAIL,
+                        to: registration.Email,
+                        subject: 'Payment Confirmed - Norwegian Open WCS 2025',
+                        html: emailHtml
+                    };
+
+                    try {
+                        await new Promise((resolve, reject) => {
+                            transporter.sendMail(message, (err, info) => {
+                                if (err) {
+                                    console.error('Error sending email:', err);
+                                    reject(err);
+                                } else {
+                                    console.log('Email sent:', info);
+                                    resolve(info);
+                                }
+                            });
+                        });
+
+                        // Update the payment confirmation email sent status
+                        await supabaseAdmin
+                            .from('RegistrationDB')
+                            .update({ paymentConfirmationSent: true })
+                            .eq('userID', userID);
+
+                    } catch (emailError) {
+                        console.error('Error sending payment confirmation email:', emailError);
+                    }
+                }
+            }
+
+            return {
+                success: true,
+                message: 'Payment confirmation emails sent successfully'
+            };
+        } catch (error: any) {
+            console.error('Error sending payment confirmations:', error);
+            return {
+                success: false,
+                error: error.message || 'Failed to send payment confirmations'
             };
         }
     }

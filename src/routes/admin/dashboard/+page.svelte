@@ -346,18 +346,27 @@
                         
                         {@const totalApproved = totalApprovedLeaders + totalApprovedFollowers}
                         {@const leadersPercentage = (totalApprovedLeaders / totalApproved) * 100 || 0}
-                        
-                        <div class="grid grid-cols-2 gap-4">
+                          <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <div class="text-emerald-400 font-semibold mb-1">Leaders</div>
                                 <div class="text-2xl font-bold text-emerald-400">{totalApprovedLeaders}</div>
                                 <div class="text-sm text-emerald-400/80">{Math.round(leadersPercentage)}%</div>
+                                <div class="text-xs text-emerald-400/60 mt-1">
+                                    Paid: {data.registrationsByRole.Leader.filter(reg => ['paymentReceived', 'checkedIn'].includes(reg.status)).length}
+                                </div>
                             </div>
                             <div>
                                 <div class="text-sky-400 font-semibold mb-1">Followers</div>
                                 <div class="text-2xl font-bold text-sky-400">{totalApprovedFollowers}</div>
                                 <div class="text-sm text-sky-400/80">{Math.round(100 - leadersPercentage)}%</div>
+                                <div class="text-xs text-sky-400/60 mt-1">
+                                    Paid: {data.registrationsByRole.Follower.filter(reg => ['paymentReceived', 'checkedIn'].includes(reg.status)).length}
+                                </div>
                             </div>
+                        </div>
+                        <div class="text-xs text-gray-400 mt-3 text-start">
+                            Total Paid: {data.registrationsByRole.Leader.filter(reg => ['paymentReceived', 'checkedIn'].includes(reg.status)).length + 
+                            data.registrationsByRole.Follower.filter(reg => ['paymentReceived', 'checkedIn'].includes(reg.status)).length} of {totalApproved}
                         </div>
                     {/if}
                 </div>
@@ -497,159 +506,6 @@
             {/each}
         </div>
     </div>
-
-    <!-- <table class="min-w-full bg-gray-800 rounded shadow mb-8 border border-gray-700">
-        <thead class="bg-gray-900">
-            <tr>
-                <th class="px-4 py-3 text-left font-semibold text-amber-400 border-b border-gray-700">Category</th>
-                <th class="px-4 py-3 text-left font-semibold text-amber-400 border-b border-gray-700">Total</th>
-                <th class="px-4 py-3 text-left font-semibold text-amber-400 border-b border-gray-700">Nordic</th>
-                <th class="px-4 py-3 text-left font-semibold text-amber-400 border-b border-gray-700">World</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="border-t border-gray-700 align-top hover:bg-gray-700/30">
-                <td class="px-4 py-3 font-semibold">Income (NOK)</td>
-                <td class="px-4 py-3">{data.totalIncome.toLocaleString('no-NO')}</td>
-                <td class="px-4 py-3">{data.totalNordicIncome.toLocaleString('no-NO')}</td>
-                <td class="px-4 py-3">{data.totalWorldIncome.toLocaleString('no-NO')}</td>
-            </tr>
-            <tr class="border-t border-gray-700 align-top hover:bg-gray-700/30">
-                <td class="px-4 py-3 font-semibold">Registrations per Level</td>
-                <td class="px-4 py-3">
-                    <ul>
-                        {#each Object.entries(
-                            Object.entries(data.nordicLevelCounts ?? {})
-                                .concat(Object.entries(data.worldLevelCounts ?? {}))
-                                .reduce((acc, [level, breakdown]) => {
-                                    if (!acc[level]) {
-                                        acc[level] = {
-                                            total: 0,
-                                            leaders: 0,
-                                            followers: 0,
-                                            attending: 0,
-                                            waitingList: 0
-                                        };
-                                    }
-                                    acc[level].total += breakdown.total;
-                                    acc[level].leaders += breakdown.leaders;
-                                    acc[level].followers += breakdown.followers;
-                                    acc[level].attending += breakdown.attending;
-                                    acc[level].waitingList += breakdown.waitingList;
-                                    return acc;
-                                }, {})
-                        ) as [level, breakdown]}
-                            <li class="mb-3">
-                                <div class="font-bold text-amber-400">{level}</div>
-                                <div class="ml-4 text-sm">
-                                    <div>Total: <span class="font-bold">{breakdown.total}</span></div>
-                                    <div class="text-emerald-400">Leaders: <span class="font-bold">{breakdown.leaders}</span></div>
-                                    <div class="text-sky-400">Followers: <span class="font-bold">{breakdown.followers}</span></div>
-                                    <div class="text-green-400">Attending: <span class="font-bold">{breakdown.attending}</span></div>
-                                    <div class="text-yellow-400">Waiting List: <span class="font-bold">{breakdown.waitingList}</span></div>
-                                </div>
-                            </li>
-                        {/each}
-                    </ul>
-                </td>
-                <td class="px-4 py-3">
-                    <ul>
-                        {#each Object.entries(data.nordicLevelCounts ?? {}) as [level, breakdown]}
-                            <li class="mb-3">
-                                <div class="font-bold text-amber-400">{level}</div>
-                                <div class="ml-4 text-sm">
-                                    <div>Total: <span class="font-bold">{breakdown.total}</span></div>
-                                    <div class="text-emerald-400">Leaders: <span class="font-bold">{breakdown.leaders}</span></div>
-                                    <div class="text-sky-400">Followers: <span class="font-bold">{breakdown.followers}</span></div>
-                                    <div class="text-green-400">Attending: <span class="font-bold">{breakdown.attending}</span></div>
-                                    <div class="text-yellow-400">Waiting List: <span class="font-bold">{breakdown.waitingList}</span></div>
-                                </div>
-                            </li>
-                        {/each}
-                    </ul>
-                </td>
-                <td class="px-4 py-3">
-                    <ul>
-                        {#each Object.entries(data.worldLevelCounts ?? {}) as [level, breakdown]}
-                            <li class="mb-3">
-                                <div class="font-bold text-amber-400">{level}</div>
-                                <div class="ml-4 text-sm">
-                                    <div>Total: <span class="font-bold">{breakdown.total}</span></div>
-                                    <div class="text-emerald-400">Leaders: <span class="font-bold">{breakdown.leaders}</span></div>
-                                    <div class="text-sky-400">Followers: <span class="font-bold">{breakdown.followers}</span></div>
-                                    <div class="text-green-400">Attending: <span class="font-bold">{breakdown.attending}</span></div>
-                                    <div class="text-yellow-400">Waiting List: <span class="font-bold">{breakdown.waitingList}</span></div>
-                                </div>
-                            </li>
-                        {/each}
-                    </ul>
-                </td>
-            </tr>
-            <tr class="border-t border-gray-700 align-top hover:bg-gray-700/30">
-                <td class="px-4 py-3 font-semibold">Registrations per Region</td>
-                <td class="px-4 py-3">
-                    <ul>
-                        {#each Object.entries(
-                            Object.entries(data.nordicRegionCounts ?? {})
-                                .concat(Object.entries(data.worldRegionCounts ?? {}))
-                                .reduce((acc, [region, count]) => {
-                                    acc[region] = (acc[region] || 0) + count;
-                                    return acc;
-                                }, {})
-                        ) as [region, count]}
-                            <li class="mb-1">{region}: <span class="font-bold">{count}</span></li>
-                        {/each}
-                    </ul>
-                </td>
-                <td class="px-4 py-3">
-                    <ul>
-                        {#each Object.entries(data.nordicRegionCounts ?? {}) as [region, count]}
-                            <li class="mb-1">{region}: <span class="font-bold">{count}</span></li>
-                        {/each}
-                    </ul>
-                </td>
-                <td class="px-4 py-3">
-                    <ul>
-                        {#each Object.entries(data.worldRegionCounts ?? {}) as [region, count]}
-                            <li class="mb-1">{region}: <span class="font-bold">{count}</span></li>
-                        {/each}
-                    </ul>
-                </td>
-            </tr>
-            <tr class="border-t border-gray-700 align-top hover:bg-gray-700/30">
-                <td class="px-4 py-3 font-semibold">Registrations per Role</td>
-                <td class="px-4 py-3">
-                    <ul>
-                        {#each Object.entries(
-                            Object.entries(data.nordicRoleCounts ?? {})
-                                .concat(Object.entries(data.worldRoleCounts ?? {}))
-                                .reduce((acc, [role, count]) => {
-                                    acc[role] = (acc[role] || 0) + count;
-                                    return acc;
-                                }, {})
-                        ) as [role, count]}
-                            <li class="mb-1">{role}: <span class="font-bold">{count}</span></li>
-                        {/each}
-                    </ul>
-                </td>
-                <td class="px-4 py-3">
-                    <ul>
-                        {#each Object.entries(data.nordicRoleCounts ?? {}) as [role, count]}
-                            <li class="mb-1">{role}: <span class="font-bold">{count}</span></li>
-                        {/each}
-                    </ul>
-                </td>
-                <td class="px-4 py-3">
-                    <ul>
-                        {#each Object.entries(data.worldRoleCounts ?? {}) as [role, count]}
-                            <li class="mb-1">{role}: <span class="font-bold">{count}</span></li>
-                        {/each}
-                    </ul>
-                </td>
-            </tr>
-        </tbody>
-    </table> -->
-
 
 {/if}
 
