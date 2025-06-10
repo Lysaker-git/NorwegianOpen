@@ -37,13 +37,20 @@ interface ChartData {
         Leader: { status: string }[];
         Follower: { status: string }[];
     };
+    intensiveCounts: {
+        total: number;
+        approved: number;
+        waiting: number;
+        nordic: number;
+        world: number;
+    };
 }
 
 export const load: PageServerLoad<ChartData> = async ({ locals }) => {
-    // Fetch all registrations
+    // Fetch all registrations    
     const { data: registrations, error } = await supabaseAdmin
         .from('RegistrationDB')
-        .select('AmountDue, Level, Region, Role, PassOption, PriceTier, RegistrationStatus');
+        .select('AmountDue, Level, Region, Role, PassOption, PriceTier, RegistrationStatus, AddedIntensive');
 
     if (error) {
         return {
@@ -71,6 +78,13 @@ export const load: PageServerLoad<ChartData> = async ({ locals }) => {
             registrationsByRole: {
                 Leader: [],
                 Follower: []
+            },
+            intensiveCounts: {
+                total: 0,
+                approved: 0,
+                waiting: 0,
+                nordic: 0,
+                world: 0
             }
         };
     }
@@ -326,6 +340,15 @@ export const load: PageServerLoad<ChartData> = async ({ locals }) => {
         }
     });
 
+    // Calculate intensive registrations
+    const intensiveCounts = {
+        total: registrations.filter(reg => reg.AddedIntensive).length,
+        approved: registrations.filter(reg => reg.AddedIntensive && ['approved', 'paymentReceived', 'checkedIn'].includes(reg.RegistrationStatus)).length,
+        waiting: registrations.filter(reg => reg.AddedIntensive && ['waitingList', 'pendingApproval'].includes(reg.RegistrationStatus)).length,
+        nordic: nordicRegs.filter(reg => reg.AddedIntensive).length,
+        world: worldRegs.filter(reg => reg.AddedIntensive).length
+    };
+
     return {
         totalIncome,
         potentialIncome,
@@ -347,6 +370,7 @@ export const load: PageServerLoad<ChartData> = async ({ locals }) => {
         worldTierIncome,
         nordicRegionCounts,
         worldRegionCounts,
-        registrationsByRole
+        registrationsByRole,
+        intensiveCounts
     };
 };
