@@ -447,8 +447,33 @@
             </div>
         </div>
 
+        <!-- Intensive Registration Card -->
+        <div class="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6 mt-6">
+            <h4 class="text-lg font-semibold text-amber-400 mb-4">Intensive Registrations</h4>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div>
+                    <div class="text-emerald-400 font-semibold mb-1">Total</div>
+                    <div class="text-2xl font-bold text-emerald-400">{data.intensiveCounts?.total || 0}</div>
+                </div>
+                <div>
+                    <div class="text-sky-400 font-semibold mb-1">Approved</div>
+                    <div class="text-2xl font-bold text-sky-400">{data.intensiveCounts?.approved || 0}</div>
+                    <div class="text-xs text-sky-400/60">
+                        {Math.round(((data.intensiveCounts?.approved || 0) / (data.intensiveCounts?.total || 1)) * 100)}% of total
+                    </div>
+                </div>
+                <div>
+                    <div class="text-yellow-400 font-semibold mb-1">Waiting</div>
+                    <div class="text-2xl font-bold text-yellow-400">{data.intensiveCounts?.waiting || 0}</div>
+                    <div class="text-xs text-yellow-400/60">
+                        {Math.round(((data.intensiveCounts?.waiting || 0) / (data.intensiveCounts?.total || 1)) * 100)}% of total
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Level Cards Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mt-6">
             {#each levels as level}
                 <div class="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6">
                     <h4 class="text-lg font-semibold text-amber-400 mb-4 text-center">{level}</h4>
