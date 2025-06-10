@@ -56,6 +56,7 @@
 		"esbuild": "^0.25.4",
 		"fa-svelte": "^3.1.0",
 		"googleapis": "^148.0.0",
-		"nodemailer": "^7.0.3"
+		"nodemailer": "^7.0.3",
+		"svelte-qrcode": "^1.0.1"
 	}
 }
