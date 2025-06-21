@@ -208,6 +208,7 @@ export const actions: Actions = {
                 roommates.push(formData.get('Roommate1'), formData.get('Roommate2'));
             } else if (hotelOption === 'HotelOptionFour') {
                 if (!formData.get('Roommate1') || !formData.get('Roommate2') || !formData.get('Roommate3')) {
+                    console.log('[SERVER]', formData.get('Roommate1'), formData.get('Roommate2'), formData.get('Roommate3'));
                     return fail(400, { error: 'Quatro room requires three roommate names', field: 'roommate' });
                 }
                 roommates.push(formData.get('Roommate1'), formData.get('Roommate2'), formData.get('Roommate3'));
