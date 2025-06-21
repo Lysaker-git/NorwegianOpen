@@ -504,7 +504,7 @@
                                         bind:value={quatroRoomMate2}
                                         placeholder="Roommate 2 name"
                                         class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black" />
-                                    <input required type="text" id="tripleRoomMate2" name="Roommate2"
+                                    <input required type="text" id="tripleRoomMate2" name="Roommate3"
                                         bind:value={quatroRoomMate3}
                                         placeholder="Roommate 3 name"
                                         class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black" />
