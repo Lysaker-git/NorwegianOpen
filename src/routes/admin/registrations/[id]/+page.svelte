@@ -77,6 +77,29 @@
             alert('Failed to update registration');
         }
     }
+
+    let showReminderConfirm = false;
+    let reminderStatus: 'idle' | 'sending' | 'sent' | 'error' = 'idle';
+    let reminderError = '';
+
+    async function sendPaymentReminder() {
+        const formData = new FormData();
+        reminderStatus = 'sending';
+        reminderError = '';
+        const res = await fetch('?/' + 'sendPaymentReminder', {
+            method: 'POST',
+            body: formData
+        });
+        console.log('Payment reminder response:', res);
+        if (res.ok) {
+            reminderStatus = 'sent';
+            await invalidate('registration');
+        } else {
+            reminderStatus = 'error';
+            reminderError = 'Failed to send payment reminder.';
+        }
+        showReminderConfirm = false;
+    }
 </script>
 
 {#if registration}
@@ -318,4 +341,31 @@
         {/if}
 {:else}
     <p class="text-gray-400 text-center mt-8">Registration not found.</p>
+{/if}
+
+{#if registration && registration.RegistrationStatus === 'approved'}
+    <div class="mt-6 flex items-center gap-4">
+        <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" on:click={() => showReminderConfirm = true}>
+            Send Payment Reminder
+        </button>
+        {#if reminderStatus === 'sent'}
+            <span class="text-green-400 ml-2">Reminder sent!</span>
+        {:else if reminderStatus === 'error'}
+            <span class="text-red-400 ml-2">{reminderError}</span>
+        {/if}
+    </div>
+    {#if showReminderConfirm}
+        <div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+            <div class="bg-gray-800 p-6 rounded shadow-lg border border-gray-600 max-w-sm w-full">
+                <h2 class="text-lg font-bold mb-4 text-white">Send Payment Reminder?</h2>
+                <p class="mb-4 text-gray-300">Are you sure you want to send a payment reminder to <span class="font-semibold">{registration.Email}</span>?</p>
+                <div class="flex gap-4 justify-end">
+                    <button class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700" on:click={() => showReminderConfirm = false}>Cancel</button>
+                    <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" on:click={sendPaymentReminder} disabled={reminderStatus === 'sending'}>
+                        {reminderStatus === 'sending' ? 'Sending...' : 'Send Reminder'}
+                    </button>
+                </div>
+            </div>
+        </div>
+    {/if}
 {/if}
