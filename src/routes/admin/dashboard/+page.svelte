@@ -532,6 +532,34 @@
         </div>
     </div>
 
+    <!-- Planned Competitors by Level Summary Cards -->
+    <div class="mt-10">
+        <h3 class="text-xl font-semibold text-amber-400 mb-4 text-center">Planned Competitors by Level</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {#each levels as level}
+                {#if data.plannedCompetitors[level]}
+                    <div class="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6 flex flex-col items-center">
+                        <div class="text-lg font-bold text-amber-300 mb-2">{level}</div>
+                        <div class="flex flex-col gap-2 w-full">
+                            <div class="flex items-center justify-between w-full">
+                                <span class="text-emerald-400 font-semibold">Leaders</span>
+                                <span class="text-emerald-200 text-xl font-bold">{data.plannedCompetitors[level].Leader}</span>
+                            </div>
+                            <div class="flex items-center justify-between w-full">
+                                <span class="text-sky-400 font-semibold">Followers</span>
+                                <span class="text-sky-200 text-xl font-bold">{data.plannedCompetitors[level].Follower}</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 border-t border-gray-700 pt-2 w-full flex items-center justify-between">
+                            <span class="text-gray-400 font-semibold">Total</span>
+                            <span class="text-gray-100 text-xl font-bold">{data.plannedCompetitors[level].Leader + data.plannedCompetitors[level].Follower}</span>
+                        </div>
+                    </div>
+                {/if}
+            {/each}
+        </div>
+    </div>
+
 {/if}
 
 <style>
