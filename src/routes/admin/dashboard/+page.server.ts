@@ -45,6 +45,12 @@ interface ChartData {
         world: number;
     };
     plannedCompetitors: Record<string, { Leader: number; Follower: number }>;
+    hotelStats: {
+        optionCounts: Record<string, number>;
+        totalAmount: number;
+        totalNights: number;
+        freeNights: number;
+    };
 }
 
 export const load: PageServerLoad<ChartData> = async ({ locals }) => {
@@ -87,7 +93,13 @@ export const load: PageServerLoad<ChartData> = async ({ locals }) => {
                 nordic: 0,
                 world: 0
             },
-            plannedCompetitors: {}
+            plannedCompetitors: {},
+            hotelStats: {
+                optionCounts: {},
+                totalAmount: 0,
+                totalNights: 0,
+                freeNights: 0
+            }
         };
     }
     console.log('[SERVER LOAD]' , registrations)
@@ -374,6 +386,36 @@ export const load: PageServerLoad<ChartData> = async ({ locals }) => {
         }
     }
 
+    // --- Hotel Registration Statistics ---
+    const { data: hotelRegistrations, error: hotelError } = await supabaseAdmin
+        .from('HotelRegistration')
+        .select('hoteloption, amountdue, numberofnights');
+
+    let hotelStats = {
+        optionCounts: {} as Record<string, number>,
+        totalAmount: 0,
+        totalNights: 0,
+        freeNights: 0
+    };
+    if (!hotelError && hotelRegistrations) {
+        for (const reg of hotelRegistrations) {
+            // Count hotel options
+            if (reg.hoteloption) {
+                hotelStats.optionCounts[reg.hoteloption] = (hotelStats.optionCounts[reg.hoteloption] || 0) + 1;
+            }
+            // Sum amount
+            if (reg.amountdue) {
+                hotelStats.totalAmount += Number(reg.amountdue) || 0;
+            }
+            // Sum nights
+            if (reg.numberofnights) {
+                hotelStats.totalNights += Number(reg.numberofnights) || 0;
+            }
+        }
+        // Calculate free nights (1 per 20 booked)
+        hotelStats.freeNights = Math.floor(hotelStats.totalNights / 20);
+    }
+
     return {
         totalIncome,
         potentialIncome,
@@ -397,6 +439,7 @@ export const load: PageServerLoad<ChartData> = async ({ locals }) => {
         worldRegionCounts,
         registrationsByRole,
         intensiveCounts,
-        plannedCompetitors: plannedCompetitorsByLevel
+        plannedCompetitors: plannedCompetitorsByLevel,
+        hotelStats
     };
 };
