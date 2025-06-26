@@ -246,6 +246,14 @@
             .style("font-size", "12px")
             .text(type === 'level' ? "Number of Registrations" : "Count / Income (NOK)");
     }
+
+    // Hotel option display names
+    const hotelOptionDisplay: Record<string, string> = {
+        HotelOptionOne: 'Single Room',
+        HotelOptionTwo: 'Double Room',
+        HotelOptionThree: 'Triple Room',
+        HotelOptionFour: 'Quatro Room',
+    };
 </script>
 
 <h1 class="text-2xl font-bold mb-6">Admin Dashboard</h1>
@@ -322,7 +330,7 @@
     </div>
 
     <!-- Registrations by Level Cards -->
-    <div class="mb-8">
+    <div class="mb-16">
         <h3 class="text-xl font-semibold text-amber-400 text-center py-4">
             Registrations by Level
         </h3>
@@ -527,6 +535,70 @@
                             {((data.nordicLevelCounts[level]?.total || 0) + (data.worldLevelCounts[level]?.total || 0)).toLocaleString()}
                         </div>
                     </div>
+                </div>
+            {/each}
+        </div>
+    </div>
+
+    <!-- Planned Competitors by Level Summary Cards -->
+    <div class="mt-10 mb-16">
+        <h3 class="text-xl font-semibold text-amber-400 mb-4 text-center">Planned Competitors by Level</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {#each levels as level}
+                {#if data.plannedCompetitors[level]}
+                    <div class="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6 flex flex-col items-center">
+                        <div class="text-lg font-bold text-amber-300 mb-2">{level}</div>
+                        <div class="flex flex-col gap-2 w-full">
+                            <div class="flex items-center justify-between w-full">
+                                <span class="text-emerald-400 font-semibold">Leaders</span>
+                                <span class="text-emerald-200 text-xl font-bold">{data.plannedCompetitors[level].Leader}</span>
+                            </div>
+                            <div class="flex items-center justify-between w-full">
+                                <span class="text-sky-400 font-semibold">Followers</span>
+                                <span class="text-sky-200 text-xl font-bold">{data.plannedCompetitors[level].Follower}</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 border-t border-gray-700 pt-2 w-full flex items-center justify-between">
+                            <span class="text-gray-400 font-semibold">Total</span>
+                            <span class="text-gray-100 text-xl font-bold">{data.plannedCompetitors[level].Leader + data.plannedCompetitors[level].Follower}</span>
+                        </div>
+                    </div>
+                {/if}
+            {/each}
+        </div>
+    </div>
+
+    <!-- Hotel Registration Statistics Section -->
+    <div class="mt-16 mb-16">
+        <h3 class="text-xl font-semibold text-amber-400 mb-4 text-center">Hotel Registration Statistics</h3>
+        <!-- Total Amount Row -->
+        <div class="flex flex-wrap gap-6 justify-center mb-6">
+            <div class="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6 flex flex-col items-center min-w-[220px] flex-1">
+                <div class="text-lg font-bold text-amber-300 mb-2">Total Amount</div>
+                <div class="text-3xl font-bold text-emerald-300">{data.hotelStats.totalAmount.toLocaleString('no-NO')} NOK</div>
+                <div class="text-gray-400 text-sm mt-1">booked for</div>
+            </div>
+        </div>
+        <!-- Nights and Free Nights Row -->
+        <div class="flex flex-wrap gap-6 justify-center mb-6">
+            <div class="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6 flex flex-col items-center min-w-[220px] flex-1">
+                <div class="text-lg font-bold text-amber-300 mb-2">Total Nights</div>
+                <div class="text-3xl font-bold text-emerald-300">{data.hotelStats.totalNights}</div>
+                <div class="text-gray-400 text-sm mt-1">nights booked</div>
+            </div>
+            <div class="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6 flex flex-col items-center min-w-[220px] flex-1">
+                <div class="text-lg font-bold text-amber-300 mb-2">Free Nights</div>
+                <div class="text-3xl font-bold text-emerald-300">{data.hotelStats.freeNights}</div>
+                <div class="text-gray-400 text-sm mt-1">(1 per 20 nights)</div>
+            </div>
+        </div>
+        <!-- Hotel Options Row -->
+        <div class="flex flex-wrap gap-6 justify-center">
+            {#each Object.entries(data.hotelStats.optionCounts) as [option, count]}
+                <div class="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6 flex flex-col items-center min-w-[220px] flex-1">
+                    <div class="text-lg font-bold text-amber-300 mb-2">{hotelOptionDisplay[option] || option}</div>
+                    <div class="text-3xl font-bold text-emerald-300">{count}</div>
+                    <div class="text-gray-400 text-sm mt-1">rooms booked</div>
                 </div>
             {/each}
         </div>

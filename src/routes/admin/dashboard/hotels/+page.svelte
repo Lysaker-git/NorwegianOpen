@@ -3,7 +3,7 @@
     import { enhance } from '$app/forms';
 
     interface HotelRegistration {
-        id: number;
+        id: string;
         fullname: string | null;
         email: string | null;
         hoteloption: string | null;
@@ -16,6 +16,7 @@
         paymentdeadline: string | null;
         created_at: string;
         status: string | null;
+        gotConfirmEmail: boolean;
     }
 
     export let data: PageData & { hotelRegistrations: HotelRegistration[] };
@@ -25,6 +26,9 @@
     let editedStatuses: Record<number, string> = {};
     let isSaving = false;
     let showSave = false;
+    let showConfirmationPopup = false;
+    let confirmationPopupMessage = '';
+    let confirmationPopupSuccess = false;
 
     const statusOptions = [
         { value: 'pending', label: 'Pending Payment' },
@@ -52,36 +56,74 @@
         });
     }
 
-    async function saveChanges() {
+    async function updateStatus(id: string, newStatus: string) {
         isSaving = true;
-        const updates = Object.entries(editedStatuses).map(([id, status]) => ({ id: parseInt(id), status }));
-
+        const updates = [{ id, status: newStatus }];
         try {
             const formData = new FormData();
             formData.append('updates', JSON.stringify(updates));
-
             const res = await fetch('?/updateStatus', {
                 method: 'POST',
                 body: formData
             });
-
-            if (res.ok) {
-                location.reload();
-            } else {
+            if (!res.ok) {
                 const errorMessage = await res.text();
-                alert(`Failed to save changes: ${errorMessage}`);
+                confirmationPopupMessage = `Failed to update status: ${errorMessage}`;
+                confirmationPopupSuccess = false;
+                showConfirmationPopup = true;
+                setTimeout(() => {
+                    showConfirmationPopup = false;
+                    location.reload();
+                }, 2000);
+            } else {
+                // Optionally show a quick success popup
+                confirmationPopupMessage = 'Status updated!';
+                confirmationPopupSuccess = true;
+                showConfirmationPopup = true;
+                setTimeout(() => {
+                    showConfirmationPopup = false;
+                    location.reload();
+                }, 1000);
             }
         } catch (error) {
-            console.error('Save error:', error);
-            alert(`Failed to save changes: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            confirmationPopupMessage = `Failed to update status: ${error instanceof Error ? error.message : 'Unknown error'}`;
+            confirmationPopupSuccess = false;
+            showConfirmationPopup = true;
+            setTimeout(() => {
+                showConfirmationPopup = false;
+                location.reload();
+            }, 2000);
         } finally {
             isSaving = false;
         }
     }
 
-    function handleStatusChange(id: number, newStatus: string) {
-        editedStatuses[id] = newStatus;
-        showSave = Object.keys(editedStatuses).length > 0;
+    async function sendHotelPaymentConfirmation(id: number) {
+        const formData = new FormData();
+        formData.append('id', id.toString());
+        const res = await fetch('?/sendHotelPaymentConfirmation', {
+            method: 'POST',
+            body: formData
+        });
+        if (res.ok) {
+            confirmationPopupMessage = 'Payment confirmation sent!';
+            confirmationPopupSuccess = true;
+        } else {
+            const errorMessage = await res.text();
+            confirmationPopupMessage = `Failed to send confirmation: ${errorMessage}`;
+            confirmationPopupSuccess = false;
+        }
+        showConfirmationPopup = true;
+        setTimeout(() => {
+            showConfirmationPopup = false;
+            location.reload();
+        }, 2000);
+    }
+
+    function handleStatusChange(id: string, newStatus: string) {
+        if (filteredRegistrations.find(r => r.id === id)?.status !== newStatus) {
+            updateStatus(id, newStatus);
+        }
     }
 
     $: {
@@ -158,31 +200,29 @@
                             <td class="px-4 py-3 whitespace-nowrap text-sm">
                                 <select
                                     class="bg-gray-700 text-gray-100 rounded px-2 py-1"
-                                    value={editedStatuses[reg.id] ?? reg.status ?? 'pending'}
+                                    value={reg.status ?? 'pending'}
                                     on:change={(e) => handleStatusChange(reg.id, e.target?.value)}
+                                    disabled={isSaving}
                                 >
                                     {#each statusOptions as opt}
                                         <option value={opt.value}>{opt.label}</option>
                                     {/each}
                                 </select>
+                                {#if reg.status === 'paid' && !reg.gotConfirmEmail}
+                                    <button
+                                        class="ml-2 px-3 py-1 rounded bg-blue-600 text-white text-xs font-semibold hover:bg-blue-700 transition"
+                                        on:click={() => sendHotelPaymentConfirmation(reg.id)}
+                                        disabled={isSaving}
+                                    >
+                                        Send Confirmation
+                                    </button>
+                                {/if}
                             </td>
                         </tr>
                     {/each}
                 </tbody>
             </table>
         </div>
-
-        {#if showSave}
-            <div class="flex justify-end mt-4">
-                <button
-                    class="px-6 py-2 rounded bg-green-600 text-white font-semibold shadow hover:bg-green-700 transition"
-                    on:click={saveChanges}
-                    disabled={isSaving}
-                >
-                    {isSaving ? 'Saving...' : 'Save Changes'}
-                </button>
-            </div>
-        {/if}
 
         <div class="mt-4 text-gray-400 text-sm">
             Total Registrations: {filteredRegistrations.length}
@@ -196,6 +236,20 @@
             <div class="flex items-center gap-3">
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-500"></div>
                 <span class="text-amber-400 font-semibold">Saving changes...</span>
+            </div>
+        </div>
+    </div>
+{/if}
+
+{#if showConfirmationPopup}
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-gray-800 rounded-lg p-6 shadow-xl border"
+            class:border-green-500={confirmationPopupSuccess}
+            class:border-red-500={!confirmationPopupSuccess}>
+            <div class="flex items-center gap-3">
+                <span class={confirmationPopupSuccess ? 'text-green-400' : 'text-red-400'}>
+                    {confirmationPopupMessage}
+                </span>
             </div>
         </div>
     </div>

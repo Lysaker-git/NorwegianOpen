@@ -44,6 +44,13 @@ interface ChartData {
         nordic: number;
         world: number;
     };
+    plannedCompetitors: Record<string, { Leader: number; Follower: number }>;
+    hotelStats: {
+        optionCounts: Record<string, number>;
+        totalAmount: number;
+        totalNights: number;
+        freeNights: number;
+    };
 }
 
 export const load: PageServerLoad<ChartData> = async ({ locals }) => {
@@ -85,6 +92,13 @@ export const load: PageServerLoad<ChartData> = async ({ locals }) => {
                 waiting: 0,
                 nordic: 0,
                 world: 0
+            },
+            plannedCompetitors: {},
+            hotelStats: {
+                optionCounts: {},
+                totalAmount: 0,
+                totalNights: 0,
+                freeNights: 0
             }
         };
     }
@@ -349,6 +363,59 @@ export const load: PageServerLoad<ChartData> = async ({ locals }) => {
         world: worldRegs.filter(reg => reg.AddedIntensive).length
     };
 
+    // Calculate planned competitors by level and role (Competing=TRUE, confirmed statuses)
+    // First, fetch Competing column for all registrations
+    const { data: registrationsWithCompeting, error: competingError } = await supabaseAdmin
+        .from('RegistrationDB')
+        .select('Level, Role, RegistrationStatus, Competing');
+
+    let plannedCompetitorsByLevel: Record<string, { Leader: number; Follower: number }> = {};
+    if (!competingError && registrationsWithCompeting) {
+        for (const reg of registrationsWithCompeting) {
+            if (!reg.Level || !reg.Role) continue;
+            if (!reg.Competing) continue;
+            if (!isConfirmedStatus(reg.RegistrationStatus)) continue;
+            if (!plannedCompetitorsByLevel[reg.Level]) {
+                plannedCompetitorsByLevel[reg.Level] = { Leader: 0, Follower: 0 };
+            }
+            if (reg.Role === 'Leader') {
+                plannedCompetitorsByLevel[reg.Level].Leader++;
+            } else if (reg.Role === 'Follower') {
+                plannedCompetitorsByLevel[reg.Level].Follower++;
+            }
+        }
+    }
+
+    // --- Hotel Registration Statistics ---
+    const { data: hotelRegistrations, error: hotelError } = await supabaseAdmin
+        .from('HotelRegistration')
+        .select('hoteloption, amountdue, numberofnights');
+
+    let hotelStats = {
+        optionCounts: {} as Record<string, number>,
+        totalAmount: 0,
+        totalNights: 0,
+        freeNights: 0
+    };
+    if (!hotelError && hotelRegistrations) {
+        for (const reg of hotelRegistrations) {
+            // Count hotel options
+            if (reg.hoteloption) {
+                hotelStats.optionCounts[reg.hoteloption] = (hotelStats.optionCounts[reg.hoteloption] || 0) + 1;
+            }
+            // Sum amount
+            if (reg.amountdue) {
+                hotelStats.totalAmount += Number(reg.amountdue) || 0;
+            }
+            // Sum nights
+            if (reg.numberofnights) {
+                hotelStats.totalNights += Number(reg.numberofnights) || 0;
+            }
+        }
+        // Calculate free nights (1 per 20 booked)
+        hotelStats.freeNights = Math.floor(hotelStats.totalNights / 20);
+    }
+
     return {
         totalIncome,
         potentialIncome,
@@ -371,6 +438,8 @@ export const load: PageServerLoad<ChartData> = async ({ locals }) => {
         nordicRegionCounts,
         worldRegionCounts,
         registrationsByRole,
-        intensiveCounts
+        intensiveCounts,
+        plannedCompetitors: plannedCompetitorsByLevel,
+        hotelStats
     };
 };
