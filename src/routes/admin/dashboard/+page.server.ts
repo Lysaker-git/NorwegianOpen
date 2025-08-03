@@ -363,6 +363,24 @@ export const load: PageServerLoad<ChartData> = async ({ locals }) => {
         world: worldRegs.filter(reg => reg.AddedIntensive).length
     };
 
+    // Intensive by role and status
+    const intensiveByRoleStatus = {
+        approved: { Leader: 0, Follower: 0 },
+        waiting: { Leader: 0, Follower: 0 }
+    };
+    for (const reg of registrations) {
+        if (!reg.AddedIntensive || !reg.Role) continue;
+        if (["approved", "paymentReceived", "checkedIn"].includes(reg.RegistrationStatus)) {
+            if (reg.Role === 'Leader' || reg.Role === 'Follower') {
+                intensiveByRoleStatus.approved[reg.Role as 'Leader' | 'Follower']++;
+            }
+        } else if (["waitingList", "pendingApproval"].includes(reg.RegistrationStatus)) {
+            if (reg.Role === 'Leader' || reg.Role === 'Follower') {
+                intensiveByRoleStatus.waiting[reg.Role as 'Leader' | 'Follower']++;
+            }
+        }
+    }
+
     // Calculate planned competitors by level and role (Competing=TRUE, confirmed statuses)
     // First, fetch Competing column for all registrations
     const { data: registrationsWithCompeting, error: competingError } = await supabaseAdmin
@@ -416,6 +434,23 @@ export const load: PageServerLoad<ChartData> = async ({ locals }) => {
         hotelStats.freeNights = Math.floor(hotelStats.totalNights / 20);
     }
 
+    // --- Pass Type Statistics (Full Pass vs Party Pass, by role and status) ---
+    const passTypeStats = {
+        FullPass: { Leader: { approved: 0, waiting: 0 }, Follower: { approved: 0, waiting: 0 } },
+        PartyPass: { Leader: { approved: 0, waiting: 0 }, Follower: { approved: 0, waiting: 0 } }
+    };
+    for (const reg of registrations) {
+        if (!reg.Role) continue;
+        const isParty = (reg.PassOption && reg.PassOption.toLowerCase().includes('party'));
+        const type = isParty ? 'PartyPass' : 'FullPass';
+        const role = reg.Role === 'Leader' ? 'Leader' : 'Follower';
+        if (['approved', 'paymentReceived', 'checkedIn'].includes(reg.RegistrationStatus)) {
+            passTypeStats[type][role].approved++;
+        } else if (['waitingList', 'pendingApproval'].includes(reg.RegistrationStatus)) {
+            passTypeStats[type][role].waiting++;
+        }
+    }
+
     return {
         totalIncome,
         potentialIncome,
@@ -439,7 +474,9 @@ export const load: PageServerLoad<ChartData> = async ({ locals }) => {
         worldRegionCounts,
         registrationsByRole,
         intensiveCounts,
+        intensiveByRoleStatus,
         plannedCompetitors: plannedCompetitorsByLevel,
-        hotelStats
+        hotelStats,
+        passTypeStats
     };
 };

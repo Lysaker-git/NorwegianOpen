@@ -57,6 +57,7 @@
     let numberOfNights: number = 0;
     let calculatedHotelPrice: number | string = 'Select hotel and dates';
     let finalCalculatedHotelPrice: number | null = null; // For hidden input
+    let submitting = false;
 
     // --- Reactive Calculations ---
     $: {
@@ -228,6 +229,10 @@
         (selectedHotel === 'HotelOptionThree' || selectedHotel === 'HotelOptionFour');
 
     $: showNoRoomsWarning = !availability.hasRoomsAvailable;
+
+    function handleSubmit(event: Event) {
+        submitting = true;
+    }
 </script>
 
 <div class="container mx-auto px-4 py-12">
@@ -235,7 +240,7 @@
         Hotel Booking - Norwegian Open 2025
     </h2>
 
-    <form method="POST" action="?/bookHotel" use:enhance class="space-y-6 max-w-xl mx-auto bg-gray-800 p-6 md:p-8 rounded-lg shadow-xl border border-gray-700 text-white">
+    <form method="POST" action="?/bookHotel" use:enhance on:submit={handleSubmit} class="space-y-6 max-w-xl mx-auto bg-gray-800 p-6 md:p-8 rounded-lg shadow-xl border border-gray-700 text-white">
         <p class="text-sm text-gray-400 mb-6">
             Booking a hotel room can be done directly with the hotel, or through us.
             Booking thorugh us will give you a discount! There is a limited number of rooms available at the discounted price.
@@ -557,9 +562,11 @@
         </p>
         <div>
             <button type="submit"
-                    class="w-full mt-4 flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
-                    disabled={!selectedHotel || (selectedHotel !== 'None' && selectedHotel !== 'HotelOptionNo' && (numberOfNights === 0 || typeof calculatedHotelPrice !== 'number'))}>
-                {#if !selectedHotel}
+                    class="w-full mt-4 flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 relative"
+                    disabled={submitting || !selectedHotel || (selectedHotel !== 'None' && selectedHotel !== 'HotelOptionNo' && (numberOfNights === 0 || typeof calculatedHotelPrice !== 'number'))}>
+                {#if submitting}
+                    <span class="loader mr-2"></span> Processing...
+                {:else if !selectedHotel}
                     Select Hotel Option
                 {:else if selectedHotel !== 'None' && selectedHotel !== 'HotelOptionNo' && (numberOfNights === 0 || typeof calculatedHotelPrice !== 'number')}
                     Complete Date Selection
@@ -628,5 +635,20 @@
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         transform: rotate(-30deg);
         padding: 0.5rem 3rem;
+    }
+
+    .loader {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #6366f1;
+        border-radius: 50%;
+        width: 1.2em;
+        height: 1.2em;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
     }
 </style>
