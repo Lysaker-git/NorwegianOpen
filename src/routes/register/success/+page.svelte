@@ -31,13 +31,15 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
             </svg>
         </div>
-        <h1 class="text-3xl font-bold text-green-300 mb-4">Registration Successful!</h1>
+        <h1 class="text-3xl font-bold text-green-300 mb-4">Registration Received!</h1>
         <p class="text-gray-300 mb-6">
-            Thank you for registering. We've sent a confirmation email to the address you provided.
-            Please check your inbox (and spam folder, just in case!).
+            Thank you for registering! Your registration has been received and is currently under review by our team.
         </p>
-        <p class="text-gray-400 text-sm mb-8">
-            We're excited to see you at the event!
+        <p class="text-gray-400 text-base mb-4">
+            Please wait for your registration to be approved before making any travel or hotel arrangements. We want to ensure your spot is confirmed before you book flights or accommodation.
+        </p>
+        <p class="text-gray-400 text-base mb-8">
+            Once your registration is approved, you will receive an email with further details and a link to book your hotel at our special event rates.
         </p>
         <a
             href="{base}/"

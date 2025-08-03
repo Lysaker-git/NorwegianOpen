@@ -455,27 +455,98 @@
             </div>
         </div>
 
-        <!-- Intensive Registration Card -->
-        <div class="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6 mt-6">
-            <h4 class="text-lg font-semibold text-amber-400 mb-4">Intensive Registrations</h4>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div>
-                    <div class="text-emerald-400 font-semibold mb-1">Total</div>
-                    <div class="text-2xl font-bold text-emerald-400">{data.intensiveCounts?.total || 0}</div>
+        <!-- Intensive Registration Card & Pass Type Overview Row -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <!-- Intensive Registration Card (split view, status color, big number) -->
+            <div class="relative rounded-lg shadow-lg border border-gray-700 p-6 flex flex-col items-center overflow-hidden min-h-[220px] bg-gray-800">
+                <!-- Background color bars for approved/waiting split -->
+                {#if data.intensiveCounts}
+                    {@const totalIntensive = data.intensiveCounts.total || 0}
+                    {@const approved = data.intensiveCounts.approved || 0}
+                    {@const waiting = data.intensiveCounts.waiting || 0}
+                    {@const approvedPct = totalIntensive > 0 ? (approved / totalIntensive) * 100 : 0}
+                    {@const waitingPct = totalIntensive > 0 ? (waiting / totalIntensive) * 100 : 0}
+                    <div class="absolute inset-0 z-0 flex">
+                        <div class="h-full bg-emerald-500/10" style="width: {approvedPct}%"></div>
+                        <div class="h-full bg-yellow-400/10" style="width: {waitingPct}%"></div>
+                    </div>
+                {/if}
+                <!-- Washed-out big number in background -->
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0">
+                    <span class="text-[7rem] md:text-[9rem] font-extrabold text-gray-500/10 leading-none">
+                        {data.intensiveCounts?.total || 0}
+                    </span>
                 </div>
-                <div>
-                    <div class="text-sky-400 font-semibold mb-1">Approved</div>
-                    <div class="text-2xl font-bold text-sky-400">{data.intensiveCounts?.approved || 0}</div>
-                    <div class="text-xs text-sky-400/60">
-                        {Math.round(((data.intensiveCounts?.approved || 0) / (data.intensiveCounts?.total || 1)) * 100)}% of total
+                <div class="relative z-10 w-full">
+                    <h4 class="text-lg font-semibold text-amber-400 mb-4 text-center">Intensive Registrations</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+                        <!-- Approved Section -->
+                        <div class="rounded-lg p-4 flex flex-col items-center">
+                            <div class="text-emerald-400 font-semibold mb-2">Approved</div>
+                            <div class="flex flex-col gap-2 w-full">
+                                <div class="flex items-center justify-between w-full">
+                                    <span class="text-emerald-400 font-semibold">Leaders</span>
+                                    <span class="text-2xl font-bold text-emerald-300">
+                                        {data.intensiveByRoleStatus?.approved?.Leader || 0}
+                                    </span>
+                                </div>
+                                <div class="flex items-center justify-between w-full">
+                                    <span class="text-sky-400 font-semibold">Followers</span>
+                                    <span class="text-2xl font-bold text-sky-300">
+                                        {data.intensiveByRoleStatus?.approved?.Follower || 0}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Waiting List Section -->
+                        <div class="rounded-lg p-4 flex flex-col items-center">
+                            <div class="text-yellow-400 font-semibold mb-2">Waiting List</div>
+                            <div class="flex flex-col gap-2 w-full">
+                                <div class="flex items-center justify-between w-full">
+                                    <span class="text-emerald-400 font-semibold">Leaders</span>
+                                    <span class="text-2xl font-bold text-emerald-200">
+                                        {data.intensiveByRoleStatus?.waiting?.Leader || 0}
+                                    </span>
+                                </div>
+                                <div class="flex items-center justify-between w-full">
+                                    <span class="text-sky-400 font-semibold">Followers</span>
+                                    <span class="text-2xl font-bold text-sky-200">
+                                        {data.intensiveByRoleStatus?.waiting?.Follower || 0}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div>
-                    <div class="text-yellow-400 font-semibold mb-1">Waiting</div>
-                    <div class="text-2xl font-bold text-yellow-400">{data.intensiveCounts?.waiting || 0}</div>
-                    <div class="text-xs text-yellow-400/60">
-                        {Math.round(((data.intensiveCounts?.waiting || 0) / (data.intensiveCounts?.total || 1)) * 100)}% of total
-                    </div>
+            </div>
+            <!-- Pass Type Overview Card -->
+            <div class="bg-gray-800 rounded-lg shadow-lg border border-gray-700 p-6 flex flex-col items-center">
+                <h4 class="text-lg font-semibold text-amber-400 mb-4">Pass Type Overview</h4>
+                <div class="w-full flex flex-col gap-4">
+                    {#each [
+                        { label: 'Full Pass', key: 'FullPass', color: 'emerald' },
+                        { label: 'Party Pass', key: 'PartyPass', color: 'amber' }
+                    ] as passTypes}
+                        <div class="border-b border-gray-700 pb-2 last:border-b-0">
+                            <div class="text-base font-semibold text-{passTypes.color}-300 mb-1">{passTypes.label}</div>
+                            <div class="flex flex-col gap-1">
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="text-emerald-400 font-semibold">Leaders</span>
+                                    <span class="text-gray-200">
+                                        {data.passTypeStats[passTypes.key].Leader.approved} <span class="text-xs text-green-400">approved</span> /
+                                        {data.passTypeStats[passTypes.key].Leader.waiting} <span class="text-xs text-yellow-400">waiting</span>
+                                    </span>
+                                </div>
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="text-sky-400 font-semibold">Followers</span>
+                                    <span class="text-gray-200">
+                                        {data.passTypeStats[passTypes.key].Follower.approved} <span class="text-xs text-green-400">approved</span> /
+                                        {data.passTypeStats[passTypes.key].Follower.waiting} <span class="text-xs text-yellow-400">waiting</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    {/each}
                 </div>
             </div>
         </div>
