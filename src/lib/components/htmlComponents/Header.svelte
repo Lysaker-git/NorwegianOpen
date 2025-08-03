@@ -168,32 +168,32 @@
                 <a href="/" on:click={handleNavClick} class="text-3xl font-bold hover:text-amber-200 transition-colors duration-300">Home</a>
             </li>
             <li class="w-full">
-                <button on:click={() => aboutDropdownOpen = !aboutDropdownOpen} class="text-3xl font-bold hover:text-amber-200 transition-colors duration-300 w-full flex justify-center items-center">
+                <button on:click={(e) => { e.stopPropagation(); aboutDropdownOpen = !aboutDropdownOpen; }} class="text-3xl font-bold hover:text-amber-200 transition-colors duration-300 w-full flex justify-center items-center">
                     About Event
                     <svg class="ml-2 h-6 w-6" fill="currentColor" viewBox="0 0 20 20"><path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08z"/></svg>
                 </button>
                 {#if aboutDropdownOpen}
                 <ul class="flex flex-col items-center mt-2" transition:fade={{ duration: 200 }}>
-                    <li><a href="/about" on:click={handleNavClick} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">About</a></li>
-                    <li><a href="/schedule" on:click={handleNavClick} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Schedule</a></li>
-                    <li><a href="/coc" on:click={handleNavClick} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Code of Conduct</a></li>
+                    <li><a href="/about" on:click={() => { handleNavClick(); aboutDropdownOpen = false; }} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">About</a></li>
+                    <li><a href="/schedule" on:click={() => { handleNavClick(); aboutDropdownOpen = false; }} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Schedule</a></li>
+                    <li><a href="/coc" on:click={() => { handleNavClick(); aboutDropdownOpen = false; }} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Code of Conduct</a></li>
                     <!-- <li><a href="/toc" on:click={handleNavClick} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Terms & Conditions</a></li> -->
                     <!-- <li><a href="/staff" on:click={handleNavClick} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Staff</a></li> -->
-                    <li><a href="/teachers" on:click={handleNavClick} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Teachers</a></li>
-                    <li><a href="/location" on:click={handleNavClick} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Location</a></li>
+                    <li><a href="/teachers" on:click={() => { handleNavClick(); aboutDropdownOpen = false; }} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Teachers</a></li>
+                    <li><a href="/location" on:click={() => { handleNavClick(); aboutDropdownOpen = false; }} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Location</a></li>
                 </ul>
                 {/if}
             </li>
             <li class="w-full mt-4">
-                <button on:click={() => registerDropdownOpen = !registerDropdownOpen} class="text-3xl font-bold hover:text-amber-200 transition-colors duration-300 w-full flex justify-center items-center">
+                <button on:click={(e) => { e.stopPropagation(); registerDropdownOpen = !registerDropdownOpen; }} class="text-3xl font-bold hover:text-amber-200 transition-colors duration-300 w-full flex justify-center items-center">
                     Register
                     <svg class="ml-2 h-6 w-6" fill="currentColor" viewBox="0 0 20 20"><path d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 10.94l3.71-3.71a.75.75 0 1 1 1.06 1.06l-4.24 4.24a.75.75 0 0 1-1.06 0L5.21 8.29a.75.75 0 0 1 .02-1.08z"/></svg>
                 </button>
                 {#if registerDropdownOpen}
                 <ul class="flex flex-col items-center mt-2" transition:fade={{ duration: 200 }}>
-                    <li><a href="/pricing" on:click={handleNavClick} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Pricing</a></li>
-                    <li><a href="/rules" on:click={handleNavClick} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Rules</a></li>
-                    <li><a href="/register" on:click={handleNavClick} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Register</a></li>
+                    <li><a href="/pricing" on:click={() => { handleNavClick(); registerDropdownOpen = false; }} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Pricing</a></li>
+                    <li><a href="/rules" on:click={() => { handleNavClick(); registerDropdownOpen = false; }} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Rules</a></li>
+                    <li><a href="/register" on:click={() => { handleNavClick(); registerDropdownOpen = false; }} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Register</a></li>
                 </ul>
                 {/if}
             </li>
