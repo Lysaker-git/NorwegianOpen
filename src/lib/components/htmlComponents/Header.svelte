@@ -126,6 +126,7 @@
                         <li><a href="/pricing" on:click={handleNavClick} class="px-4 py-2 hover:text-amber-200 transition-colors duration-300">Pricing</a></li>
                         <li><a href="/rules" on:click={handleNavClick} class="px-4 py-2 hover:text-amber-200 transition-colors duration-300">Rules</a></li>
                         <li><a href="/register" on:click={handleNavClick} class="px-4 py-2 hover:text-amber-200 transition-colors duration-300">Register</a></li>
+                        <li><a href="/register/hotel" on:click={handleNavClick} class="px-4 py-2 hover:text-amber-200 transition-colors duration-300">Book Hotel</a></li>
                     </ul>
                 </div>
                 {/if}
@@ -194,6 +195,7 @@
                     <li><a href="/pricing" on:click={() => { handleNavClick(); registerDropdownOpen = false; }} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Pricing</a></li>
                     <li><a href="/rules" on:click={() => { handleNavClick(); registerDropdownOpen = false; }} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Rules</a></li>
                     <li><a href="/register" on:click={() => { handleNavClick(); registerDropdownOpen = false; }} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Register</a></li>
+                    <li><a href="/register/hotel" on:click={() => { handleNavClick(); registerDropdownOpen = false; }} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Book Hotel</a></li>
                 </ul>
                 {/if}
             </li>
