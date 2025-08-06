@@ -9,7 +9,7 @@ import transporter from '$lib/emailClient.server';
 // --- Define Deadlines, Base Prices, Pass Options SERVER-SIDE ---
 // (Your existing constants and helper functions remain the same)
 const YMIR_DEADLINE_STRING_SERVER = '2025-05-29';
-const MIDGARD_DEADLINE_STRING_SERVER = '2025-07-31';
+const MIDGARD_DEADLINE_STRING_SERVER = '2025-08-22';
 
 const ymirDeadlineServer = new Date(YMIR_DEADLINE_STRING_SERVER + 'T23:59:59');
 const midgardDeadlineServer = new Date(MIDGARD_DEADLINE_STRING_SERVER + 'T23:59:59');
