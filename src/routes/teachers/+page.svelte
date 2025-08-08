@@ -45,7 +45,7 @@ Framework:
 <style>
 h1 {
     text-align: center;
-    font-size: 2.5rem;
+    font-size: 4rem;
     margin: 2.5rem 0 3rem 0;
     font-family: 'NorseBold', serif;
     color: #ffe08a;
@@ -99,6 +99,10 @@ h1 {
 
 .bio-text p:not(:first-child) {
     margin-top: 1rem;
+}
+
+.bio-text p {
+    text-align: start;
 }
 
 @media (max-width: 900px) {
@@ -160,7 +164,7 @@ h1 {
         padding: 0 2vw;
     }
     h1 {
-        font-size: 1.1rem;
+        font-size: 2.5rem;
         margin: 1rem 0 1.5rem 0;
     }
     .pro-info h2 {
