@@ -40,6 +40,7 @@ export const load = (async ({ locals }) => {
             Level,
             Role,
             PassOption,
+            PromoCode,
             AddedIntensive,
             AmountDue,
             RegistrationStatus,
