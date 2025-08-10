@@ -241,6 +241,30 @@
                 <span class="font-semibold text-gray-400">User ID:</span>
                 <span class="text-gray-400">{registration.userID}</span>
             </div>
+            <!-- Promo Code -->
+            <div class="flex items-center gap-2">
+                <span class="font-semibold text-gray-400">Promo Code:</span>
+                {#if editingField === 'PromoCode'}
+                    <input
+                        id="input-PromoCode"
+                        class="p-2 rounded bg-gray-700 border border-gray-600 text-gray-200 flex-1"
+                        bind:value={registration.PromoCode}
+                        on:blur={() => saveEdit('PromoCode')}
+                        on:keydown={(e) => e.key === 'Enter' && saveEdit('PromoCode')}
+                    />
+                    <button aria-label="promo code change button" class="ml-1 text-gray-400 hover:text-green-400" on:click={() => saveEdit('PromoCode')}>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                    </button>
+                    <button aria-label="promo code change button" class="ml-1 text-gray-400 hover:text-red-400" on:click={() => cancelEdit('PromoCode')}>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                {:else}
+                    <span class="text-gray-300">{registration.PromoCode || '—'}</span>
+                    <button aria-label="promo code change button" class="ml-2 text-gray-400 hover:text-amber-400" on:click={() => startEdit('PromoCode')} title="Edit Promo Code">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 13l6-6m2 2l-6 6m2-2l-6 6" /></svg>
+                    </button>
+                {/if}
+            </div>
             <!-- Add more fields as needed, following the same pattern -->
         </div>
         <div class="absolute top-4 right-4">
