@@ -164,7 +164,7 @@ export const actions: Actions = {
             const requiredFields = ['FullName', 'Email', 'HotelOption', 'CheckInDate', 'CheckOutDate', 'NumberOfNights'];
             for (const field of requiredFields) {
                 if (!formData.get(field)) {
-                    return fail(400, { 
+                     return fail(400, { 
                         error: `Missing required field: ${field}`,
                         field: field.toLowerCase()
                     });
