@@ -44,6 +44,14 @@
                 <p class="mb-4">This Code of Conduct outlines our expectations. By attending {eventName}, you agree to uphold these principles. Violations may result in sanctions, including removal from the event without refund and potential bans from future events, at the organizers' discretion.</p>
                 <p class="font-semibold text-amber-100">We welcome everyone, regardless of gender, gender identity/expression, age, sexual orientation, disability, physical appearance, body size, race, ethnicity, religion, dance skill level, or dance role preference.</p>
             </section>
+
+                        <!-- Add after the "Our Commitment" section, before "Expected Conduct" -->
+            <section class="mb-8">
+              <h2 class="mt-10 mb-4 text-xl sm:text-2xl font-medium text-amber-200">Cancellation Policy</h2>
+              <p class="mb-4">
+                <strong class="font-semibold">Please note:</strong> After <span class="text-amber-200 font-bold">15th of August</span>, all tickets are <span class="text-red-400 font-bold">non-refundable</span>. If you are unable to attend after this date, you are responsible for selling your ticket to another participant. Please notify the organizers of any ticket transfers to ensure a smooth process.
+              </p>
+            </section>
   
             <section class="mb-8">
                 <h2 class="mt-10 mb-5 pb-2 border-b border-gray-300 text-xl sm:text-2xl font-medium text-white">
