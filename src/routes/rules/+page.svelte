@@ -197,7 +197,7 @@
               </h2>
               <p class="mb-4">For questions regarding competition rules, please contact:</p>
               <ul class="list-none pl-0 space-y-2">
-                <li><strong class="font-semibold inline-block w-32">Chief Judge:</strong> <code class="code-style">TBA</code></li>
+                <li><strong class="font-semibold inline-block w-32">Chief Judge:</strong> <code class="code-style">Henriette Koefoed Svendsen</code></li>
                 <li><strong class="font-semibold inline-block w-32">Event Organizers:</strong> <code class="code-style">Ida Marie Strand</code></li>
                 <li><strong class="font-semibold inline-block w-32">Event Website:</strong> <a href="/" target="_blank" rel="noopener noreferrer" class="link-style"><code class="code-style">Norwegianopen.no</code></a></li>
               </ul>
