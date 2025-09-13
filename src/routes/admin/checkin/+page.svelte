@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { fly } from 'svelte/transition';
   let registrations = [];
   let searchName = '';
   let searchUserID = '';
@@ -10,10 +11,13 @@
   let loading = false;
   let checkinSuccess = false;
   let userIDError = '';
+  let showModal = false;
+  let modalTimeout: any = null;
 
   // Load all registrations for quick select
   export let data;
   registrations = data.registrations || [];
+  console.log('[CLIENT PAGE] Checkin Registrations', registrations);
 
   $: nameMatches = searchName.length > 0
     ? registrations.filter(r => r.FullName && r.FullName.toLowerCase().includes(searchName.toLowerCase()))
@@ -31,6 +35,7 @@
     if (result && result.length === 1) {
       selectedReg = result[0];
       userIDError = '';
+      editFields = { Comments: selectedReg.Comments };
     } else {
       selectedReg = null;
       userIDError = 'No match found for this UserID.';
@@ -43,25 +48,7 @@
     searchName = reg.FullName;
     nameMatches = [];
     userIDError = '';
-  }
-
-  function startEdit() {
-    editMode = true;
-    editFields = { ...selectedReg };
-  }
-
-  async function saveEdit() {
-    loading = true;
-    const formData = new FormData();
-    formData.append('userID', selectedReg.userID);
-    formData.append('updates', JSON.stringify(editFields));
-    const res = await fetch('?/update', { method: 'POST', body: formData });
-    const { success } = await res.json();
-    if (success) {
-      Object.assign(selectedReg, editFields);
-      editMode = false;
-    }
-    loading = false;
+    editFields = { Comments: reg.Comments };
   }
 
   async function checkin() {
@@ -69,10 +56,48 @@
     const formData = new FormData();
     formData.append('userID', selectedReg.userID);
     const res = await fetch('?/checkin', { method: 'POST', body: formData });
-    const { success } = await res.json();
-    if (success) {
+    // Accept both json() and plain object responses
+    let result;
+    try {
+      result = await res.json();
+    } catch (e) {
+      result = res;
+    }
+    if (result && (result.success === true || result.status === 200)) {
       selectedReg.RegistrationStatus = 'checkedIn';
       checkinSuccess = true;
+      showModal = true;
+      // Auto-close modal after 10s
+      modalTimeout = setTimeout(() => closeModal(), 10000);
+    }
+    loading = false;
+  }
+
+  function closeModal() {
+    showModal = false;
+    checkinSuccess = false;
+    // Reset for next check-in
+    setTimeout(() => {
+      searchName = '';
+      searchUserID = '';
+      selectedReg = null;
+      editFields = {};
+      // Focus name field
+      const nameInput = document.getElementById('nameInput');
+      if (nameInput) nameInput.focus();
+    }, 500); // Wait for modal to finish transition
+    if (modalTimeout) clearTimeout(modalTimeout);
+  }
+
+  async function saveComments() {
+    loading = true;
+    const formData = new FormData();
+    formData.append('userID', selectedReg.userID);
+    formData.append('updates', JSON.stringify({ Comments: editFields.Comments }));
+    const res = await fetch('?/update', { method: 'POST', body: formData });
+    const { success } = await res.json();
+    if (success) {
+      selectedReg.Comments = editFields.Comments;
     }
     loading = false;
   }
@@ -84,6 +109,7 @@
   <div class="mb-4 flex flex-col gap-2">
     <label class="text-gray-200 font-semibold">Search by Full Name:</label>
     <input
+      id="nameInput"
       class="w-full p-2 rounded bg-gray-700 border border-gray-600 text-gray-200 placeholder-gray-400"
       type="text"
       bind:value={searchName}
@@ -125,26 +151,43 @@
     <div class="bg-gray-900 rounded p-4 border border-gray-700 mt-4">
       <h2 class="text-xl font-bold text-amber-400 mb-2">Registration Details</h2>
       <div class="mb-2 text-gray-200"><strong>Name:</strong> {selectedReg.FullName}</div>
-      <div class="mb-2 text-gray-200"><strong>Email:</strong> {selectedReg.Email}</div>
-      <div class="mb-2 text-gray-200"><strong>UserID:</strong> {selectedReg.userID}</div>
-      <div class="mb-2 text-gray-200"><strong>Status:</strong> {selectedReg.RegistrationStatus}</div>
-      <!-- Add more fields as needed -->
-      {#if editMode}
-        <div class="mt-2">
-          <label class="text-gray-200 font-semibold">Edit Fields:</label>
-          <input class="w-full p-2 rounded bg-gray-700 border border-gray-600 text-gray-200 mb-2" type="text" bind:value={editFields.FullName} placeholder="Full Name" />
-          <input class="w-full p-2 rounded bg-gray-700 border border-gray-600 text-gray-200 mb-2" type="text" bind:value={editFields.Email} placeholder="Email" />
-          <!-- Add more editable fields as needed -->
-          <button class="px-4 py-2 rounded bg-green-600 text-white font-semibold shadow hover:bg-green-700 transition mr-2" on:click={saveEdit} disabled={loading}>Save</button>
-          <button class="px-4 py-2 rounded bg-gray-700 text-gray-200 font-semibold shadow hover:bg-gray-600 transition" on:click={() => editMode = false} disabled={loading}>Cancel</button>
-        </div>
-      {:else}
-        <button class="px-4 py-2 rounded bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 transition mr-2" on:click={startEdit} disabled={loading}>Edit</button>
-        <button class="px-4 py-2 rounded bg-amber-500 text-gray-900 font-semibold shadow hover:bg-amber-400 transition" on:click={checkin} disabled={loading || selectedReg.RegistrationStatus === 'checkedIn'}>Check In</button>
-        {#if checkinSuccess}
-          <span class="ml-2 text-green-400 font-semibold">Checked In!</span>
-        {/if}
+      <div class="mb-2 text-gray-200"><strong>Level:</strong> {selectedReg.Level}</div>
+      <div class="mb-2 text-gray-200"><strong>Role:</strong> {selectedReg.Role}</div>
+      <div class="mb-2 text-gray-200"><strong>Pass Type:</strong> {selectedReg.PassOption}</div>
+      {#if selectedReg.AddedIntensive}
+        <div class="mb-2 text-gray-200"><strong>Joel and Chantelle Blues Intensive:</strong> Yes </div>
       {/if}
+      <div class="mb-2 text-gray-200"><strong>Status:</strong> {selectedReg.RegistrationStatus}</div>
+      <!-- Comments field at the end, always editable -->
+      <div class="mt-4">
+        <label class="text-gray-200 font-semibold">Comments:</label>
+        <textarea class="w-full p-2 rounded bg-gray-700 border border-gray-600 text-gray-200 mb-2" bind:value={editFields.Comments} placeholder="Comments..." rows="3">{selectedReg.comments}</textarea>
+        <div class="flex gap-2 mt-2">
+          <button class="px-4 py-2 rounded bg-green-600 text-white font-semibold shadow hover:bg-green-700 transition" on:click={saveComments} disabled={loading}>Save Comments</button>
+          <button class="px-4 py-2 rounded bg-amber-500 text-gray-900 font-semibold shadow hover:bg-amber-400 transition" on:click={checkin} disabled={loading || selectedReg.RegistrationStatus === 'checkedIn'}>Check In</button>
+          {#if checkinSuccess}
+            <span class="ml-2 text-green-400 font-semibold">Checked In!</span>
+          {/if}
+        </div>
+      </div>
+    </div>
+  {/if}
+
+  {#if showModal}
+    <div class="fixed inset-0 flex items-center justify-center z-50">
+      <div
+        class="bg-amber-500 text-gray-900 rounded-lg shadow-xl border-2 border-amber-700 px-8 py-6 text-center font-bold text-xl"
+        in:fly={{ x: 500, duration: 400, easing: t => 1 - Math.pow(1-t, 2) }}
+        out:fly={{ x: -500, duration: 600, easing: t => t*t }}
+        style="min-width:320px; max-width:90vw;"
+      >
+        <div class="mb-4">{selectedReg?.FullName} is <span class="text-green-700">Checked In!</span></div>
+        <button
+          class="px-6 py-2 rounded bg-gray-900 text-amber-400 font-semibold shadow hover:bg-gray-800 transition"
+          on:click={closeModal}
+        >Continue</button>
+        <div class="mt-2 text-xs text-gray-700">This will close automatically in 10 seconds.</div>
+      </div>
     </div>
   {/if}
 </div>

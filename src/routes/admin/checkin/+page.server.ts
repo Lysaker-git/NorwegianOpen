@@ -55,9 +55,9 @@ export const actions: Actions = {
       .update({ RegistrationStatus: 'checkedIn' })
       .eq('userID', userID);
     if (error) {
-      return json({ success: false, error: error.message });
+      return { success: false, error: error.message };
     }
-    return json({ success: true });
+    return { success: true };
   },
   update: async ({ request }) => {
     const formData = await request.formData();
