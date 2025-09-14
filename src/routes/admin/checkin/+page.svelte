@@ -13,6 +13,11 @@
   let userIDError = '';
   let showModal = false;
   let modalTimeout: any = null;
+  let buttonsDisabled = false;
+  let checkinClicked = false;
+  let saveClicked = false;
+  let showCommentsSaved = false;
+  let commentsSavedTimeout: any = null;
 
   // Load all registrations for quick select
   export let data;
@@ -35,7 +40,7 @@
     if (result && result.length === 1) {
       selectedReg = result[0];
       userIDError = '';
-      editFields = { Comments: selectedReg.Comments };
+      editFields = { Comments: selectedReg.comments };
     } else {
       selectedReg = null;
       userIDError = 'No match found for this UserID.';
@@ -48,11 +53,13 @@
     searchName = reg.FullName;
     nameMatches = [];
     userIDError = '';
-    editFields = { Comments: reg.Comments };
+    editFields = { Comments: reg.comments };
   }
 
   async function checkin() {
     loading = true;
+    buttonsDisabled = true;
+    checkinClicked = true;
     const formData = new FormData();
     formData.append('userID', selectedReg.userID);
     const res = await fetch('?/checkin', { method: 'POST', body: formData });
@@ -71,11 +78,13 @@
       modalTimeout = setTimeout(() => closeModal(), 10000);
     }
     loading = false;
+    setTimeout(() => { checkinClicked = false; }, 200);
   }
 
   function closeModal() {
     showModal = false;
     checkinSuccess = false;
+    buttonsDisabled = false;
     // Reset for next check-in
     setTimeout(() => {
       searchName = '';
@@ -91,15 +100,27 @@
 
   async function saveComments() {
     loading = true;
+    saveClicked = true;
     const formData = new FormData();
     formData.append('userID', selectedReg.userID);
-    formData.append('updates', JSON.stringify({ Comments: editFields.Comments }));
+    formData.append('updates', JSON.stringify({ comments: editFields.Comments }));
     const res = await fetch('?/update', { method: 'POST', body: formData });
-    const { success } = await res.json();
-    if (success) {
-      selectedReg.Comments = editFields.Comments;
+    console.log('[SAVE COMMENTS] Response:', res);
+    let result;
+    try {
+      result = await res.json();
+      console.log('[SAVE COMMENTS] Parsed JSON:', result);
+    } catch (e) {
+      result = res;
+    }
+    if (result.status === 200) {
+      selectedReg.comments = editFields.Comments;
+      showCommentsSaved = true;
+      if (commentsSavedTimeout) clearTimeout(commentsSavedTimeout);
+      commentsSavedTimeout = setTimeout(() => { showCommentsSaved = false; }, 3000);
     }
     loading = false;
+    setTimeout(() => { saveClicked = false; }, 200);
   }
 </script>
 
@@ -107,7 +128,7 @@
   <h1 class="text-3xl font-bold text-amber-400 mb-6 font-[NorseBold]">Participant Check-In</h1>
 
   <div class="mb-4 flex flex-col gap-2">
-    <label class="text-gray-200 font-semibold">Search by Full Name:</label>
+    <label for="" class="text-gray-200 font-semibold">Search by Full Name:</label>
     <input
       id="nameInput"
       class="w-full p-2 rounded bg-gray-700 border border-gray-600 text-gray-200 placeholder-gray-400"
@@ -126,7 +147,7 @@
   </div>
 
   <div class="mb-4 flex flex-col gap-2">
-    <label class="text-gray-200 font-semibold">Scan or Enter UserID:</label>
+    <label for="" class="text-gray-200 font-semibold">Scan or Enter UserID:</label>
     <div class="flex gap-2">
       <input
         class="w-full p-2 rounded bg-gray-700 border border-gray-600 text-gray-200 placeholder-gray-400"
@@ -160,21 +181,34 @@
       <div class="mb-2 text-gray-200"><strong>Status:</strong> {selectedReg.RegistrationStatus}</div>
       <!-- Comments field at the end, always editable -->
       <div class="mt-4">
-        <label class="text-gray-200 font-semibold">Comments:</label>
+        <label for="" class="text-gray-200 font-semibold">Comments:</label>
         <textarea class="w-full p-2 rounded bg-gray-700 border border-gray-600 text-gray-200 mb-2" bind:value={editFields.Comments} placeholder="Comments..." rows="3">{selectedReg.comments}</textarea>
         <div class="flex gap-2 mt-2">
-          <button class="px-4 py-2 rounded bg-green-600 text-white font-semibold shadow hover:bg-green-700 transition" on:click={saveComments} disabled={loading}>Save Comments</button>
-          <button class="px-4 py-2 rounded bg-amber-500 text-gray-900 font-semibold shadow hover:bg-amber-400 transition" on:click={checkin} disabled={loading || selectedReg.RegistrationStatus === 'checkedIn'}>Check In</button>
-          {#if checkinSuccess}
-            <span class="ml-2 text-green-400 font-semibold">Checked In!</span>
-          {/if}
+          <button
+            class="px-4 py-2 rounded bg-green-600 text-white font-semibold shadow hover:bg-green-700 transition {saveClicked ? 'scale-95 ring-2 ring-green-400' : ''}"
+            on:click={saveComments}
+            style="transition: transform 0.15s, box-shadow 0.15s;"
+          >Save Comments</button>
+          <button
+            class="px-4 py-2 rounded bg-amber-500 text-gray-900 font-semibold shadow hover:bg-amber-400 transition {checkinClicked ? 'scale-95 ring-2 ring-amber-400' : ''}"
+            on:click={checkin}
+            disabled={loading || selectedReg.RegistrationStatus === 'checkedIn'}
+            style="transition: transform 0.15s, box-shadow 0.15s;"
+          >Check In</button>
         </div>
+        {#if showCommentsSaved}
+          <div class="text-green-400 font-semibold mt-2">Comments updated!</div>
+        {/if}
       </div>
     </div>
   {/if}
 
   {#if showModal}
-    <div class="fixed inset-0 flex items-center justify-center z-50">
+    <!-- Overlay for dark blur effect -->
+    <div class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40"></div>
+    <div
+      class="fixed inset-0 flex items-center justify-center z-50"
+    >
       <div
         class="bg-amber-500 text-gray-900 rounded-lg shadow-xl border-2 border-amber-700 px-8 py-6 text-center font-bold text-xl"
         in:fly={{ x: 500, duration: 400, easing: t => 1 - Math.pow(1-t, 2) }}
