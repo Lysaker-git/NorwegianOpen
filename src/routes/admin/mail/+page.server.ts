@@ -34,16 +34,22 @@ export const load: PageServerLoad = async ({ locals }) => {
 
 export const actions: Actions = {
 	sendMassEmail: async ({ request, locals }) => {
+		console.log('[SEND MASS EMAIL] Action triggered');
 		if (!locals.isAdmin) {
 			return json({ status: 403, error: 'Unauthorized' });
 		}
 		const formData = await request.formData();
+		console.log('[SEND MASS EMAIL] Form data received:', Array.from(formData.entries()));
 		const selectedIDs = JSON.parse(formData.get('selectedIDs') as string) as string[];
+		console.log('[SEND MASS EMAIL] Selected IDs:', selectedIDs);
 		const htmlContent = formData.get('htmlContent') as string;
+		console.log('[SEND MASS EMAIL] HTML Content length:', htmlContent.length);
 		const subject = formData.get('subject') as string;
+		console.log('[SEND MASS EMAIL] Subject:', subject);
 
 		// Use testEmails if selectedIDs is empty (for testing)
 		const recipients = selectedIDs.length > 0 ? selectedIDs : testEmails;
+		console.log('[SEND MASS EMAIL] Recipients:', recipients);
 
 		// Send email using transporter with BCC
 		const message = {
