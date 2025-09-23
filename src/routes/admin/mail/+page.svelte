@@ -68,9 +68,15 @@
   async function sendMail() {
     sending = true;
     const formData = new FormData();
-    formData.append('selectedIDs', useTestMail ? JSON.stringify([]) : JSON.stringify(selectedEmails));
+    // Force use of test emails for all sends
+    formData.append('selectedIDs', JSON.stringify([]));
     formData.append('htmlContent', emailContent);
     formData.append('subject', emailHeader || 'Norwegian Open WCS 2025 Announcement');
+    console.log('Form Data:', {
+      selectedIDs: formData.get('selectedIDs'),
+      htmlContent: formData.get('htmlContent'),
+      subject: formData.get('subject')
+    });
     await fetch('?/sendMassEmail', {
       method: 'POST',
       body: formData
@@ -83,7 +89,7 @@
     emailFooter = '';
     selectedEmails = [];
     useTestMail = false;
-    alert('Mail sent!');
+    location.reload();
   }
 </script>
 
@@ -209,7 +215,7 @@
   <button
     class="px-6 py-2 rounded bg-green-600 text-white font-semibold shadow hover:bg-green-700 transition"
     on:click={() => showConfirm = true}
-    disabled={sending || selectedEmails.length === 0 || !emailContent}
+    disabled={sending || !emailContent}
   >
     Send Email
   </button>

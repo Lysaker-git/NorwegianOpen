@@ -7,7 +7,6 @@
 
     export let data;
     const dispatch = createEventDispatcher();
-    console.log('Registration data:', data.hotelData);
 
     // Clone registration to allow editing without mutating original
     let registration = { ...data.registration };
@@ -99,6 +98,28 @@
             reminderError = 'Failed to send payment reminder.';
         }
         showReminderConfirm = false;
+    }
+
+    let showDeleteConfirm = false;
+    let deleting = false;
+
+    async function deleteRegistration() {
+        deleting = true;
+        console.log('[CLIENT] Attempting to delete registration for userID:', registration.userID);
+        // Use FormData and do NOT set Content-Type header, let browser set it for multipart/form-data
+        const formData = new FormData();
+        const res = await fetch('?/' + 'delete', {
+            method: 'POST',
+            body: formData
+        });
+        console.log('[CLIENT] Delete response:', res);
+        if (res.ok) {
+            window.location.href = '/admin/registrations';
+        } else {
+            deleting = false;
+            showDeleteConfirm = false;
+            alert('Failed to delete registration');
+        }
     }
 </script>
 
@@ -267,7 +288,7 @@
             </div>
             <!-- Add more fields as needed, following the same pattern -->
         </div>
-        <div class="absolute top-4 right-4">
+        <div class="absolute top-4 right-4 flex flex-col items-end gap-2 z-20">
             {#if isDirty}
                 <button
                     class="px-6 py-2 bg-amber-500 text-gray-900 font-semibold rounded hover:bg-amber-600 transition-colors duration-150"
@@ -285,6 +306,29 @@
             {/if}
         </div>
     </div>
+    <!-- Move Delete Registration button below the entire registration -->
+    <div class="max-w-3xl mx-auto flex justify-end mt-4">
+        <button
+            class="px-6 py-2 bg-red-600 text-white font-semibold rounded hover:bg-red-700 transition-colors duration-150 shadow"
+            on:click={() => { showDeleteConfirm = true; console.log('[CLIENT] showDeleteConfirm set to true'); }}
+        >
+            Delete Registration
+        </button>
+    </div>
+    {#if showDeleteConfirm}
+        <div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+            <div class="bg-gray-800 p-6 rounded shadow-lg border border-gray-600 max-w-sm w-full">
+                <h2 class="text-lg font-bold mb-4 text-white">Delete Registration?</h2>
+                <p class="mb-4 text-gray-300">Are you sure you want to delete this registration for <span class="font-semibold">{registration.FullName}</span>?</p>
+                <div class="flex gap-4 justify-end">
+                    <button class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700" on:click={() => { showDeleteConfirm = false; console.log('[CLIENT] showDeleteConfirm set to false'); }}>Cancel</button>
+                    <button class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700" on:click={deleteRegistration} disabled={deleting}>
+                        {deleting ? 'Deleting...' : 'Delete'}
+                    </button>
+                </div>
+            </div>
+        </div>
+    {/if}
     <div class="max-w-3xl mx-auto bg-gray-800 rounded-lg shadow-lg p-8 mt-8 relative">
             <h2 class="text-2xl font-bold text-amber-300 mb-4 font-[NorseBold]">Partner Details</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
