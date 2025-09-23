@@ -178,7 +178,21 @@
       {#if selectedReg.AddedIntensive}
         <div class="mb-2 text-gray-200"><strong>Joel and Chantelle Blues Intensive:</strong> Yes </div>
       {/if}
-      <div class="mb-2 text-gray-200"><strong>Status:</strong> {selectedReg.RegistrationStatus}</div>
+      <div class="mb-2 text-gray-200"><strong>Status:</strong> 
+        {#if selectedReg.RegistrationStatus === 'checkedIn'}
+          <span class="text-green-400 font-semibold">Checked In</span>
+        {:else if selectedReg.RegistrationStatus === 'paymentReceived'}
+          <span class="text-blue-400 font-semibold">Paid (Not Checked In)</span>
+        {:else if selectedReg.RegistrationStatus === 'approved'}
+          <span class="text-yellow-400 font-semibold">Approved (Not Paid)</span>
+        {:else if selectedReg.RegistrationStatus === 'pendingApproval'}
+          <span class="text-orange-400 font-semibold">Pending Approval</span>
+        {:else if selectedReg.RegistrationStatus === 'waitingList'}
+          <span class="text-purple-400 font-semibold">Waiting List</span>
+        {:else}
+          <span class="text-gray-300 font-semibold">{selectedReg.RegistrationStatus}</span>
+        {/if}
+      </div>
       <!-- Comments field at the end, always editable -->
       <div class="mt-4">
         <label for="" class="text-gray-200 font-semibold">Comments:</label>

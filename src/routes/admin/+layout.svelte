@@ -9,6 +9,13 @@
         prevPath = $page.url.pathname;
         mobileNavOpenAdmin = false;
     }
+    const restrictedUserEmail = 'register@now.no';
+    $: isRestrictedUser = $page.data.session?.user?.email === restrictedUserEmail;
+    // Redirect restricted user to /admin/checkin if not already there
+    if (isRestrictedUser && !$page.url.pathname.startsWith('/admin/checkin')) {
+        window.location.href = '/admin/checkin';
+    }
+    console.log('USER INFO:', $page.data.session?.user);
 </script>
 
 <div class="mx-8 ">
@@ -18,15 +25,27 @@
                 <a href="/admin" class="text-xl font-bold text-amber-400 hover:text-amber-300">Admin Panel</a>
                 <!-- Desktop nav -->
                 <div class="hidden md:flex items-center">
-                    <a href="/admin/registrations" class="px-4 py-2 rounded bg-amber-500 text-gray-900 font-semibold shadow hover:bg-amber-400 transition-colors duration-150 mr-2">
-                        Registrations
-                    </a>
-                    <a href="/admin/dashboard/hotels" class="px-4 py-2 rounded bg-amber-500 text-gray-900 font-semibold shadow hover:bg-amber-400 transition-colors duration-150 mr-2">
-                        Hotel Registrations
-                    </a>
-                    <a href="/admin/dashboard" class="px-4 py-2 rounded bg-indigo-500 text-white font-semibold shadow hover:bg-indigo-400 transition-colors duration-150">
-                        Dashboard
-                    </a>
+                    {#if isRestrictedUser}
+                        <a href="/admin/checkin" class="px-4 py-2 rounded bg-amber-500 text-gray-900 font-semibold shadow hover:bg-amber-400 transition-colors duration-150 mr-2">
+                            Check-in
+                        </a>
+                    {:else}
+                        <a href="/admin/registrations" class="px-4 py-2 rounded bg-amber-500 text-gray-900 font-semibold shadow hover:bg-amber-400 transition-colors duration-150 mr-2">
+                            Registrations
+                        </a>
+                        <a href="/admin/dashboard/hotels" class="px-4 py-2 rounded bg-amber-500 text-gray-900 font-semibold shadow hover:bg-amber-400 transition-colors duration-150 mr-2">
+                            Hotel Registrations
+                        </a>
+                        <a href="/admin/mail" class="px-4 py-2 rounded bg-amber-500 text-gray-900 font-semibold shadow hover:bg-amber-400 transition-colors duration-150 mr-2">
+                            Mail
+                        </a>
+                        <a href="/admin/checkin" class="px-4 py-2 rounded bg-amber-500 text-gray-900 font-semibold shadow hover:bg-amber-400 transition-colors duration-150 mr-2">
+                            Check-in
+                        </a>
+                        <a href="/admin/dashboard" class="px-4 py-2 rounded bg-indigo-500 text-white font-semibold shadow hover:bg-indigo-400 transition-colors duration-150">
+                            Dashboard
+                        </a>
+                    {/if}
                     {#if $page.data.session && $page.url.pathname === '/admin'}
                         <form 
                             method="POST" 
@@ -46,9 +65,15 @@
                 <!-- Mobile nav dropdown -->
                 {#if mobileNavOpenAdmin}
                 <div class="absolute right-0 top-14 z-40 w-56 bg-gray-900 border border-gray-700 rounded shadow-lg flex flex-col md:hidden animate-fade-in pointer-events-auto">
-                    <a href="/admin/registrations" class="px-4 py-3 border-b border-gray-700 hover:bg-amber-500 hover:text-gray-900 transition-colors">Registrations</a>
-                    <a href="/admin/dashboard/hotels" class="px-4 py-3 border-b border-gray-700 hover:bg-amber-500 hover:text-gray-900 transition-colors">Hotel Registrations</a>
-                    <a href="/admin/dashboard" class="px-4 py-3 border-b border-gray-700 hover:bg-indigo-500 hover:text-white transition-colors">Dashboard</a>
+                    {#if isRestrictedUser}
+                        <a href="/admin/checkin" class="px-4 py-3 border-b border-gray-700 hover:bg-amber-500 hover:text-gray-900 transition-colors">Check-in</a>
+                    {:else}
+                        <a href="/admin/registrations" class="px-4 py-3 border-b border-gray-700 hover:bg-amber-500 hover:text-gray-900 transition-colors">Registrations</a>
+                        <a href="/admin/dashboard/hotels" class="px-4 py-3 border-b border-gray-700 hover:bg-amber-500 hover:text-gray-900 transition-colors">Hotel Registrations</a>
+                        <a href="/admin/mail" class="px-4 py-3 border-b border-gray-700 hover:bg-amber-500 hover:text-gray-900 transition-colors">Mail</a>
+                        <a href="/admin/checkin" class="px-4 py-3 border-b border-gray-700 hover:bg-amber-500 hover:text-gray-900 transition-colors">Check-in</a>
+                        <a href="/admin/dashboard" class="px-4 py-3 border-b border-gray-700 hover:bg-indigo-500 hover:text-white transition-colors">Dashboard</a>
+                    {/if}
                     {#if $page.data.session && $page.url.pathname === '/admin'}
                         <form method="POST" action="?/logout" class="">
                             <button type="submit" class="w-full text-center px-0 py-2 rounded bg-red-600 hover:bg-red-700">
