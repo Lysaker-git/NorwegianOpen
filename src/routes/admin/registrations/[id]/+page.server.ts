@@ -91,6 +91,20 @@ export const actions: Actions = {
         } catch (e) {
             return { success: false, error: 'Failed to send email.' };
         }
+    },
+    delete: async ({ params }) => {
+        const { id } = params;
+        console.log(`[SERVER] [DELETE REGISTRATION] Deleting registration for userID: ${id}`);
+        const { error } = await supabaseAdmin
+            .from('RegistrationDB')
+            .delete()
+            .eq('userID', id);
+        if (error) {
+            console.log('[SERVER] Delete error:', error.message);
+            return { success: false, error: error.message };
+        }
+        console.log('[SERVER] Delete success for userID:', id);
+        return { success: true };
     }
 };
 
