@@ -34,9 +34,11 @@
     userIDError = '';
     const formData = new FormData();
     formData.append('type', 'userID');
-    formData.append('value', searchUserID);
+    formData.append('value', searchUserID.trim()); // trim whitespace
+    console.log('[CLIENT] Searching for userID:', searchUserID.trim());
     const res = await fetch('?/search', { method: 'POST', body: formData });
     const { result } = await res.json();
+    console.log('[CLIENT] Search result:', result);
     if (result && result.length === 1) {
       selectedReg = result[0];
       userIDError = '';

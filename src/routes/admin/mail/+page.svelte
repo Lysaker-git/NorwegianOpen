@@ -51,10 +51,13 @@
     } else {
       selectedStatuses = [...selectedStatuses, status];
     }
-    filtered = selectedStatuses.length > 0
-      ? data.registrations.filter(r => selectedStatuses.includes(r.RegistrationStatus))
-      : data.registrations;
-    selectedEmails = filtered.map(r => r.Email).filter(Boolean);
+    // Only update selectedEmails if not searching
+    if (!searchTerm) {
+      filtered = selectedStatuses.length > 0
+        ? data.registrations.filter(r => selectedStatuses.includes(r.RegistrationStatus))
+        : data.registrations;
+      selectedEmails = filtered.map(r => r.Email).filter(Boolean);
+    }
   }
 
   function toggleEmail(email: string) {
@@ -68,8 +71,8 @@
   async function sendMail() {
     sending = true;
     const formData = new FormData();
-    // Force use of test emails for all sends
-    formData.append('selectedIDs', JSON.stringify([]));
+    // Send to selected emails unless test mode is checked
+    formData.append('selectedIDs', useTestMail ? JSON.stringify([]) : JSON.stringify(selectedEmails));
     formData.append('htmlContent', emailContent);
     formData.append('subject', emailHeader || 'Norwegian Open WCS 2025 Announcement');
     console.log('Form Data:', {
@@ -91,6 +94,15 @@
     useTestMail = false;
     location.reload();
   }
+
+  // Add search bar for participant filtering
+  let searchTerm = '';
+  $: filtered = selectedStatuses.length > 0
+    ? data.registrations.filter(r => selectedStatuses.includes(r.RegistrationStatus))
+    : data.registrations;
+  $: filtered = searchTerm.length > 0
+    ? filtered.filter(r => r.FullName && r.FullName.toLowerCase().includes(searchTerm.toLowerCase()))
+    : filtered;
 </script>
 
 <svelte:head>
@@ -125,6 +137,15 @@
     >
       All
     </button>
+    <!-- Search bar for participant filtering -->
+    <input
+      class="ml-4 px-3 py-1 rounded bg-gray-700 text-gray-200 border border-gray-600 focus:ring-amber-500 focus:border-amber-500"
+      type="text"
+      bind:value={searchTerm}
+      placeholder="Search by name..."
+      autocomplete="off"
+      style="min-width:180px;"
+    />
   </div>
 
   <div class="mb-4">
