@@ -39,7 +39,11 @@
               <h1 class="text-2xl font-bold text-center mx-4 text-white">Hotel Registration</h1>
               <div class="h-px w-16 bg-amber-400"></div>
             </div>
-            <HotelRegistration {form} {data} />
+            <div class="p-4 mb-4 text-sm text-yellow-300 bg-yellow-900 rounded-lg text-center" role="alert">
+              Hotel booking through our page is now closed. <br>
+              If you still need a room, please contact <a href="https://www.scandichotels.no/hamar" target="_blank" rel="noopener noreferrer" class="underline text-amber-300 hover:text-amber-400">Scandic Hamar</a> directly.
+            </div>
+            <!-- <HotelRegistration {form} {data} /> -->
           </div>
       </div>
   </div>
