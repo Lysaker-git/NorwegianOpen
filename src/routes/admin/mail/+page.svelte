@@ -1,11 +1,10 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
   import type { PageData } from '../$types';
-  export let data: PageData & { registrations: Registration[] };
+  export let data: PageData & { registrations: Registration[], statuses: string[], levels: string[], passOptions: string[] };
 
-  let filtered = data.registrations;
-  let selectedStatuses: string[] = [];
-  let selectedEmails: string[] = [];
+  let selectedStatus: string | null = null;
+  let selectedLevel: string | null = null;
   let emailHeader = '';
   let emailInfo1 = '';
   let emailInfo2 = '';
@@ -14,6 +13,8 @@
   let showConfirm = false;
   let sending = false;
   let useTestMail = false;
+  let selectedPassOption: string | null = null;
+  let showRecipients = false;
 
   const TEST_EMAILS = [
     'roblysa@hotmail.com',
@@ -26,8 +27,26 @@
     FullName: string | null;
     Email: string | null;
     RegistrationStatus: string;
+    Level?: string | null;
+    PassOption?: string | null;
     // ...other fields as needed...
   }
+
+  // Use statuses, levels, and passOptions from server
+  const statuses = data.statuses || [];
+  const levels = data.levels || [];
+  const passOptions = data.passOptions || [];
+
+  // Filtered recipients based on selection
+  $: filtered = selectedStatus
+    ? data.registrations.filter(r => r.RegistrationStatus === selectedStatus)
+    : selectedLevel
+      ? data.registrations.filter(r => r.Level === selectedLevel)
+      : selectedPassOption
+        ? data.registrations.filter(r => r.PassOption === selectedPassOption)
+        : [];
+
+  $: selectedEmails = filtered.map(r => r.Email).filter(Boolean);
 
   $: emailContent = `
   <div style="max-width:600px;margin:24px auto;background:#fff;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;line-height:1.6;color:#222;">
@@ -43,43 +62,30 @@
       <span>© ${new Date().getFullYear()} Norwegian Open WCS. All rights reserved.</span>
     </div>
   </div>
-`;
+  `;
 
-  function filterByStatus(status: string) {
-    if (selectedStatuses.includes(status)) {
-      selectedStatuses = selectedStatuses.filter(s => s !== status);
-    } else {
-      selectedStatuses = [...selectedStatuses, status];
-    }
-    // Only update selectedEmails if not searching
-    if (!searchTerm) {
-      filtered = selectedStatuses.length > 0
-        ? data.registrations.filter(r => selectedStatuses.includes(r.RegistrationStatus))
-        : data.registrations;
-      selectedEmails = filtered.map(r => r.Email).filter(Boolean);
-    }
+  function selectStatus(status: string) {
+    selectedStatus = status;
+    selectedLevel = null;
+    selectedPassOption = null;
   }
-
-  function toggleEmail(email: string) {
-    if (selectedEmails.includes(email)) {
-      selectedEmails = selectedEmails.filter(e => e !== email);
-    } else {
-      selectedEmails = [...selectedEmails, email];
-    }
+  function selectLevel(level: string) {
+    selectedLevel = level;
+    selectedStatus = null;
+    selectedPassOption = null;
+  }
+  function selectPassOption(pass: string) {
+    selectedPassOption = pass;
+    selectedStatus = null;
+    selectedLevel = null;
   }
 
   async function sendMail() {
     sending = true;
     const formData = new FormData();
-    // Send to selected emails unless test mode is checked
     formData.append('selectedIDs', useTestMail ? JSON.stringify([]) : JSON.stringify(selectedEmails));
     formData.append('htmlContent', emailContent);
     formData.append('subject', emailHeader || 'Norwegian Open WCS 2025 Announcement');
-    console.log('Form Data:', {
-      selectedIDs: formData.get('selectedIDs'),
-      htmlContent: formData.get('htmlContent'),
-      subject: formData.get('subject')
-    });
     await fetch('?/sendMassEmail', {
       method: 'POST',
       body: formData
@@ -90,19 +96,9 @@
     emailInfo1 = '';
     emailInfo2 = '';
     emailFooter = '';
-    selectedEmails = [];
     useTestMail = false;
     location.reload();
   }
-
-  // Add search bar for participant filtering
-  let searchTerm = '';
-  $: filtered = selectedStatuses.length > 0
-    ? data.registrations.filter(r => selectedStatuses.includes(r.RegistrationStatus))
-    : data.registrations;
-  $: filtered = searchTerm.length > 0
-    ? filtered.filter(r => r.FullName && r.FullName.toLowerCase().includes(searchTerm.toLowerCase()))
-    : filtered;
 </script>
 
 <svelte:head>
@@ -112,60 +108,124 @@
 <div class="bg-gray-800 p-6 rounded-lg shadow-lg max-w-3xl mx-auto my-8">
   <h1 class="text-3xl font-bold text-amber-400 mb-6 font-[NorseBold]">Send Mass Email</h1>
 
-  <div class="mb-4 flex flex-wrap gap-2">
-    <label for="" class="text-gray-200 font-semibold">Filter by status:</label>
-    {#each ['approved', 'pendingApproval', 'waitingList', 'paymentReceived', 'checkedIn'] as status}
-      <button
-        class="px-3 py-1 rounded font-semibold shadow transition border-2"
-        class:bg-amber-500={selectedStatuses.includes(status)}
-        class:bg-gray-700={!selectedStatuses.includes(status)}
-        class:text-gray-900={selectedStatuses.includes(status)}
-        class:text-gray-200={!selectedStatuses.includes(status)}
-        class:border-amber-400={selectedStatuses.includes(status)}
-        class:border-gray-600={!selectedStatuses.includes(status)}
-        on:click={() => filterByStatus(status)}
-        aria-pressed={selectedStatuses.includes(status)}
-        disabled={useTestMail}
-      >
-        {status}
-      </button>
-    {/each}
-    <button
-      class="px-3 py-1 rounded bg-gray-700 text-gray-200 font-semibold shadow hover:bg-gray-600 transition border-2 border-gray-600"
-      on:click={() => { selectedStatuses = []; filtered = data.registrations; selectedEmails = filtered.map(r => r.Email).filter(Boolean); }}
-      disabled={useTestMail}
-    >
-      All
-    </button>
-    <!-- Search bar for participant filtering -->
-    <input
-      class="ml-4 px-3 py-1 rounded bg-gray-700 text-gray-200 border border-gray-600 focus:ring-amber-500 focus:border-amber-500"
-      type="text"
-      bind:value={searchTerm}
-      placeholder="Search by name..."
-      autocomplete="off"
-      style="min-width:180px;"
-    />
-  </div>
-
-  <div class="mb-4">
-    <label for="" class="text-gray-200 font-semibold mb-2 block">Select recipients:</label>
-    <div class="max-h-40 overflow-y-auto bg-gray-900 rounded p-2 border border-gray-700">
-      {#each filtered as reg}
-        <label class="flex items-center gap-2 text-sm text-gray-200 mb-1">
-          <input
-            type="checkbox"
-            checked={selectedEmails.includes(reg.Email)}
-            on:change={() => toggleEmail(reg.Email)}
-            class="accent-amber-500"
+  <div class="mb-6 flex flex-wrap gap-8">
+    <!-- Status column -->
+    <div>
+      <div class="text-gray-200 font-semibold mb-2">Filter by status:</div>
+      <div class="flex flex-col gap-2">
+        {#each statuses as status}
+          <button
+            class="px-3 py-1 rounded font-semibold shadow transition border-2"
+            class:bg-amber-500={selectedStatus === status}
+            class:bg-gray-700={selectedStatus !== status}
+            class:text-gray-900={selectedStatus === status}
+            class:text-gray-200={selectedStatus !== status}
+            class:border-amber-400={selectedStatus === status}
+            class:border-gray-600={selectedStatus !== status}
+            on:click={() => selectStatus(status)}
+            aria-pressed={selectedStatus === status}
             disabled={useTestMail}
-          />
-          {reg.FullName} <span class="text-gray-400">({reg.Email})</span>
-        </label>
-      {/each}
+          >
+            {status}
+          </button>
+        {/each}
+      </div>
     </div>
+    <!-- Level column -->
+    <div>
+      <div class="text-gray-200 font-semibold mb-2">Filter by level:</div>
+      <div class="flex flex-col gap-2">
+        {#each levels as level}
+          <button
+            class="px-3 py-1 rounded font-semibold shadow transition border-2"
+            class:bg-amber-500={selectedLevel === level}
+            class:bg-gray-700={selectedLevel !== level}
+            class:text-gray-900={selectedLevel === level}
+            class:text-gray-200={selectedLevel !== level}
+            class:border-amber-400={selectedLevel === level}
+            class:border-gray-600={selectedLevel !== level}
+            on:click={() => selectLevel(level)}
+            aria-pressed={selectedLevel === level}
+            disabled={useTestMail}
+          >
+            {level}
+          </button>
+        {/each}
+      </div>
+    </div>
+    <!-- PassOption column (Zero to Hero, dummyReg, etc) -->
+    {#if passOptions.length > 0}
+    <div>
+      <div class="text-gray-200 font-semibold mb-2">Filter by pass type:</div>
+      <div class="flex flex-col gap-2">
+        {#each passOptions as pass}
+          <button
+            class="px-3 py-1 rounded font-semibold shadow transition border-2"
+            class:bg-amber-500={selectedPassOption === pass}
+            class:bg-gray-700={selectedPassOption !== pass}
+            class:text-gray-900={selectedPassOption === pass}
+            class:text-gray-200={selectedPassOption !== pass}
+            class:border-amber-400={selectedPassOption === pass}
+            class:border-gray-600={selectedPassOption !== pass}
+            on:click={() => selectPassOption(pass)}
+            aria-pressed={selectedPassOption === pass}
+            disabled={useTestMail}
+          >
+            {pass}
+          </button>
+        {/each}
+      </div>
+    </div>
+    {/if}
   </div>
 
+  <!-- Preview Table -->
+  <div class="mb-6">
+    <div class="flex items-center justify-between mb-2">
+      <div class="text-gray-200 font-semibold">Recipients Preview:</div>
+      {#if filtered.length > 0}
+        <button
+          class="text-amber-400 hover:underline text-sm font-semibold focus:outline-none"
+          on:click={() => showRecipients = !showRecipients}
+        >
+          {showRecipients ? 'Hide' : 'Show'} recipients ({filtered.length})
+        </button>
+      {/if}
+    </div>
+    {#if filtered.length > 0 && showRecipients}
+      <div class="overflow-x-auto rounded border border-gray-700 bg-gray-900 mb-0">
+        <table class="min-w-full text-sm text-left">
+          <thead>
+            <tr class="bg-gray-800 text-amber-300">
+              <th class="px-4 py-2">Full Name</th>
+              <th class="px-4 py-2">Email</th>
+              <th class="px-4 py-2">Level</th>
+              <th class="px-4 py-2">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {#each filtered as reg}
+              <tr class="border-t border-gray-700 hover:bg-gray-800">
+                <td class="px-4 py-2">{reg.FullName}</td>
+                <td class="px-4 py-2">{reg.Email}</td>
+                <td class="px-4 py-2">{reg.Level}</td>
+                <td class="px-4 py-2">{reg.RegistrationStatus}</td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+    {/if}
+    {#if filtered.length > 0}
+      <div class="flex justify-end bg-gray-900 border-x border-b border-gray-700 rounded-b px-4 py-2 text-amber-300 font-semibold text-sm">
+        Total recipients: {filtered.length}
+      </div>
+    {:else}
+      <div class="text-gray-400 italic">No recipients selected.</div>
+    {/if}
+  </div>
+
+  <!-- Email content fields (unchanged) -->
   <div class="mb-4">
     <label for="emailHeader" class="text-gray-200 font-semibold mb-2 block">Email Header:</label>
     <input
@@ -236,7 +296,7 @@
   <button
     class="px-6 py-2 rounded bg-green-600 text-white font-semibold shadow hover:bg-green-700 transition"
     on:click={() => showConfirm = true}
-    disabled={sending || !emailContent}
+    disabled={sending || !emailContent || (!selectedStatus && !selectedLevel && !selectedPassOption)}
   >
     Send Email
   </button>
@@ -245,7 +305,9 @@
     <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div class="bg-gray-800 rounded-lg p-6 shadow-xl border border-amber-500 max-w-md w-full">
         <h2 class="text-xl font-bold text-amber-400 mb-4">Confirm Send</h2>
-        <p class="text-gray-200 mb-4">Are you sure you want to send this email to {selectedEmails.length} recipients?</p>
+        <p class="text-gray-200 mb-4">
+          Are you sure you want to send this email to {selectedEmails.length} recipients?
+        </p>
         <div class="flex gap-4 justify-end">
           <button
             class="px-4 py-2 rounded bg-gray-700 text-gray-200 font-semibold shadow hover:bg-gray-600 transition"

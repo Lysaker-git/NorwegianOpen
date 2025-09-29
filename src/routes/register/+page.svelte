@@ -37,10 +37,6 @@
             <RegistrationCountdown />
             <p class="py-2 text-white">IF you would like to stay up to date please enter your email below</p>
             <MailList {form}/>
-            <!-- <p class="text-lg text-gray-300">
-              Registration will open on {regOpenDate.toLocaleDateString()} at {regOpenDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} CEST.
-              Stay tuned for the saga to begin!
-            </p> -->
           </div>
         {:else}
           <div class="bg-gray-900 rounded-lg p-8 shadow-lg border border-amber-400/30">
@@ -56,7 +52,7 @@
   </div>
   
   <style global>
-    h1 {
+    h1, h2, h3 {
       font-family: 'NorseBold';
     }
   </style>

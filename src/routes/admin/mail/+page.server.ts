@@ -22,14 +22,50 @@ export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.isAdmin) {
 		return json({ status: 403, error: 'Unauthorized' });
 	}
+	// Fetch registrations
 	const { data: registrations, error } = await supabaseAdmin
 		.from('RegistrationDB')
-		.select('id, FullName, Email, RegistrationStatus')
+		.select('id, FullName, Email, RegistrationStatus, Level, PassOption')
 		.order('created_at', { ascending: true });
 	if (error) {
 		return json({ status: 500, error: error.message });
 	}
-	return { registrations: registrations };
+
+	// Fetch unique statuses
+	const { data: statusRows, error: statusError } = await supabaseAdmin
+		.from('RegistrationDB')
+		.select('RegistrationStatus')
+		.neq('RegistrationStatus', null)
+		.order('RegistrationStatus', { ascending: true });
+	if (statusError) {
+		return json({ status: 500, error: statusError.message });
+	}
+	const statuses = Array.from(new Set((statusRows ?? []).map(r => r.RegistrationStatus)));
+
+	// Fetch unique levels
+	const { data: levelRows, error: levelError } = await supabaseAdmin
+		.from('RegistrationDB')
+		.select('Level')
+		.neq('Level', null)
+		.order('Level', { ascending: true });
+	if (levelError) {
+		return json({ status: 500, error: levelError.message });
+	}
+	const levels = Array.from(new Set((levelRows ?? []).map(r => r.Level)));
+
+	// Fetch unique PassOptions, include both 'Zero to Hero' and 'dummyReg' for testing
+	const { data: passRows, error: passError } = await supabaseAdmin
+		.from('RegistrationDB')
+		.select('PassOption')
+		.in('PassOption', ['Zero to Hero', 'dummyReg']);
+	if (passError) {
+		return json({ status: 500, error: passError.message });
+	}
+	// Only add the button if at least one exists
+	const passOptions = Array.from(new Set((passRows ?? []).map(r => r.PassOption).filter(Boolean)));
+	console.log('[LOAD REGISTRATIONS] Pass options:', passOptions)
+
+	return { registrations, statuses, levels, passOptions };
 };
 
 export const actions: Actions = {
