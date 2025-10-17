@@ -1,9 +1,8 @@
 <script lang="ts">
     import { onMount, onDestroy } from 'svelte';
     import { calculateTimeRemaining } from '$lib/components/utils';
-    import { REG_OPEN_STRING } from '$lib/components/constants';
-    
-    const regOpenDate = new Date(REG_OPEN_STRING + 'T19:00:00');
+    import { regOpenDate } from '$lib/components/constants';
+
     let timeRemaining = calculateTimeRemaining(regOpenDate);
     let countdownInterval: ReturnType<typeof setInterval>;
 

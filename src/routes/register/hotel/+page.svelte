@@ -1,18 +1,14 @@
 <script lang="ts">
     import type { ActionData } from './$types';
     import type { PageData } from '../$types';
-    import { REG_OPEN_STRING } from '$lib/components/constants';
+    import { regOpenDate, today } from '$lib/components/constants';
     import RegistrationForm from '$lib/components/htmlComponents/RegistrationForm.svelte';
     import HotelRegistration from '$lib/components/htmlComponents/hotelRegistration.svelte';
     import { onMount } from 'svelte';
     import MailList from '$lib/components/htmlComponents/MailList.svelte';
     export let form: ActionData;
     export let data: PageData;
-
-    console.log('[CLIENT PAGE] Hotel Registration', data);
-  
-    const regOpenDate = new Date(REG_OPEN_STRING + 'T19:00:00');
-    const today = new Date();
+    
     let isVisible = false;
   
     onMount(() => {

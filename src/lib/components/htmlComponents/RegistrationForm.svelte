@@ -2,14 +2,13 @@
     import { enhance } from '$app/forms';
     import type { ActionData } from '../../../routes/register/$types'; // Adjust path if needed
     import {
-        YMIR_DEADLINE_STRING,
-        MIDGARD_DEADLINE_STRING,
         PARTY_PASS_PRICE,
         passOptionsByLevel,
         LEVEL_OPTIONS,
-        // HOTEL_PRICES, // Removed
 		ZERO_TO_HERO,
-        INTENSIVE
+        INTENSIVE,
+        ymirDeadline,
+        midgardDeadline
     } from '$lib/components/constants';
     import {
         getCurrentTier,
@@ -29,10 +28,6 @@
     let selectedPassOption: string | null = null;
 
     let isLoading = false;
-
-    // --- Define Pricing Tiers and Deadlines ---
-    const ymirDeadline = new Date(YMIR_DEADLINE_STRING + 'T23:59:59');
-    const midgardDeadline = new Date(MIDGARD_DEADLINE_STRING + 'T23:59:59');
 
     // --- Reactive Calculations ---
     let currentTier: Tier = getCurrentTier(new Date(), ymirDeadline, midgardDeadline);

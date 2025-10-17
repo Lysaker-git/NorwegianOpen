@@ -1,15 +1,13 @@
 <script lang="ts">
     import type { ActionData } from './$types';
     import type { PageData } from '../$types';
-    import { REG_OPEN_STRING } from '$lib/components/constants';
+    import { regOpenDate, today } from '$lib/components/constants';
     import RegistrationCountdown from '$lib/components/htmlComponents/RegistrationCountdown.svelte';
     import RegistrationForm from '$lib/components/htmlComponents/RegistrationForm.svelte';
     import { onMount } from 'svelte';
     import MailList from '$lib/components/htmlComponents/MailList.svelte';
     export let form: ActionData;
   
-    const regOpenDate = new Date(REG_OPEN_STRING + 'T19:00:00');
-    const today = new Date();
     let isVisible = false;
   
     onMount(() => {
