@@ -1,17 +1,10 @@
 <script lang="ts">
     import { page } from '$app/stores';
-    import { paymentInfo } from '$lib/components/constants';
+    import { paymentInfo, statusLabels } from '$lib/components/constants';
     
     export let data;
     const { registration, hotelData } = data;
 
-    // Registration status map
-    const statusLabels = {
-        'pendingApproval': 'Pending approval',
-        'approved': 'Approved',
-        'waitingList': 'Waiting list',
-        'cancelled': 'Cancelled'
-    };
 </script>
 
 {#if registration}

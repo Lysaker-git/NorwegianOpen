@@ -3,11 +3,13 @@
     import { onMount } from 'svelte';
     import { fade, fly } from 'svelte/transition';
     import DarkLogo from '$lib/components/logo/nopenDarkLogo.png';
+    import { navEndDate, today } from '$lib/components/constants';
     
     let isMenuOpen = false;
     let isTransitioning = false;
     let aboutDropdownOpen = false;
     let registerDropdownOpen = false;
+
 
     // Handle menu toggle with transition lock to prevent multiple clicks during animation
     function toggleMenu() {
@@ -90,6 +92,7 @@
             <img class="cInvert h-12" src={DarkLogo} alt="Norwegian Open WCS 2025 Logo" />
         </a>
     </div>
+    {#if today <= navEndDate}
     <!-- Desktop Navigation -->
     <nav class="hidden md:block">
         <ul class="flex space-x-6 items-center">
@@ -158,10 +161,10 @@
             </svg>
         </button>
     </div>
+    {/if}
 </header>
 
-<!-- Full-screen Mobile Navigation Menu -->
-{#if isMenuOpen}
+{#if today <= navEndDate && isMenuOpen}
 <div class="fixed inset-0 bg-[#4F4943] z-40 flex md:hidden" transition:fade={{ duration: 200 }}>
     <nav class="h-full w-full flex flex-col justify-center items-center">
         <ul class="flex flex-col items-center justify-between h-3/4 text-white w-full">

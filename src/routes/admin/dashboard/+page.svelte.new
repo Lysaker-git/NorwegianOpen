@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Norwegian Open WCS 2025</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #A31F34; /* Norwegian Flag Red */
+            text-align: center;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #002868; /* Norwegian Flag Blue */
+            margin-top: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        h3 {
+            color: #333;
+            margin-top: 15px;
+        }
+        a {
+            color: #002868;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 5px;
+        }
+        .intro-greeting {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+        .viking-quote {
+            font-style: italic;
+            border-left: 3px solid #ccc;
+            padding-left: 15px;
+            margin: 15px 0;
+            background-color: #f9f9f9;
+        }
+        .closing {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+        }
+        .team-signature {
+            font-style: italic;
+            margin-top: 10px;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the First Edition of Norwegian Open WCS 2025!</h1>
+
+        <p class="intro-greeting">Dear dancers,</p>
+        <p>Welcome to Norway — land of <b>fjords</b>, <b>northern lights</b>, and echoes of Valhalla that still whisper through the mountains. We are beyond excited to greet you here in <b>Hamar</b> for the very first edition of <b>Norwegian Open WCS (NOW)</b>!</p>
+
+        <h2>The NOW Vision: A Dance Saga Begins</h2>
+        <p>Our vision for NOW is to create a realm unlike any other — a safe and magical world where time seems to vanish, and all that matters is the present moment. Here, in the company of friends old and new, we hope you will find yourself immersed in smiles, laughter, and the uniting joy of West Coast Swing — a dance that binds us together across borders and cultures. This is the dawn of a saga that will echo for years to come.</p>
+        <p>Hamar, with its deep <b>Viking roots</b>, is the perfect place to begin this journey. Once a medieval stronghold by the shores of mighty <b>Mjøsa</b>, Norway’s largest lake, it was a place of gathering, trade, and storytelling. Today, it becomes the stage for your stories — of music, movement, and community.</p>
+
+        <h2>Schedule, Competitions & Intensives</h2>
+        <p>You can find the finalized schedule for the weekend <b><a href="http://norwegianopen.no/schedule" target="_blank">here</a></b>.</p>
+        <p>Remember to pre-register for competitions via <b><a href="http://scoring.dance" target="_blank">scoring.dance</a></b>.</p>
+
+        <h3>Competitions Offered:</h3>
+        <ul>
+            <li><b>Strictly:</b> Novice, Intermediate, Open</li>
+            <li><b>Jack & Jill:</b> Newcomer, Novice, Intermediate, Sophisticated, Advanced, All-Star</li>
+        </ul>
+
+        <h3>Special Intensives (all available for purchase at the entrance):</h3>
+        <ul>
+            <li><b>The Blues Intensive</b> with Joel & Chantelle — Friday 11:00–14:00</li>
+            <li><b>Grounded & Connected</b> with Ardena — Friday 18:30–20:00</li>
+            <li><b>Follower Styling Intensive</b> with Fernanda — Saturday 10:15–11:45</li>
+        </ul>
+
+        <h2>Getting Here & Getting Around</h2>
+        <p>From <b>Oslo Gardermoen Airport (OSL)</b>, Hamar is just a direct train ride away (RE10 or F6). We recommend downloading the <b>Vy app</b> to plan your travels and purchase tickets with ease.</p>
+        <p>From Hamar Station, the <b>Scandic Hamar Hotel</b> is only a short walk. Around the hotel, you’ll find everything you need: restaurants, cafés, shops, and even a shopping mall. And don’t miss a stroll down to <b>Mjøsa</b> — it’s the perfect place to take in the beauty of Hamar.</p>
+
+        <h2>What to Wear</h2>
+        <p>October in Norway can be fresh — sometimes chilly in the evenings, sometimes a touch of rain. Bring <b>layers</b>, a warm jacket, and shoes you can walk comfortably in. And together, let’s send a prayer to the gods for good weather on Sunday evening, when we gather in <b>Midgard</b> (the cozy outdoor courtyard at the hotel) to share stories, connect with new friends, and raise a glass.</p>
+
+        <h2>Practical Tips</h2>
+        <ul>
+            <li><b>Water of the gods:</b> Norwegian drinking water is some of the purest in the world. Bring your bottle and refill at water stations outside the ballrooms, or straight from the tap.</li>
+            <li><b>Hotel policy:</b> Please remember that meals and alcohol not purchased at the hotel may not be consumed in public areas. Drinks from the bar are, of course, welcome.</li>
+            <li><b>Kardemommeloven (The Cardamom Law):</b> Here in Norway we live by the simple law of kindness:
+                <div class="viking-quote">
+                    <em>“Man skal ikke plage andre, man skal være grei og snill, og forøvrig kan man gjøre som man vil.”</em><br>
+                    (“Do not bother others, be nice and kind, and otherwise, you may do as you please.”)
+                </div>
+            </li>
+        </ul>
+
+        <div class="closing">
+            <h2>Let the Saga Begin</h2>
+            <p>This weekend, you are not just dancers — you are <b>explorers</b>, <b>adventurers</b>, and members of a new chapter in WCS history. We hope you leave with full hearts, new friends, and memories that will echo like Viking songs long after the music stops.</p>
+            <p>If you have any questions, comments, or concerns, please don’t hesitate to reach out to us. We are here to make sure your experience is <b>legendary</b>.</p>
+            <p style="font-size: 1.2em; margin-top: 20px;"><strong>Welcome to Norwegian Open WCS 2025 —<br>Let the dancing saga begin!</strong></p>
+            <p class="team-signature">
+                With excitement and gratitude,<br>
+                The <b>Norwegian Open WCS Team</b>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,8 +1,7 @@
 <!-- e.g., src/lib/components/HotelRegistrationForm.svelte -->
 <script lang="ts">
     import { enhance } from '$app/forms';
-    import type { ActionData } from './$types'; // Adjust if this form has its own +page.server.ts action
-    import { HOTEL_PRICES } from '$lib/components/constants'; // Ensure HOTEL_PRICES is exported from here
+    import { HOTEL_PRICES, hotelMinDate, hotelMaxDate, availableDates, getHotelDisplayName, formatPrice, roomOptions } from '$lib/components/constants'; // Ensure HOTEL_PRICES is exported from here
     import ImageCarousel from './ImageCarousel.svelte';
     import { fade, scale } from 'svelte/transition';
 
@@ -17,7 +16,7 @@
 
     import CardComponent from './cardComponent.svelte';
 
-    export let data: PageData;
+    export let data: any;
     const { availability } = data;
 
     console.log('[CLIENT SUBPAGE] Hotel Registration', availability);
@@ -26,16 +25,12 @@
     const imageModulesTriple = import.meta.glob('$lib/components/images/scandic/triple/*.webp', { eager: true });
     const imageModulesQuatro = import.meta.glob('$lib/components/images/scandic/quatro/*.webp', { eager: true });
 
-    const quatroImages = Object.values(imageModulesQuatro).map(module => module.default);
-    const singleImages = Object.values(imageModules).map(module => module.default);
-    const tripleImages = Object.values(imageModulesTriple).map(module => module.default);
+    const quatroImages = Object.values(imageModulesQuatro).map(module => (module as { default: string }).default);
+    const singleImages = Object.values(imageModules).map(module => (module as { default: string }).default);
+    const tripleImages = Object.values(imageModulesTriple).map(module => (module as { default: string }).default);
 
     // Props for form feedback (if used as a component in a page with a server action)
     // export let form: ActionData | null = null;
-
-    // --- Constants ---
-    const hotelMinDate = '2025-10-02';
-    const hotelMaxDate = '2025-10-06';
 
     // --- State Variables ---
     let email: string = ''; // To associate with the main registration
@@ -87,28 +82,6 @@
         finalCalculatedHotelPrice = (typeof calculatedHotelPrice === 'number') ? calculatedHotelPrice : null;
     }
 
-    function getHotelDisplayName(key: string): string {
-        switch(key) {
-            case 'HotelOptionOne': return 'Single Room';
-            case 'HotelOptionTwo': return 'Twin Room';
-            case 'HotelOptionThree': return 'Triple Room';
-            case 'HotelOptionFour': return 'Quatro Room';
-            default: return 'Selected Hotel';
-        }
-    }
-
-    function formatPrice(price: number | undefined) {
-        return price ? `${price.toLocaleString()} NOK` : '';
-    }
-
-    const availableDates = [
-        '2025-10-02',
-        '2025-10-03',
-        '2025-10-04',
-        '2025-10-05',
-        '2025-10-06'
-    ];
-
     function selectDate(date: string) {
         if (!checkInDate || (checkInDate && checkOutDate)) {
             checkInDate = date;
@@ -124,106 +97,6 @@
     function isInRange(date: string): boolean {
         return !!(checkInDate && checkOutDate && date > checkInDate && date < checkOutDate);
     }
-    
-    const roomOptions = [
-        {
-            key: 'HotelOptionOne',
-            label: 'Single Room',
-            description: 'A private room for one person.',
-            price: HOTEL_PRICES.HotelOptionOne,
-            image: doublebeds,
-            features: [
-                'Bathroom with shower',
-                'Bathroom with shower or bathtub',
-                'Table',
-                'Wooden floor',
-                'Chair/chairs',
-                'Free WiFi',
-                'Non-smoking',
-                'Bathroom amenities',
-                'Connecting rooms (available in some rooms)',
-                'Sofa bed (available in some rooms)',
-                'Adjustable beds (available in some rooms)',
-                'Bunk bed (available in some rooms)',
-                'Iron and ironing board',
-                'Desk and chair',
-                'Hair dryer'
-            ]
-        },
-        {
-            key: 'HotelOptionTwo',
-            label: 'Twin Room',
-            description: 'A room for two people. You will need to specify your roommate.',
-            price: HOTEL_PRICES.HotelOptionTwo,
-            image: connectingRoom, 
-            features: [
-                'Bathroom with shower',
-                'Bathroom with shower or bathtub',
-                'Table',
-                'Wooden floor',
-                'Chair/chairs',
-                'Free WiFi',
-                'Non-smoking',
-                'Bathroom amenities',
-                'Connecting rooms (available in some rooms)',
-                'Sofa bed (available in some rooms)',
-                'Adjustable beds (available in some rooms)',
-                'Bunk bed (available in some rooms)',
-                'Iron and ironing board',
-                'Desk and chair',
-                'Hair dryer'
-            ]
-        },
-        {
-            key: 'HotelOptionThree',
-            label: 'Triple Room',
-            description: 'A room for three people. You will need to specify your roommates.',
-            price: HOTEL_PRICES.HotelOptionThree,
-            image: triple,
-            features: [
-                'Bathroom with shower',
-                'Bathroom with shower or bathtub',
-                'Table',
-                'Wooden floor',
-                'Free WiFi',
-                'Chair/chairs',
-                'Non-smoking',
-                'Bathroom amenities',
-                'Connecting rooms (available in some rooms)',
-                'Sofa bed (available in some rooms)',
-                'Adjustable beds (available in some rooms)',
-                'Bunk bed (available in some rooms)',
-                'Iron and ironing board',
-                'Desk and chair',
-                'Hair dryer'
-            ]
-        },
-        {
-            key: 'HotelOptionFour',
-            label: 'Quatro Room',
-            description: 'A room for four people. You will need to specify your roommates.',
-            price: HOTEL_PRICES.HotelOptionFour,
-            image: fourOne,
-            features: [
-                'Free WiFi',
-                'Bathroom with shower',
-                'Bathroom amenities',
-                'Wooden floors',
-                'Safe (available in some rooms)',
-                'Refrigerator (available in some rooms)',
-                'Table',
-                'Chair(s)',
-                'Non-smoking',
-                'Upper floors',
-                'Easy access',
-                'Blackout curtains',
-                'Bunk bed',
-                'Iron and ironing board',
-                'Desk and chair',
-                'Hairdryer'
-            ]
-        }
-    ];
 
     $: showLargeRoomWarning = !availability.hasLargeRoomsAvailable && 
         (selectedHotel === 'HotelOptionThree' || selectedHotel === 'HotelOptionFour');
@@ -278,7 +151,7 @@
         </div>
 
         <div class="mb-6">
-            <label class="block text-sm font-medium mb-2">Hotel Option (Prices per night)</label>
+            <span class="block text-sm font-medium mb-2">Hotel Option (Prices per night)</span>
             {#if !selectedHotel}
                 {#key 'grid'}
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-1"
@@ -620,10 +493,6 @@
         justify-content: center;
         z-index: 10;
         overflow: hidden;
-    }
-
-    .sold-out .card-content {
-        filter: blur(4px);
     }
 
     .sold-out-text {

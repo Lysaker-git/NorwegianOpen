@@ -268,10 +268,19 @@
     <div class="mb-4 bg-gray-900 rounded p-4 border border-gray-700">
       <label for="emailPreview" class="text-gray-200 font-semibold mb-2 block">Preview:</label>
       <iframe
-        class="w-full min-h-[120px] bg-gray-900 border-none rounded"
-        style="color: #fff; background: transparent;"
+        class="w-full bg-gray-900 border-none rounded"
+        style="color: #fff; background: transparent; display: block; width: 100%;" 
         srcdoc={emailContent}
         title="Email Preview"
+        on:load={(e) => {
+          const iframe = e.target;
+          if (iframe && iframe.contentWindow && iframe.contentDocument) {
+            // Wait for content to render
+            setTimeout(() => {
+              iframe.style.height = iframe.contentDocument.body.scrollHeight + 'px';
+            }, 50);
+          }
+        }}
       ></iframe>
     </div>
   {/if}

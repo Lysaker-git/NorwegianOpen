@@ -1,21 +1,8 @@
 <script lang="ts">
     import bannerImage from '$lib/components/images/imagesPros/banner.jpg';
-    import ardenaPlain from '$lib/components/images/imagesPros/ArdenaPlain.png';
-    import ibiPlain from '$lib/components/images/imagesPros/IbiPlain.jpg';
-    import julaPlain from '$lib/components/images/imagesPros/JulaPlain.png';
-    import jcPlain from '$lib/components/images/imagesPros/JCPlain.png';
-    import atillaPlain from '$lib/components/images/imagesPros/AttiloPlain.png';
-    import type { ProBio } from '$lib/components/objects/pros';
     import { pros } from '$lib/components/objects/pros';
+    import { proImages } from '$lib/components/constants';
 
-    // Map pro names to images (ensure keys match names in pros.ts)
-    const proImages: Record<string, string> = {
-        "JOEL TORGESON & CHANTELLE PIANETTA": jcPlain,
-        "ATTILA KOBORI": atillaPlain,
-        "JULA PALENGA": julaPlain,
-        "IBIROCAY ALSÉN": ibiPlain,
-        "ARDENA GOJANI": ardenaPlain
-    };
 </script>
 
 <h1>Our Pros and Staff</h1>
@@ -35,13 +22,6 @@
     </section>
 {/each}
 
-<!--
-Framework: 
-- Each pro is a <section class="pro-section">
-- Inside: <div class="pro-img"> (image) and <div class="pro-info"> (bio)
-- You can flex, grid, or style as you wish.
-- No default styles except for the h1.
--->
 <style>
 h1 {
     text-align: center;
