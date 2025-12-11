@@ -45,13 +45,6 @@
                 <p class="font-semibold text-amber-100">We welcome everyone, regardless of gender, gender identity/expression, age, sexual orientation, disability, physical appearance, body size, race, ethnicity, religion, dance skill level, or dance role preference.</p>
             </section>
 
-                        <!-- Add after the "Our Commitment" section, before "Expected Conduct" -->
-            <section class="mb-8">
-              <h2 class="mt-10 mb-4 text-xl sm:text-2xl font-medium text-amber-200">Cancellation Policy</h2>
-              <p class="mb-4">
-                <strong class="font-semibold">Please note:</strong> After <span class="text-amber-200 font-bold">15th of August</span>, all tickets are <span class="text-red-400 font-bold">non-refundable</span>. If you are unable to attend after this date, you are responsible for selling your ticket to another participant. Please notify the organizers of any ticket transfers to ensure a smooth process.
-              </p>
-            </section>
   
             <section class="mb-8">
                 <h2 class="mt-10 mb-5 pb-2 border-b border-gray-300 text-xl sm:text-2xl font-medium text-white">
@@ -142,6 +135,18 @@
                    <li>Being barred from attending future [Norwegian Open] events.</li>
                    <li>Contacting venue security or local law enforcement if necessary.</li>
                  </ul>
+              </section>
+              <section class="mb-8">
+                <h2 class="mt-10 mb-5 pb-2 border-b border-gray-300 text-xl sm:text-2xl font-medium text-white">
+                  Alcohol & Drug Policy
+                </h2>
+                <p class="mb-4">The Norwegian Open follows Norwegian law and the venue (Scandic Hotels) policies regarding alcohol and other controlled substances.</p>
+                <ul class="list-disc pl-6 space-y-2 mb-4">
+                  <li>Scandic Hotels prohibits bringing alcoholic beverages or other drinks purchased outside the hotel into their licensed areas. Any outside alcohol found will be confiscated and may result in removal from the venue.</li>
+                  <li>Alcohol may only be consumed in licensed areas and in accordance with the venue's rules. Organizers reserve the right to refuse service or entry to anyone visibly intoxicated or behaving in an unsafe manner.</li>
+                  <li>Possession, use, or distribution of illegal drugs is strictly prohibited. Any violation will be reported to local authorities and may result in immediate expulsion from the event without refund and potential legal consequences.</li>
+                  <li>Anyone found distributing illicit substances will be removed and reported. If you or someone needs help related to substances, seek event staff or medical assistance immediately.</li>
+                </ul>
               </section>
   
               <p class="text-center mt-12 italic text-white">

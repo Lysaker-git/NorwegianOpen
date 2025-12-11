@@ -21,6 +21,8 @@
 				<div class="mx-auto max-w-3xl px-6 py-2 text-center md:py-8 lg:py-12">
 					
 			        {#if today <= regOpenDate}
+					<img class="cInvert max-h-100 mx-auto" src={DarkLogo} alt="Norwegian Open WCS 2025 Logo" />
+
 					<div class="pt-4">
 						<RegistrationCountdown />
 					</div>
@@ -42,7 +44,7 @@
 						Thank you for being part of this year's event — we hope you had a wonderful time. See you next year!
 					</p>
 					<img class="cInvert max-h-100 mx-auto" src={DarkLogo} alt="Norwegian Open WCS 2025 Logo" />
-					<!-- <h2 class="mb-10 text-2xl font-bold md:text-3xl lg:text-4xl text-white">Save the dates 2. of October - 6. of October</h2> -->
+					<h2 class="mb-10 text-2xl font-bold md:text-3xl lg:text-4xl text-white">Save the dates 1. of October - 5. of October</h2>
 					{/if}
 				</div>
 			</div>	

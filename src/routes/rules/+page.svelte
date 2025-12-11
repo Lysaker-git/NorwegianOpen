@@ -16,6 +16,7 @@
     <div class="container mx-auto px-4 py-12 relative z-10">
       <div class="transition-opacity duration-1000 opacity-100">
         <div class="max-w-4xl mx-auto">
+              <!-- New Alcohol & Drugs policy -->
           <!-- Title with ornamental borders -->
           <div class="flex items-center justify-center mb-10">
             <div class="h-px w-16 bg-amber-400">
@@ -72,6 +73,23 @@
                 <li>You must maintain your chosen role (Leader or Follower) throughout all rounds of a single competition. Role switching during a competitive dance is generally not permitted for more than 8 beats.</li>
               </ul>
               <p><strong class="font-semibold">Points:</strong> WSDC points are awarded based on placement in finals, provided the division meets minimum entry requirements (<code class="code-style">Minimum Entries for Points, e.g., 5 Leaders and 5 Followers</code>). Points are tracked separately for Leader and Follower roles.</p>
+            </section>
+
+            <!-- Expanded WSDC role & points guidance -->
+            <section class="mb-8">
+              <h2 class="mt-10 mb-5 pb-2 border-b border-gray-300 text-xl sm:text-2xl font-medium text-white">
+                WSDC Roles, Main & Secondary Role Guidance
+              </h2>
+              <p class="mb-3">WSDC differentiates points and levels by dance role: Leader and Follower. Your <strong>Main Role</strong> is the role where you hold the majority of your points; your <strong>Secondary Role</strong> is the other role.</p>
+              <ul class="list-disc pl-6 space-y-2 mb-4">
+                <li><strong>Main Role:</strong> Your WSDC level in your main role determines your primary eligibility. This is the role where your official WSDC points are highest.</li>
+                <li><strong>Secondary Role:</strong> You may enter competitions in a secondary role subject to WSDC rules — generally you may compete up to one level lower in your secondary role than your main role, but specific limits depend on current WSDC policy. Always verify your eligibility on the WSDC registry.</li>
+                <li><strong>Example:</strong> If your Main Role is Intermediate, you may enter Intermediate (main role) and potentially Novice (secondary) subject to WSDC rules and event-specific restrictions.</li>
+                <li><strong>Point Requirements:</strong> Points are awarded when divisions meet minimum entry thresholds. Ensure you understand the minimum entries required for points and consult the WSDC registry for up-to-date rules.</li>
+                <li><strong>Role Switching:</strong> For Jack &amp; Jill, competitors may indicate primary and secondary roles at registration. Role switching during a single competitive heat is discouraged and limited by competition rules (typically not more than 8 beats where applicable).</li>
+                <li><strong>Disputes & Petitions:</strong> If you believe your WSDC points are incorrect or a reclassification is warranted, follow the petition process. Decisions by the Chief Judge are final.</li>
+              </ul>
+              <p class="mb-2">If you are unsure about your WSDC level or eligibility, check the WSDC Points Registry or contact the Chief Judge prior to registering for competitions.</p>
             </section>
   
             <section class="mb-8">
@@ -221,8 +239,5 @@
     h1, h2 { font-family: 'NorseBold'; }
     .rune { animation: float 5s ease-in-out infinite; opacity: 0.6; }
     @media (max-width: 640px) { .rune { font-size: 2rem; } }
-    .bg-gray-800 { background-color: #232B3A; }
     .text-amber-400 { color: #fbbf24; }
-    .text-amber-200 { color: #fde68a; }
-    .text-amber-100 { color: #fef3c7; }
   </style>

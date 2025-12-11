@@ -16,6 +16,7 @@
         <ul class="flex justify-center mx-auto gap-5 w-full mb-5">
             <li><a href="/coc">Code of Conduct</a></li>
             <li><a href="/rules">Competition Rules</a></li>
+            <li><a href="/toc">Terms & Conditions</a></li>
         </ul>
     </div>
     <p>© 2025 Norwegian Open WCS | All Rights Reserved</p>
