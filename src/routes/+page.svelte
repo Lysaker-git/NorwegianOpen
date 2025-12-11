@@ -22,10 +22,12 @@
 					
 			        {#if today <= regOpenDate}
 					<img class="cInvert max-h-100 mx-auto" src={DarkLogo} alt="Norwegian Open WCS 2025 Logo" />
+					<h2 class="mb-10 text-2xl font-bold md:text-3xl lg:text-4xl text-white">Save the dates 1. of October - 5. of October 2026</h2>
 
 					<div class="pt-4">
 						<RegistrationCountdown />
 					</div>
+
 					{:else if today <= eventDate}
 					<h2 class="pt-4 mb-10 text-2xl font-bold md:text-3xl lg:text-4xl text-white">
 						 Registration is now open!
