@@ -13,7 +13,25 @@ const images = Object.keys(modules)
 // track loaded images
 let loaded = new Set<string>();
 function markLoaded(src: string) {
-	loaded.add(src);
+	// update immutably so Svelte reactivity picks up the change
+	const s = new Set(loaded);
+	s.add(src);
+	loaded = s;
+}
+
+// action to ensure images already complete (from cache) are detected,
+// and to mark on error as well so spinner doesn't persist for broken files
+function imageTracker(node: HTMLImageElement, src: string) {
+	const mark = () => markLoaded(src);
+	if (node.complete && node.naturalWidth !== 0) mark();
+	node.addEventListener('load', mark);
+	node.addEventListener('error', mark);
+	return {
+		destroy() {
+			node.removeEventListener('load', mark);
+			node.removeEventListener('error', mark);
+		}
+	};
 }
 </script>
 
@@ -41,7 +59,7 @@ function markLoaded(src: string) {
 						alt={img.name}
 						loading="lazy"
 						class="w-full h-40 md:h-48 object-cover"
-						on:load={() => markLoaded(img.src)}
+						use:imageTracker={img.src}
 					/>
 				</figure>
 			{/each}
