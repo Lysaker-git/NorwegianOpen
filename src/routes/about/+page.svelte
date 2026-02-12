@@ -50,7 +50,7 @@
           <div class="mb-12 flex justify-center">
             <div class="relative">
               <h2 class="text-2xl md:text-3xl font-bold text-center border-t-2 border-b-2 border-amber-400 py-4 px-8 text-white">
-                ~ The Saga Begins ~
+                ~ The Saga Continues ~
               </h2>
               <!-- Norse corner decorations -->
               <div class="absolute -top-3 -left-3 w-6 h-6 border-t-2 border-l-2 border-amber-400"></div>
@@ -63,25 +63,42 @@
           <!-- Main text -->
           <div class="bg-gray-800 text-white backdrop-blur-sm rounded-lg p-6 md:p-10 shadow-xl border border-amber-400/30 transform transition-all hover:shadow-amber-400/20">
             <p class="mb-6 text-lg leading-relaxed">
-              In the ancient lands where Odin wanders and the echoes of Valhalla still whisper through the fjords, a new legend is about to be born.
+              From the echoes of Valhalla to the forests of Midgard, the call goes out once more! October 1–4, 2026, warriors of West Coast Swing will once again gather in Norway to dance, duel, and celebrate under the watchful eyes of the Norse gods.
             </p>
-            <p class="mb-6 text-lg leading-relaxed">
-              This October, under the first full moon of fall, Norway shall open its gates to warriors of West Coast Swing from across the nine realms. Under the watchful eyes of Frigg and Freyja, you'll form legendary bonds in Strictly duels, battle in epic Jack & Jill tournaments (yes - rewarded with precious WSDC points!), and delve into ancient wisdom and knowledge, led by the master sages of swing.
+
+            <p class="mb-4 text-lg leading-relaxed">
+              Strictly competitions
             </p>
-            <p class="mb-6 text-lg leading-relaxed">
-              But the true magic? It lies in the night - when the music flows like mead through the halls of Asgard and every dance becomes a magical tale worthy of the skalds.
+            <p class="mb-4 text-lg leading-relaxed">
+              Jack &amp; Jills from Newcomer to All-Star + Sophisticated
+            </p>
+            <p class="mb-4 text-lg leading-relaxed">
+              Sunday fun competition
             </p>
             <p class="mb-8 text-lg leading-relaxed">
-              Prepare your feet. Ready your hearts. Among the mythical fjords and the ancient forests, warriors and wanderers from all corners of Midgard will unite to honour the unyielding love of West Coast Swing.
+              A welcoming realm for dancers of all levels
             </p>
-            
+
+            <p class="mb-6 text-lg leading-relaxed font-semibold">
+              This year, we are proud to welcome our 2026 instructors:
+            </p>
+            <p class="mb-2 text-lg leading-relaxed">Ardena &amp; Ibi</p>
+            <p class="mb-2 text-lg leading-relaxed">Fernanda &amp; Igor</p>
+            <p class="mb-2 text-lg leading-relaxed">Hugo &amp; Stacy</p>
+            <p class="mb-8 text-lg leading-relaxed">Olivier &amp; Virginie</p>
+
+            <p class="mb-8 text-lg leading-relaxed">
+              Step into a realm where light, sound, and movement merge — and every dance feels larger than life.
+            </p>
+
             <div class="border-t border-amber-400/30 pt-6 mt-8">
               <p class="text-lg text-amber-200 font-semibold">
-                Say hello to Norway's new WSDC Trial Event! We're so excited to share more magical joy of West Coast Swing in this country and dance with you all in october.
+                Say hello to Norway's new WSDC Event! We're so excited to share more magical joy of West Coast Swing in this country and dance with you all in october.
               </p>
               <p class="mt-4 text-lg text-amber-100">
                 Save the date (and book your flights), and make sure to keep yourselves updated on this new, glorious adventure
               </p>
+
             </div>
           </div>
         </div>

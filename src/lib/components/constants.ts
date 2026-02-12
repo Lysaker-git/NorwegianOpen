@@ -1,8 +1,7 @@
-import ardenaPlain from '$lib/components/images/imagesPros/ArdenaPlain.png';
-import ibiPlain from '$lib/components/images/imagesPros/IbiPlain.jpg';
-import julaPlain from '$lib/components/images/imagesPros/JulaPlain.png';
-import jcPlain from '$lib/components/images/imagesPros/JCPlain.png';
-import atillaPlain from '$lib/components/images/imagesPros/AttiloPlain.png';
+import ardenaAndIbi from '$lib/components/images/imagesPros/ArdenaAndIbi.jpg';
+import igorAndFernanda from '$lib/components/images/imagesPros/IgorAndFernanda.jpg';
+import olivierAndVirginie from '$lib/components/images/imagesPros/OlivierAndVirginie.jpg';
+import hugoAndStacy from '$lib/components/images/imagesPros/HugoAndStacy.jpg';
 import { pros } from '$lib/components/objects/pros';
 
 import type { PriceRow } from '$lib/components/interface.ts';
@@ -14,24 +13,23 @@ export const MIDGARD_DEADLINE_STRING = '2026-05-31';
 export const ymirDeadline = new Date(YMIR_DEADLINE_STRING + 'T23:59:59');
 export const midgardDeadline = new Date(MIDGARD_DEADLINE_STRING + 'T23:59:59');
 
-export const navEndDate = new Date('2025-10-06T23:59:59');
+export const navEndDate = new Date('2026-10-05T23:59:59');
 export const today = new Date();
 export const regOpenDate = new Date(REG_OPEN_STRING + 'T20:00:00');
 export const eventDate = new Date('2026-10-01T00:00:00');
 
 export const proImages: Record<string, string> = {
-    "JOEL TORGESON & CHANTELLE PIANETTA": jcPlain,
-    "ATTILA KOBORI": atillaPlain,
-    "JULA PALENGA": julaPlain,
-    "IBIROCAY ALSÉN": ibiPlain,
-    "ARDENA GOJANI": ardenaPlain
+    "OLIVIER & VIRGINIE MASSART": olivierAndVirginie,
+    "HUGO MIGUEZ & STACY KAY": hugoAndStacy,
+    "IGOR PITANGUI & FERNANDA DUBIEL": igorAndFernanda,
+    "ARDENA GOJANI & MANUEL IBIROCAY ALSÉN": ardenaAndIbi,
 };
 
 // Pricing tiers
 export const basePrices = {
-    Ymir: { Nordic: 1800, World: 1500 },      // Early Bird prices
-    Midgard: { Nordic: 2000, World: 1700 },   // Full prices
-    Ragnarok: { Nordic: 2200, World: 1900 }   // Late Bird prices
+    Ymir: { Nordic: 2000, World: 1800 },      // Early Bird prices
+    Midgard: { Nordic: 2200, World: 2000 },   // Full prices
+    Ragnarok: { Nordic: 2400, World: 2200 }   // Late Bird prices
 };
 
 // Pass options by level
@@ -81,9 +79,9 @@ export const colorPalette = {
 }
 
 export const tiers = [
-    { name: 'Ymir', title: '❄️ Ymir', subtitle: 'Early Bird', deadline: 'Ends May 29th' },
-    { name: 'Midgard', title: '🌍 Midgard', subtitle: 'Regular', deadline: 'Ends Aug 22nd' },
-    { name: 'Ragnarok', title: '🔥 Ragnarok', subtitle: 'Late Bird', deadline: 'From 23rd Aug' }
+    { name: 'Ymir', title: '❄️ Ymir', subtitle: 'Early Bird', deadline: 'First 100 Passes' },
+    { name: 'Midgard', title: '🌍 Midgard', subtitle: 'Regular', deadline: 'Ends 1st of May' },
+    { name: 'Ragnarok', title: '🔥 Ragnarok', subtitle: 'Late Bird', deadline: 'From 2nd og May' }
 ];
 
 export const currencySymbol = 'NOK';
@@ -95,35 +93,35 @@ export const priceRows: PriceRow[] = [
                 {
                     region: 'Nordic',
                     prices: [
-                        { amount: 1800 },
                         { amount: 2000 },
-                        { amount: 2200 }
+                        { amount: 2200 },
+                        { amount: 2400 }
                     ]
                 },
                 {
                     region: 'World',
                     prices: [
-                        { amount: 1500 },
-                        { amount: 1700 },
-                        { amount: 1900 }
+                        { amount: 1800 },
+                        { amount: 1200 },
+                        { amount: 2200 }
                     ]
                 }
             ]
         },
-        {
-            level: 'Zero to Hero',
-            levelRowSpan: 1,
-            regions: [
-                {
-                    region: 'All Regions',
-                    prices: [
-                        { amount: 1300 },
-                        { amount: 1300 },
-                        { amount: 1300 }
-                    ]
-                }
-            ]
-        },
+        // {
+        //     level: 'Zero to Hero',
+        //     levelRowSpan: 1,
+        //     regions: [
+        //         {
+        //             region: 'All Regions',
+        //             prices: [
+        //                 { amount: 1300 },
+        //                 { amount: 1300 },
+        //                 { amount: 1300 }
+        //             ]
+        //         }
+        //     ]
+        // },
         {
             level: 'Party Pass',
             levelRowSpan: 1,
@@ -131,15 +129,15 @@ export const priceRows: PriceRow[] = [
                 {
                     region: 'All Regions',
                     prices: [
-                        { amount: 1200, note: "First 50 passes" },
-                        { amount: 1200 },
-                        { amount: 1200 }
+                        { amount: 1500, note: "Only 50 passes" },
+                        { amount: 1500 },
+                        { amount: 1500 }
                     ]
                 }
             ]
         },
         {
-            level: 'Blues Intensive with Joel & Chantelle',
+            level: 'Choreo Intensive with Fernanda and Igor',
             levelRowSpan: 1,
             regions: [
                 {
@@ -156,9 +154,8 @@ export const priceRows: PriceRow[] = [
 
 export const passDescriptions = {
         'Full Pass': 'You will get acces to all workshops, evening dances, and competitions.',
-        'Zero to Hero': `A weekend-long, beginner-friendly track designed for brand-new or less experienced dancers. You'll get guided workshops, personal support, and encouragement to help you feel comfortable on the social floor and ready for the Newcomer Jack & Jill. The program includes fun, confidence-building sessions each day, with a focus on community and empowerment. You can register as a single follow/lead and will be partnered up or put on the waiting list.`,
         'Party Pass': 'Access to evening dances and competitions only.',
-        'Blues Intensive': 'Focused blues workshop and events with Joel and Chantelle.'
+        'Choreo Intensive with Fernanda and Igor': 'Focused choreography workshop and events with Fernanda and Igor.'
     };
 
 export const statusLabels = {
