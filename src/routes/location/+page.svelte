@@ -101,7 +101,7 @@
         </div>
       </div>
   
-      <div in:fade={{ duration: 600, delay: 600 }}>
+      <!-- <div in:fade={{ duration: 600, delay: 600 }}>
         <div class="max-w-3xl mx-auto">
           <h2 class="text-white text-3xl font-bold mb-6 border-b border-gray-300 pb-3" style="font-family: 'NorseBold', sans-serif;">Booking Your Stay</h2>
   
@@ -123,6 +123,6 @@
             for announcements about when you can book your spot at Norwegian Open WCS 2025!
           </p>
         </div>
-      </div>
+      </div> -->
     {/if}
   </div>
