@@ -135,27 +135,27 @@ export const priceRows: PriceRow[] = [
                     ]
                 }
             ]
-        },
-        {
-            level: 'Choreo Intensive with Fernanda and Igor',
-            levelRowSpan: 1,
-            regions: [
-                {
-                    region: 'All Regions',
-                    prices: [
-                        { amount: 1000 },
-                        { amount: 1000 },
-                        { amount: 1000 }
-                    ]
-                }
-            ]
         }
+        // {
+        //     level: 'Choreo Intensive with Fernanda and Igor',
+        //     levelRowSpan: 1,
+        //     regions: [
+        //         {
+        //             region: 'All Regions',
+        //             prices: [
+        //                 { amount: 1000 },
+        //                 { amount: 1000 },
+        //                 { amount: 1000 }
+        //             ]
+        //         }
+        //     ]
+        // }
     ];
 
 export const passDescriptions = {
         'Full Pass': 'You will get acces to all workshops, evening dances, and competitions.',
         'Party Pass': 'Access to evening dances and competitions only.',
-        'Choreo Intensive with Fernanda and Igor': 'Focused choreography workshop and events with Fernanda and Igor.'
+        // 'Choreo Intensive with Fernanda and Igor': 'Focused choreography workshop and events with Fernanda and Igor.'
     };
 
 export const statusLabels = {
