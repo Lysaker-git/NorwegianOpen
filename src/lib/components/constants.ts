@@ -1,7 +1,7 @@
-import ardenaAndIbi from '$lib/components/images/imagesPros/ArdenaAndIbi.jpg';
-import igorAndFernanda from '$lib/components/images/imagesPros/IgorAndFernanda.jpg';
-import olivierAndVirginie from '$lib/components/images/imagesPros/OlivierAndVirginie.jpg';
-import hugoAndStacy from '$lib/components/images/imagesPros/HugoAndStacy.jpg';
+import ardenaAndIbi from '$lib/components/images/imagesPros/ardenaAndIbi.jpg';
+import igorAndFernanda from '$lib/components/images/imagesPros/igorAndFernanda.jpg';
+import olivierAndVirginie from '$lib/components/images/imagesPros/olivierAndVirginie.jpg';
+import hugoAndStacy from '$lib/components/images/imagesPros/hugoAndStacy.jpg';
 import { pros } from '$lib/components/objects/pros';
 
 import type { PriceRow } from '$lib/components/interface.ts';
