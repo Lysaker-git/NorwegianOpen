@@ -6,7 +6,7 @@
 
 <div class="container mx-auto px-4 py-12">
     <h1 class="text-3xl sm:text-4xl font-bold text-center mb-10 text-gray-100 font-[NorseBold]">
-        Pricing Tiers - Norwegian Open 2025
+        Pricing Tiers - Norwegian Open 2026
     </h1>
 
     <div class="max-w-4xl mx-auto overflow-x-auto bg-gray-800 shadow-lg rounded-lg border border-gray-700">

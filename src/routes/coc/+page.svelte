@@ -1,5 +1,5 @@
 <script lang="ts">
-    let eventName = "NORWEGIAN OPEN 2025"
+    let eventName = "NORWEGIAN OPEN 2026"
 </script>
   
   <div class="relative min-h-screen overflow-hidden">
@@ -153,7 +153,7 @@
                 Thank you for helping make {eventName} a safe, respectful, and fun event for everyone!
               </p>
               <p class="text-center mt-2 text-xs text-white">
-                (Last Updated: 18/4/2025)
+                (Last Updated: 18/4/2026)
               </p>
             </div>
           </div>
