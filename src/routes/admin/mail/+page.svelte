@@ -85,7 +85,7 @@
     const formData = new FormData();
     formData.append('selectedIDs', useTestMail ? JSON.stringify([]) : JSON.stringify(selectedEmails));
     formData.append('htmlContent', emailContent);
-    formData.append('subject', emailHeader || 'Norwegian Open WCS 2025 Announcement');
+    formData.append('subject', emailHeader || 'Norwegian Open WCS 2026 Announcement');
     await fetch('?/sendMassEmail', {
       method: 'POST',
       body: formData
@@ -102,7 +102,7 @@
 </script>
 
 <svelte:head>
-  <title>Send Mass Email - Norwegian Open WCS 2025</title>
+  <title>Send Mass Email - Norwegian Open WCS 2026</title>
 </svelte:head>
 
 <div class="bg-gray-800 p-6 rounded-lg shadow-lg max-w-3xl mx-auto my-8">

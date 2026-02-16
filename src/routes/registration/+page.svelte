@@ -15,13 +15,13 @@
 
 	// --- Define Pricing Tiers and Deadlines ---
     // (Use Norse names as requested)
-	const YMIR_DEADLINE_STRING = '2025-05-31'; // End of Early Bird - SET YOUR DATE
-	const MIDGARD_DEADLINE_STRING = '2025-08-22'; // End of Regular - SET YOUR DATE
+	const YMIR_DEADLINE_STRING = '2026-05-31'; // End of Early Bird - SET YOUR DATE
+	const MIDGARD_DEADLINE_STRING = '2026-08-22'; // End of Regular - SET YOUR DATE
 
     
 	const ymirDeadline = new Date(YMIR_DEADLINE_STRING + 'T23:59:59');
 	const midgardDeadline = new Date(MIDGARD_DEADLINE_STRING + 'T23:59:59');
-    const REG_OPEN_STRING = '2025-05-01';
+    const REG_OPEN_STRING = '2026-05-01';
     const regOpenVar = new Date(REG_OPEN_STRING + 'T17:00:00');
 
     const TodaysDate = new Date();

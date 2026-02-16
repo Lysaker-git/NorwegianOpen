@@ -69,7 +69,7 @@ interface EmailMessage {
 }
 
 function generateHotelConfirmationEmail(details: HotelEmailDetails): string {
-    const eventName = "Norwegian Open WCS 2025";
+    const eventName = "Norwegian Open WCS 2026";
     const paymentDeadline = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
     const currencySymbol = "NOK";
     const textColor = '#333333';    // Main text
@@ -257,7 +257,7 @@ export const actions: Actions = {
                 const message = {
                     from: GOOGLE_EMAIL,
                     to: data.email,
-                    subject: 'Hotel Booking Confirmation - Norwegian Open WCS 2025',
+                    subject: 'Hotel Booking Confirmation - Norwegian Open WCS 2026',
                     html: generateHotelConfirmationEmail(data)
                 } as const;                try {
                     console.log('[SERVER]', 'Attempting to send email');

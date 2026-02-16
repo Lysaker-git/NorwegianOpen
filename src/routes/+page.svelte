@@ -5,7 +5,7 @@
 	import { today, regOpenDate, eventDate } from '$lib/components/constants';
 
 	// eagerly import all highlight images from previous year folder
-	const highlightModules = import.meta.glob('/src/lib/components/images/previousYears/2025/images/highlight/*.{avif,webp,png,jpg}', { eager: true }) as Record<string, { default: string }>;
+	const highlightModules = import.meta.glob('/src/lib/components/images/previousYears/2026/images/highlight/*.{avif,webp,png,jpg}', { eager: true }) as Record<string, { default: string }>;
 	const highlights: { src: string; name: string }[] = Object.keys(highlightModules).map((path) => {
 		const parts = path.split('/');
 		const filename = parts[parts.length - 1];
@@ -56,7 +56,7 @@
 </script>
 
 <svelte:head>
-	<title>Norwegian Open WCS 2025</title>
+	<title>Norwegian Open WCS 2026</title>
 </svelte:head>
 
 <svelte:window on:keydown={onWindowKeydown} />
@@ -72,7 +72,7 @@
 				<div class="mx-auto max-w-3xl px-6 py-2 text-center md:py-8 lg:py-12">
 					
 			        {#if today <= regOpenDate}
-					<img class="cInvert max-h-100 mx-auto" src={DarkLogo} alt="Norwegian Open WCS 2025 Logo" />
+					<img class="cInvert max-h-100 mx-auto" src={DarkLogo} alt="Norwegian Open WCS 2026 Logo" />
 					<h2 class="mb-10 text-2xl font-bold md:text-3xl lg:text-4xl text-white">Save the dates 1. of October - 5. of October 2026</h2>
 
 					<div class="pt-4">
@@ -83,7 +83,7 @@
 					<h2 class="pt-4 mb-10 text-2xl font-bold md:text-3xl lg:text-4xl text-white">
 						 Registration is now open!
 					</h2>
-					<img class="cInvert max-h-100 mx-auto" src={DarkLogo} alt="Norwegian Open WCS 2025 Logo" />
+					<img class="cInvert max-h-100 mx-auto" src={DarkLogo} alt="Norwegian Open WCS 2026 Logo" />
 					<h2 class="mb-10 text-2xl font-bold md:text-3xl lg:text-4xl text-white">Save the dates 2. of October - 6. of October</h2>
 					<a
 						href="/register"
@@ -91,12 +91,12 @@
 						>Register</a>
 					{:else}
 					<h2 class="pt-4 mb-6 text-2xl font-bold md:text-3xl lg:text-4xl text-white">
-						Thank you for joining Norwegian Open WCS 2025!
+						Thank you for joining Norwegian Open WCS 2026!
 					</h2>
 					<p class="mb-6 text-gray-300">
 						Thank you for being part of this year's event — we hope you had a wonderful time. See you next year!
 					</p>
-					<img class="cInvert max-h-100 mx-auto" src={DarkLogo} alt="Norwegian Open WCS 2025 Logo" />
+					<img class="cInvert max-h-100 mx-auto" src={DarkLogo} alt="Norwegian Open WCS 2026 Logo" />
 					<h2 class="mb-10 text-2xl font-bold md:text-3xl lg:text-4xl text-white">Save the dates 1. of October - 5. of October</h2>
 					{/if}
 				</div>
@@ -108,7 +108,7 @@
 			<div class="max-w-5xl mx-auto px-6 text-center">
 				<div class="w-full flex items-center justify-center mb-4">
 					<div class="h-px w-24 bg-amber-400 mr-4"></div>
-					<h3 class="text-2xl md:text-3xl font-bold text-amber-100">Highlights from 2025</h3>
+					<h3 class="text-2xl md:text-3xl font-bold text-amber-100">Highlights from 2026</h3>
 					<div class="h-px w-24 bg-amber-400 ml-4"></div>
 				</div>
 
