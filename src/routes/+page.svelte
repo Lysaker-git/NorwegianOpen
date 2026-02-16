@@ -37,7 +37,7 @@
 	// Rotating two-image display state
 	let rotIndex = 0; // start index of the pair
 	let rotInterval: number | null = null;
-	const ROTATE_MS = 3000; // rotate every 3s
+	const ROTATE_MS = 7000; // rotate every 7s
 
 	const pairCount = Math.max(1, Math.floor(highlights.length / 2));
 

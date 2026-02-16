@@ -73,7 +73,7 @@ h1 {
 }
 
 .pro-info h2 {
-    font-size: 2rem;
+    font-size: clamp(2.5rem, calc(2.5rem + 1vw), 5.5rem);
     margin-bottom: 1rem;
 }
 
@@ -111,14 +111,14 @@ h1 {
         padding: 0 1vw;
     }
     h1 {
-        font-size: 1.7rem;
+        font-size: clamp(1.7rem, calc(1.7rem + 1vw), 2.5rem);
         margin: 1.5rem 0 2rem 0;
     }
     .pro-info h2 {
-        font-size: 1.3rem;
+        font-size: clamp(1.3rem, calc(1.3rem + 1vw), 2rem);
     }
     .bio-text p {
-        font-size: 1rem;
+        font-size: clamp(1rem, calc(1rem + 0.5vw), 1.2rem);
     }
 }
 @media (max-width: 600px) {
@@ -148,7 +148,7 @@ h1 {
         margin: 1rem 0 1.5rem 0;
     }
     .pro-info h2 {
-        font-size: 1rem;
+        font-size: 2rem;
     }
     .bio-text p {
         font-size: 0.92rem;
