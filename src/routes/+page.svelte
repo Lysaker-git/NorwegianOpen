@@ -5,7 +5,8 @@
 	import { today, regOpenDate, eventDate } from '$lib/components/constants';
 
 	// eagerly import all highlight images from previous year folder
-	const highlightModules = import.meta.glob('/src/lib/components/images/previousYears/2026/images/highlight/*.{avif,webp,png,jpg}', { eager: true }) as Record<string, { default: string }>;
+	const highlightModules = import.meta.glob('/src/lib/components/images/previousYears/2025/images/highlight/*.{avif,webp,png,jpg}', { eager: true }) as Record<string, { default: string }>;
+	console.log('Highlight modules:', highlightModules);
 	const highlights: { src: string; name: string }[] = Object.keys(highlightModules).map((path) => {
 		const parts = path.split('/');
 		const filename = parts[parts.length - 1];
@@ -17,6 +18,24 @@
 	let modalOpen = false;
 	let modalSrc = '';
 	let modalAlt = '';
+
+// preloading
+const preloadedImages: HTMLImageElement[] = [];
+let preloadDone = false;
+
+function startPreloading() {
+	const promises = highlights.map((h) => {
+		const img = new Image();
+		img.src = h.src;
+		preloadedImages.push(img);
+		if (typeof img.decode === 'function') return img.decode().catch(() => {});
+		return Promise.resolve();
+	});
+	return Promise.all(promises).then(() => {
+		preloadDone = true;
+		console.log('Highlights preloaded');
+	});
+}
 
 	function openModal(h: { src: string; name: string }) {
 		modalSrc = h.src;
@@ -41,7 +60,11 @@
 
 	const pairCount = Math.max(1, Math.floor(highlights.length / 2));
 
+	console.log(`Loaded ${highlights.length} highlights, showing ${pairCount} pairs.`);
 	onMount(() => {
+		// start preloading highlight images so switching is instant
+		startPreloading();
+
 		if (highlights.length > 2) {
 			rotInterval = setInterval(() => {
 				rotIndex = (rotIndex + 2) % highlights.length;

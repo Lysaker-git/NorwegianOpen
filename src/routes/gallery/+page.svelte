@@ -50,15 +50,14 @@ function imageTracker(node: HTMLImageElement, src: string) {
 			{#each images as img}
 				<figure class="relative overflow-hidden rounded-md bg-gray-800">
 					{#if !loaded.has(img.src)}
-						<div class="absolute inset-0 flex items-center justify-center bg-gray-700/40">
-							<div class="w-8 h-8 border-4 border-amber-400 border-t-transparent rounded-full animate-spin"></div>
-						</div>
+						<div class="skeleton absolute inset-0"></div>
 					{/if}
 					<img
 						src={img.src}
 						alt={img.name}
 						loading="lazy"
-						class="w-full h-40 md:h-48 object-cover"
+						class="w-full h-40 md:h-48 object-cover gallery-img"
+						class:loaded={loaded.has(img.src)}
 						use:imageTracker={img.src}
 					/>
 				</figure>
@@ -69,4 +68,23 @@ function imageTracker(node: HTMLImageElement, src: string) {
 
 <style>
 /* minimal extra styling if needed */
+	.skeleton {
+		background: linear-gradient(90deg, rgba(100,100,100,0.18) 25%, rgba(150,150,150,0.18) 50%, rgba(100,100,100,0.18) 75%);
+		background-size: 200% 100%;
+		animation: shimmer 1.2s linear infinite;
+	}
+
+	.gallery-img {
+		transition: opacity .5s ease;
+		opacity: 0;
+		display: block;
+	}
+	.gallery-img.loaded {
+		opacity: 1;
+	}
+
+	@keyframes shimmer {
+		0% { background-position: 200% 0; }
+		100% { background-position: -200% 0; }
+	}
 </style>
