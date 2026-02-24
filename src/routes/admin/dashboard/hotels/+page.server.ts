@@ -6,7 +6,7 @@ import type { Actions } from './$types';
 import transporter from '$lib/emailClient.server';
 
 function generateHotelPaymentConfirmationEmail(hotel: any) {
-    const eventName = 'Norwegian Open WCS 2025';
+    const eventName = 'Norwegian Open WCS 2026';
     const styles = {
         body: 'font-family: Arial, Helvetica, sans-serif; background: #f4f4f7; color: #333; padding: 0; margin: 0;',
         container: 'max-width: 600px; margin: 40px auto; background: #fff; border: 1px solid #ddd; border-radius: 5px; overflow: hidden;',
@@ -27,7 +27,7 @@ function generateHotelPaymentConfirmationEmail(hotel: any) {
         <div style="${styles.content}">
           <h2 style="${styles.h2}">Your Hotel Payment is Confirmed!</h2>
           <p style="${styles.detail}">Dear ${hotel.fullname || 'guest'},</p>
-          <p style="${styles.detail}">We have received your payment for your hotel booking at Norwegian Open WCS 2025.</p>
+          <p style="${styles.detail}">We have received your payment for your hotel booking at Norwegian Open WCS 2026.</p>
           <div style="${styles.detail}"><span style="${styles.highlight}">Room Type:</span> ${hotel.hoteloption || 'N/A'}</div>
           <div style="${styles.detail}"><span style="${styles.highlight}">Check-in:</span> ${hotel.checkindate || 'N/A'}</div>
           <div style="${styles.detail}"><span style="${styles.highlight}">Check-out:</span> ${hotel.checkoutdate || 'N/A'}</div>
@@ -123,7 +123,7 @@ export const actions = {
             await transporter.sendMail({
                 from: process.env.GOOGLE_EMAIL,
                 to: hotel.email,
-                subject: 'Hotel Payment Confirmation - Norwegian Open WCS 2025',
+                subject: 'Hotel Payment Confirmation - Norwegian Open WCS 2026',
                 html: generateHotelPaymentConfirmationEmail(hotel)
             });
             // Mark as confirmation sent

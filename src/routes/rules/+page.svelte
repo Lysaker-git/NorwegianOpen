@@ -1,5 +1,5 @@
 <script lang="ts">
-    let eventName = "NORWEGIAN OPEN 2025"
+    let eventName = "NORWEGIAN OPEN 2026"
   </script>
   
   <div class="relative min-h-screen overflow-hidden">

@@ -16,7 +16,7 @@
   </script>
   
   <svelte:head>
-    <title>Location - Norwegian Open WCS 2025</title>
+    <title>Location - Norwegian Open WCS 2026</title>
   </svelte:head>
   
   <div class="container mx-auto px-4 md:px-8 py-12">
@@ -26,7 +26,7 @@
   
         <div class="max-w-3xl mx-auto mb-12">
           <p class="text-lg md:text-xl text-center mb-4">
-            Norwegian Open WCS 2025 will be hosted at the spectacular Scandic Hamar hotel,
+            Norwegian Open WCS 2026 will be hosted at the spectacular Scandic Hamar hotel,
             offering modern facilities and comfortable accommodations for our dance event.
             Conveniently located in the heart of Hamar, it provides the perfect venue for our weekend of West Coast Swing.
           </p>
@@ -120,7 +120,7 @@
   
           <p class="text-white text-lg mb-4">
             Registration is open - make sure to follow our social media channels
-            for announcements about when you can book your spot at Norwegian Open WCS 2025!
+            for announcements about when you can book your spot at Norwegian Open WCS 2026!
           </p>
         </div>
       </div> -->
