@@ -110,7 +110,7 @@
                         <li><a href="/about" on:click={handleNavClick} class="px-4 py-2 hover:text-amber-200 transition-colors duration-300">About</a></li>
                         <li><a href="/schedule" on:click={handleNavClick} class="px-4 py-2 hover:text-amber-200 transition-colors duration-300">Schedule</a></li>
                         <li><a href="/coc" on:click={handleNavClick} class="px-4 py-2 hover:text-amber-200 transition-colors duration-300">Code of Conduct</a></li>
-                        <!-- <li><a href="/intensives" on:click={handleNavClick} class="px-4 py-2 hover:text-amber-200 transition-colors duration-300">Intensives</a></li> -->
+                        <li><a href="/intensives" on:click={handleNavClick} class="px-4 py-2 hover:text-amber-200 transition-colors duration-300">Intensives</a></li>
                         <!-- <li><a href="/staff" on:click={handleNavClick} class="px-4 py-2 hover:text-amber-200 transition-colors duration-300">Staff</a></li> -->
                         <li><a href="/teachers" on:click={handleNavClick} class="px-4 py-2 hover:text-amber-200 transition-colors duration-300">Teachers</a></li>
                         <li><a href="/location" on:click={handleNavClick} class="px-4 py-2 hover:text-amber-200 transition-colors duration-300">Location</a></li>
@@ -181,7 +181,7 @@
                     <li><a href="/about" on:click={() => { handleNavClick(); aboutDropdownOpen = false; }} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">About</a></li>
                     <li><a href="/schedule" on:click={() => { handleNavClick(); aboutDropdownOpen = false; }} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Schedule</a></li>
                     <li><a href="/coc" on:click={() => { handleNavClick(); aboutDropdownOpen = false; }} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Code of Conduct</a></li>
-                    <!-- <li><a href="/intensives" on:click={handleNavClick} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Intensives</a></li> -->
+                    <li><a href="/intensives" on:click={() => { handleNavClick(); aboutDropdownOpen = false; }} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Intensives</a></li>
                     <!-- <li><a href="/staff" on:click={handleNavClick} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Staff</a></li> -->
                     <li><a href="/teachers" on:click={() => { handleNavClick(); aboutDropdownOpen = false; }} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Teachers</a></li>
                     <li><a href="/location" on:click={() => { handleNavClick(); aboutDropdownOpen = false; }} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Location</a></li>
