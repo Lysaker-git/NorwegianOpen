@@ -131,7 +131,7 @@ function startPreloading() {
 			<div class="max-w-5xl mx-auto px-6 text-center">
 				<div class="w-full flex items-center justify-center mb-4">
 					<div class="h-px w-24 bg-amber-400 mr-4"></div>
-					<h3 class="text-2xl md:text-3xl font-bold text-amber-100">Highlights from 2026</h3>
+					<h3 class="text-2xl md:text-3xl font-bold text-amber-100">Highlights from 2025</h3>
 					<div class="h-px w-24 bg-amber-400 ml-4"></div>
 				</div>
 
