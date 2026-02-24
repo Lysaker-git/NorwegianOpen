@@ -19,7 +19,7 @@
             <li><a href="/toc">Terms & Conditions</a></li>
         </ul>
     </div>
-    <p>© 2025 Norwegian Open WCS | All Rights Reserved</p>
+    <p>© 2026 Norwegian Open WCS | All Rights Reserved</p>
 </footer>
 
 <style>

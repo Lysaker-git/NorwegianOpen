@@ -102,7 +102,7 @@ export const priceRows: PriceRow[] = [
                     region: 'World',
                     prices: [
                         { amount: 1800 },
-                        { amount: 1200 },
+                        { amount: 2000 },
                         { amount: 2200 }
                     ]
                 }
@@ -171,15 +171,15 @@ import connectingRoom from '$lib/components/images/scandic/single/connectingRoom
 import doublebeds from '$lib/components/images/scandic/single/doublebeds.webp';
 import triple from '$lib/components/images/scandic/triple/triple.webp';
 
-export const hotelMinDate = '2025-10-02';
-export const hotelMaxDate = '2025-10-06';
+export const hotelMinDate = '2026-10-02';
+export const hotelMaxDate = '2026-10-06';
 
 export const availableDates = [
-    '2025-10-02',
-    '2025-10-03',
-    '2025-10-04',
-    '2025-10-05',
-    '2025-10-06'
+    '2026-10-02',
+    '2026-10-03',
+    '2026-10-04',
+    '2026-10-05',
+    '2026-10-06'
 ];
 
 export function getHotelDisplayName(key: string): string {

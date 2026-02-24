@@ -110,7 +110,7 @@
 
 <div class="container mx-auto px-4 py-12">
     <h2 class="text-3xl sm:text-4xl font-bold text-center mb-10 text-gray-100 font-[NorseBold]">
-        Hotel Booking - Norwegian Open 2025
+        Hotel Booking - Norwegian Open 2026
     </h2>
 
     <form method="POST" action="?/bookHotel" use:enhance on:submit={handleSubmit} class="space-y-6 max-w-xl mx-auto bg-gray-800 p-6 md:p-8 rounded-lg shadow-xl border border-gray-700 text-white">
@@ -425,13 +425,13 @@
             <strong>Cancellation Policy:</strong>
         </p>
         <p class="text-sm text-gray-400 mb-2">
-            You may cancel your entire reservation free of charge until June 27, 2025.
+            You may cancel your entire reservation free of charge until June 27, 2026.
         </p>
         <p class="text-sm text-gray-400 mb-2">
-            If you cancel between June 27th and August 27th you will have to pay 50% of the full price. Cancellation after August 27th, 2025 will have to paid in full.
+            If you cancel between June 27th and August 27th you will have to pay 50% of the full price. Cancellation after August 27th, 2026 will have to paid in full.
         </p>        
         <p class="text-sm text-gray-400 mb-6">
-            The list of guest names and room assignments must be submitted no later than September 15, 2025. After this date the guest list will be final.
+            The list of guest names and room assignments must be submitted no later than September 15, 2026. After this date the guest list will be final.
         </p>
         <div>
             <button type="submit"

@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-  <title>Intensives - Norwegian Open WCS 2025</title>
+  <title>Intensives - Norwegian Open WCS 2026</title>
 </svelte:head>
 
 <div class="container mx-auto px-4 md:px-8 py-12">
@@ -13,7 +13,7 @@
     </h1>
     <div class="max-w-3xl mx-auto mb-12">
       <p class="text-lg md:text-xl text-center mb-4">
-        Take your Norwegian Open WCS 2025 experience to the next level with our exclusive intensives! Whether you want to master the groove of blues or unlock your expressive styling, these special sessions are designed to inspire and elevate your dancing.
+        Take your Norwegian Open WCS 2026 experience to the next level with our exclusive intensives! Whether you want to master the groove of blues or unlock your expressive styling, these special sessions are designed to inspire and elevate your dancing.
       </p>
     </div>
   </div>
@@ -30,7 +30,7 @@
         </p>
         <ul class="mb-4 text-white">
           <li><span class="font-bold text-amber-200">🎶 When:</span> Friday, October 3rd – 11:00 to 14:00</li>
-          <li><span class="font-bold text-amber-200">📍 Where:</span> Norwegian Open WCS 2025</li>
+          <li><span class="font-bold text-amber-200">📍 Where:</span> Norwegian Open WCS 2026</li>
           <li><span class="font-bold text-amber-200">💰 Price:</span> 1000 NOK</li>
         </ul>
         <div class="p-4 border-l-4 bg-gray-900 border-blue-500 text-white mb-4">
@@ -68,11 +68,11 @@
           </p>
         </div>
         <p class="text-lg mb-4 text-white">
-          We’re beyond excited to announce that our very own social media manager — and incredible pro dancer — <span class="font-semibold text-amber-200">Fernanda Dubiel</span> is bringing something extra special to Norwegian Open WCS 2025!
+          We’re beyond excited to announce that our very own social media manager — and incredible pro dancer — <span class="font-semibold text-amber-200">Fernanda Dubiel</span> is bringing something extra special to Norwegian Open WCS 2026!
         </p>
         <ul class="mb-4 text-white">
           <li><span class="font-bold text-amber-200">🎶 When:</span> Saturday, October 4th – 10:15 to 11:45</li>
-          <li><span class="font-bold text-amber-200">📍 Where:</span> Norwegian Open WCS 2025</li>
+          <li><span class="font-bold text-amber-200">📍 Where:</span> Norwegian Open WCS 2026</li>
           <li><span class="font-bold text-amber-200">💰 Price:</span> 400 NOK</li>
         </ul>
         <div class="p-4 border-l-4 bg-gray-900 border-blue-500 text-white mb-4">
