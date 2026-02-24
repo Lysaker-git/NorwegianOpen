@@ -3,6 +3,7 @@
     import NowSch2 from '$lib/components/images/schedule/NowSch2.jpg';
     import NowSch3 from '$lib/components/images/schedule/NowSch3.jpg';
     import levels from '$lib/components/images/levels/levels.jpg';
+    import Schedule from '$lib/components/images/Schedule.jpg'
 </script>
 
 <div class="px-4 sm:px-6 md:px-8 max-w-5xl mx-auto mt-8">
@@ -12,6 +13,12 @@
                 The preliminary schedule for 2026 is coming soon.
             </p>
         </div>
+        <img
+            src={Schedule}
+            alt="Schedule overview"
+            class="w-full shadow-md schedule-img border border-gray-700 mb-6"
+        />
+
         <img
             src={levels}
             alt="Levels overview"
