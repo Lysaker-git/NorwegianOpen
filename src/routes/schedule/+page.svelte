@@ -3,21 +3,15 @@
     import NowSch2 from '$lib/components/images/schedule/NowSch2.jpg';
     import NowSch3 from '$lib/components/images/schedule/NowSch3.jpg';
     import levels from '$lib/components/images/levels/levels.jpg';
-    import Schedule from '$lib/components/images/Schedule.jpg'
 </script>
 
 <div class="px-4 sm:px-6 md:px-8 max-w-5xl mx-auto mt-8">
     <div class="p-4">
-        <div class="mb-6 bg-amber-400/5 border border-amber-400/20 text-amber-200 rounded-md p-4 text-center">
-            <p class="text-sm md:text-base font-semibold">
-                The preliminary schedule for 2026 is coming soon.
-            </p>
-        </div>
-        <img
-            src={Schedule}
-            alt="Schedule overview"
-            class="w-full shadow-md schedule-img border border-gray-700 mb-6"
-        />
+        <iframe
+            src="https://dancepoint.no/events/2ffe1eb9-3fe2-428b-b66e-7f3ecfb858a4/embed/schedule"
+            title="Norwegian Open WCS 2026 schedule"
+            class="w-full shadow-md schedule-frame border border-gray-700 mb-6"
+        ></iframe>
 
         <img
             src={levels}
@@ -62,5 +56,11 @@
     }
     .schedule-img:last-of-type {
         margin-bottom: 0;
+    }
+    .schedule-frame {
+        height: 85vh;
+        min-height: 700px;
+        border-radius: 0.5rem;
+        background: #18181b;
     }
 </style>
