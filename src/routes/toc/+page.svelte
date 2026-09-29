@@ -1,5 +1,6 @@
 <script lang="ts">
-    let eventName = "NORWEGIAN OPEN 2025"
+    let eventName = "NORWEGIAN OPEN 2026"
+    const lastUpdated = "29/09/2026"
 </script>
   
   <div class="relative min-h-screen overflow-hidden">
@@ -36,6 +37,16 @@
             </div>
           </div>
 
+          <!-- Update notice -->
+          <div class="mb-8 rounded-lg border-2 border-amber-400 bg-amber-400/10 p-5 text-white">
+            <p class="font-semibold text-amber-400 mb-2">Updated {lastUpdated}</p>
+            <ul class="list-disc pl-6 space-y-1 text-sm">
+              <li>No refunds are available any more, as the event is only days away. Ticket transfers are still possible.</li>
+              <li>Competition entry fees are non-refundable.</li>
+              <li>Our new <a href="/privacy" class="link-style">Privacy Policy</a> explains how we handle your personal data.</li>
+            </ul>
+          </div>
+
           <!-- Main text -->
           <div class="bg-gray-800 text-white backdrop-blur-sm rounded-lg p-6 md:p-10 shadow-xl border border-amber-400/30 transform transition-all hover:shadow-amber-400/20">
             <h2 class="text-2xl md:text-3xl font-bold text-amber-400 mb-6 mt-2">{eventName} TERMS & CONDITIONS</h2>
@@ -48,12 +59,8 @@
 
             <section class="mb-8">
               <h2 class="mt-4 mb-3 text-lg font-semibold text-amber-200">Cancellation & Refunds</h2>
-              <ul class="list-disc pl-6 space-y-2 mb-4">
-                <li>Full refund if you cancel before <strong class="text-amber-200">1st June</strong>.</li>
-                <li>If you cancel between <strong class="text-amber-200">1st June</strong> and <strong class="text-amber-200">30th June</strong>, you remain responsible for <strong>50%</strong> of the pass price.</li>
-                <li>After <strong class="text-amber-200">1st July</strong> there are <strong class="text-red-400">no refunds</strong>; you are responsible for selling your ticket to another participant.</li>
-              </ul>
-              <p class="mb-2">If you transfer your ticket to another person, please inform the organizers so we can update registration and contact details.</p>
+              <p class="mb-2">There are currently <strong class="text-red-400">no refunds</strong> available for passes. If you can no longer attend, you are responsible for transferring your pass to another participant.</p>
+              <p class="mb-2">If you transfer your pass to another person, please inform the organizers so we can update registration and contact details.</p>
             </section>
 
             <section class="mb-8">
@@ -79,7 +86,7 @@
 
             <section class="mb-8">
               <h2 class="mt-4 mb-3 text-lg font-semibold text-amber-200">Data & Privacy</h2>
-              <p class="mb-2">We will store registration and contact details to communicate event updates, pass confirmations, and emergency information. We will not share your personal data with third parties except where necessary for event operations (e.g., venue, ticketing partners) or if required by law.</p>
+              <p class="mb-2">Registration, payments, and hotel bookings are handled on <a href="https://dancepoint.no" target="_blank" rel="noopener noreferrer" class="link-style">DancePoint</a>, and your registration data is stored there. This website does not collect registration data. Competition entries and results are shared with the World Swing Dance Council (WSDC) and published on Scoring.dance. Read our <a href="/privacy" class="link-style">Privacy Policy</a> for full details.</p>
             </section>
 
             <section class="mb-8">
@@ -94,11 +101,11 @@
 
             <section class="mb-8">
               <h2 class="mt-4 mb-3 text-lg font-semibold text-amber-200">Refunds for Competition Withdrawals</h2>
-              <p class="mb-2">Competition entry fees may be subject to separate refund rules. Check the specific competition terms when registering. For Strictly or Jack &amp; Jill entries, late withdrawals may not receive a refund.</p>
+              <p class="mb-2">Competition entry fees (Jack &amp; Jill and Strictly Swing) are non-refundable. See the <a href="/rules" class="link-style">Competition Rules</a> for details.</p>
             </section>
 
             <p class="text-center mt-8 italic text-white">By completing registration and payment you agree to these Terms & Conditions.</p>
-            <p class="text-center mt-4 text-xs text-white">(Last Updated: 30/09/2025)</p>
+            <p class="text-center mt-4 text-xs text-white">(Last Updated: {lastUpdated})</p>
           </div>
         </div>
       </div>
@@ -111,7 +118,8 @@
       @apply bg-gray-100 px-2 py-0.5 mx-px text-sm rounded border border-gray-200 font-mono text-white align-middle inline-block; /* Added inline-block */
     }
     .link-style {
-      @apply text-blue-600 hover:text-blue-800 hover:underline transition duration-200 ease-in-out;
+      color: #fbbf24;
+      text-decoration: underline;
     }
     body {
        margin: 0; /* Prevent potential default body margin */
