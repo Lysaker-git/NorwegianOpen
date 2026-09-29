@@ -17,6 +17,7 @@
             <li><a href="/coc">Code of Conduct</a></li>
             <li><a href="/rules">Competition Rules</a></li>
             <li><a href="/toc">Terms & Conditions</a></li>
+            <li><a href="/privacy">Privacy Policy</a></li>
         </ul>
     </div>
     <p>© 2026 Norwegian Open WCS | All Rights Reserved</p>
