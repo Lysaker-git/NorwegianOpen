@@ -1,7 +1,7 @@
 <script lang="ts">
     let eventName = "NORWEGIAN OPEN 2026"
-    const lastUpdated = "29/09/2026"
-    const contactEmail = "ida_marie@outlook.com"
+    const lastUpdated = "30/09/2026"
+    const contactEmail = "norwegianopenwcs@gmail.com"
 </script>
 
 <div class="relative min-h-screen overflow-hidden">
@@ -37,7 +37,7 @@
 
         <section class="mb-8">
           <h2 class="section-heading">Who is responsible</h2>
-          <p class="mb-2">The data controller is Norvind WCS, organizer of {eventName}. For any privacy questions or requests, contact Ida Marie Strand at <a href="mailto:{contactEmail}" class="link-style">{contactEmail}</a>.</p>
+          <p class="mb-2">The data controller is Ida Marie Strand, organizer of {eventName}. For any privacy questions or requests, email <a href="mailto:{contactEmail}" class="link-style">{contactEmail}</a>.</p>
         </section>
 
         <section class="mb-8">

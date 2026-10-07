@@ -1,6 +1,6 @@
 <script lang="ts">
     let eventName = "NORWEGIAN OPEN 2026"
-    const lastUpdated = "29/09/2026"
+    const lastUpdated = "30/09/2026"
 </script>
   
   <div class="relative min-h-screen overflow-hidden">
@@ -42,7 +42,7 @@
             <p class="font-semibold text-amber-400 mb-2">Updated {lastUpdated}</p>
             <ul class="list-disc pl-6 space-y-1 text-sm">
               <li>No refunds are available any more, as the event is only days away. Ticket transfers are still possible.</li>
-              <li>Competition entry fees are non-refundable.</li>
+              <li>Competition entry fees are not refunded if you withdraw after registration for that competition closes.</li>
               <li>Our new <a href="/privacy" class="link-style">Privacy Policy</a> explains how we handle your personal data.</li>
             </ul>
           </div>
@@ -101,7 +101,7 @@
 
             <section class="mb-8">
               <h2 class="mt-4 mb-3 text-lg font-semibold text-amber-200">Refunds for Competition Withdrawals</h2>
-              <p class="mb-2">Competition entry fees (Jack &amp; Jill and Strictly Swing) are non-refundable. See the <a href="/rules" class="link-style">Competition Rules</a> for details.</p>
+              <p class="mb-2">Competition entry fees (Jack &amp; Jill and Strictly Swing) are not refunded if you withdraw after registration for that competition closes. See the <a href="/rules" class="link-style">Competition Rules</a> for details.</p>
             </section>
 
             <p class="text-center mt-8 italic text-white">By completing registration and payment you agree to these Terms & Conditions.</p>

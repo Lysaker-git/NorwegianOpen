@@ -1,5 +1,7 @@
 <script lang="ts">
     let eventName = "NORWEGIAN OPEN 2026"
+    const lastUpdated = "30/09/2026"
+    const contactEmail = "norwegianopenwcs@gmail.com"
 </script>
   
   <div class="relative min-h-screen overflow-hidden">
@@ -34,6 +36,17 @@
               <div class="absolute -bottom-3 -right-3 w-6 h-6 border-b-2 border-r-2 border-amber-400"></div>
             </div>
           </div>
+          <!-- Update notice -->
+          <div class="mb-8 rounded-lg border-2 border-amber-400 bg-amber-400/10 p-5 text-white">
+            <p class="font-semibold text-amber-400 mb-2">Updated {lastUpdated}</p>
+            <ul class="list-disc pl-6 space-y-1 text-sm">
+              <li>Clearer scope: who and where this Code of Conduct applies to. We also follow the WSDC Code of Conduct.</li>
+              <li>New safety contact and event email address.</li>
+              <li>New section on what happens after you make a report.</li>
+              <li>Updated floorcraft guidance, and retaliation added to unacceptable conduct.</li>
+            </ul>
+          </div>
+
           <!-- Main text -->
           <div class="bg-gray-800 text-white backdrop-blur-sm rounded-lg p-6 md:p-10 shadow-xl border border-amber-400/30 transform transition-all hover:shadow-amber-400/20">
             <h2 class="text-2xl md:text-3xl font-bold text-amber-400 mb-6 mt-2">{eventName} CODE OF CONDUCT</h2>
@@ -41,6 +54,7 @@
             <section class="mb-8">
                 <h2 class="mt-10 mb-4 text-xl sm:text-2xl font-medium text-amber-200">Our Commitment: A Safe & Inclusive Space</h2>
                 <p class="mb-4">{eventName} is dedicated to providing a safe, comfortable, and welcoming event experience for everyone. We celebrate West Coast Swing, community, and connection. We expect all attendees, instructors, staff, and volunteers to contribute to a positive environment built on mutual respect.</p>
+                <p class="mb-4">This Code of Conduct applies to everyone at the event: attendees, competitors, instructors, judges, DJs, staff, and volunteers. It covers all event spaces, including the ballroom, workshops, hotel areas used by the event, and our online channels. {eventName} also follows the <a href="https://www.worldsdc.com/code-of-conduct/" target="_blank" rel="noopener noreferrer" class="link-style">WSDC Code of Conduct</a>.</p>
                 <p class="mb-4">This Code of Conduct outlines our expectations. By attending {eventName}, you agree to uphold these principles. Violations may result in sanctions, including removal from the event without refund and potential bans from future events, at the organizers' discretion.</p>
                 <p class="font-semibold text-amber-100">We welcome everyone, regardless of gender, gender identity/expression, age, sexual orientation, disability, physical appearance, body size, race, ethnicity, religion, dance skill level, or dance role preference.</p>
             </section>
@@ -58,7 +72,7 @@
                     <strong class="font-semibold">Dance Roles:</strong> We support dancers choosing any role (lead, follow, or switching) they prefer, regardless of gender.
                   </li>
                   <li>
-                    <strong class="font-semibold">Floor Craft & Safety:</strong> Be aware of your surroundings and your partner. Prioritize safety to avoid collisions. If accidental contact occurs, apologize immediately. Aerials, lifts, drops, or other weight-support moves that could be unsafe in a social setting are generally not permitted on the social floor unless explicitly agreed upon by both partners *and* executed with extreme care for surroundings. When in doubt, leave it out.
+                    <strong class="font-semibold">Floor Craft & Safety:</strong> Be aware of your surroundings and look after your partner. Drops, dips, and rides are part of West Coast Swing, so lead them with care, make sure your partner is comfortable, and check there is room around you first. Aerials and lifts are not allowed on the social floor. If you bump into someone, apologize right away. When in doubt, leave it out.
                   </li>
                   <li>
                     <strong class="font-semibold">Feedback:</strong> Refrain from offering unsolicited advice or instruction on the social dance floor or during workshops unless specifically asked or if there is an immediate safety concern. Teaching is for designated classes.
@@ -96,6 +110,7 @@
                   <li>Sustained disruption of workshops or other event activities.</li>
                   <li>Inappropriate or unwanted physical contact.</li>
                   <li>Unwelcome sexual attention or advances.</li>
+                  <li>Retaliation against anyone who reports a concern.</li>
                   <li>Advocating for, or encouraging, any of the above behavior.</li>
                 </ul>
                  <p class="font-semibold">
@@ -113,15 +128,27 @@
                 <p class="mb-4">You can reach out via any of the following methods:</p>
                 <ul class="list-disc pl-6 space-y-2 mb-4">
                   <li>Speak to any identified {eventName} Organizer or Staff member in person. They can often be found near the registration desk or wearing Staff Identifiers.</li>
-                  <li>Contact our designated Safety Contact(s): <code class="code-style">Ida Marie Strand</code>.</li>
-                  <li>Email us at: <a href="mailto:ida_marie@outlook.com" class="link-style"><code class="code-style">ida_marie@outlook.com</code></a></li>
-                  <!-- <li>Call or text (if applicable): <code class="code-style">[Contact Phone Number, specify if text preferred]</code></li> -->
+                  <li>Contact our Safety Contacts: Ida Marie Strand, or Robin Synnestvedt Lysaker (<a href="tel:+4745478700" class="link-style">+47 454 78 700</a>).</li>
+                  <li>Email us at: <a href="mailto:{contactEmail}" class="link-style">{contactEmail}</a></li>
                 </ul>
                 <p>
                   Event staff are prepared to assist participants experiencing harassment by helping them contact organizers, providing escorts, or otherwise ensuring they feel safe for the duration of the event. We value your attendance and your well-being.
                 </p>
               </section>
   
+              <section class="mb-8">
+                <h2 class="mt-10 mb-5 pb-2 border-b border-gray-300 text-xl sm:text-2xl font-medium text-white">
+                  What Happens After a Report
+                </h2>
+                <ol class="list-decimal pl-6 space-y-2 mb-4">
+                  <li>A Safety Contact listens to you privately and writes down what happened.</li>
+                  <li>We check in with you about what support you need and whether you want further action.</li>
+                  <li>The organizers review the report, speak with the people involved where appropriate, and decide on any action.</li>
+                  <li>We let you know the outcome as far as privacy allows.</li>
+                </ol>
+                <p>Reports can also be made after the event by email to <a href="mailto:{contactEmail}" class="link-style">{contactEmail}</a>.</p>
+              </section>
+
               <section class="mb-8">
                  <h2 class="mt-10 mb-5 pb-2 border-b border-gray-300 text-xl sm:text-2xl font-medium text-white">
                   Enforcement & Consequences
@@ -132,7 +159,7 @@
                  <ul class="list-disc pl-6 space-y-2">
                    <li>A verbal warning.</li>
                    <li>Expulsion from the event without a refund.</li>
-                   <li>Being barred from attending future [Norwegian Open] events.</li>
+                   <li>Being barred from attending future Norwegian Open events.</li>
                    <li>Contacting venue security or local law enforcement if necessary.</li>
                  </ul>
               </section>
@@ -144,7 +171,7 @@
                 <ul class="list-disc pl-6 space-y-2 mb-4">
                   <li>Scandic Hotels prohibits bringing alcoholic beverages or other drinks purchased outside the hotel into their licensed areas. Any outside alcohol found will be confiscated and may result in removal from the venue.</li>
                   <li>Alcohol may only be consumed in licensed areas and in accordance with the venue's rules. Organizers reserve the right to refuse service or entry to anyone visibly intoxicated or behaving in an unsafe manner.</li>
-                  <li>Possession, use, or distribution of illegal drugs is strictly prohibited. Any violation will be reported to local authorities and may result in immediate expulsion from the event without refund and potential legal consequences.</li>
+                  <li>Possession, use, or distribution of illegal drugs is strictly prohibited. Violations will be reported to the police and will lead to immediate removal from the event without a refund.</li>
                   <li>Anyone found distributing illicit substances will be removed and reported. If you or someone needs help related to substances, seek event staff or medical assistance immediately.</li>
                 </ul>
               </section>
@@ -153,7 +180,7 @@
                 Thank you for helping make {eventName} a safe, respectful, and fun event for everyone!
               </p>
               <p class="text-center mt-2 text-xs text-white">
-                (Last Updated: 18/4/2026)
+                (Last Updated: {lastUpdated})
               </p>
             </div>
           </div>
@@ -179,4 +206,6 @@
     .text-amber-400 { color: #fbbf24; }
     .text-amber-200 { color: #fde68a; }
     .text-amber-100 { color: #fef3c7; }
+    .link-style { color: #fbbf24; text-decoration: underline; }
+    .link-style:hover { color: #fde68a; }
   </style>
