@@ -42,6 +42,9 @@
                         <a href="/admin/checkin" class="px-4 py-2 rounded bg-amber-500 text-gray-900 font-semibold shadow hover:bg-amber-400 transition-colors duration-150 mr-2">
                             Check-in
                         </a>
+                        <a href="/admin/shop/orders" class="px-4 py-2 rounded bg-amber-500 text-gray-900 font-semibold shadow hover:bg-amber-400 transition-colors duration-150 mr-2">
+                            Shop
+                        </a>
                         <a href="/admin/dashboard" class="px-4 py-2 rounded bg-indigo-500 text-white font-semibold shadow hover:bg-indigo-400 transition-colors duration-150">
                             Dashboard
                         </a>
@@ -72,6 +75,7 @@
                         <a href="/admin/dashboard/hotels" class="px-4 py-3 border-b border-gray-700 hover:bg-amber-500 hover:text-gray-900 transition-colors">Hotel Registrations</a>
                         <a href="/admin/mail" class="px-4 py-3 border-b border-gray-700 hover:bg-amber-500 hover:text-gray-900 transition-colors">Mail</a>
                         <a href="/admin/checkin" class="px-4 py-3 border-b border-gray-700 hover:bg-amber-500 hover:text-gray-900 transition-colors">Check-in</a>
+                        <a href="/admin/shop/orders" class="px-4 py-3 border-b border-gray-700 hover:bg-amber-500 hover:text-gray-900 transition-colors">Shop</a>
                         <a href="/admin/dashboard" class="px-4 py-3 border-b border-gray-700 hover:bg-indigo-500 hover:text-white transition-colors">Dashboard</a>
                     {/if}
                     {#if $page.data.session && $page.url.pathname === '/admin'}
