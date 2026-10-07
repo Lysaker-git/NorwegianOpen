@@ -250,7 +250,7 @@ begin
   if not found then
     raise exception 'ORDER_NOT_FOUND';
   end if;
-  if not (
+  if p_status is null or not (
        (v_status = 'awaiting_payment' and p_status = 'paid')
     or (v_status = 'paid' and p_status in ('sent', 'delivered'))
     or (v_status = 'sent' and p_status = 'delivered')
@@ -283,15 +283,15 @@ on conflict (id) do nothing;
 -- =============================================================================
 -- MANUAL TEST CHECKLIST: run these one block at a time in the SQL editor
 -- after the script above. Each block cleans up after itself.
+-- In the Supabase SQL editor only the last statement's result is shown: select everything from `begin;` up to (not including) `rollback;` and run it, read the result, then run `rollback;` on its own.
 -- =============================================================================
--- 1) Place an order and see stock drop (expect stock 5 -> 3, total 600):
+-- 1) Place an order and see stock drop (expect stock 3, order total 600, status awaiting_payment):
 -- begin;
 --   insert into products (id, name, price_nok) values ('00000000-0000-0000-0000-000000000001', 'Test tee', 300);
 --   insert into product_variants (id, product_id, label, stock) values ('00000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-000000000001', 'M', 5);
 --   select * from place_order('{"customer_name":"Test","email":"t@t.no","phone":"12345678","delivery_method":"pickup"}',
 --                             '[{"variant_id":"00000000-0000-0000-0000-0000000000a1","quantity":2}]');
---   select stock from product_variants where id = '00000000-0000-0000-0000-0000000000a1';
---   select order_number, total_nok, status from orders order by created_at desc limit 1;
+--   select (select stock from product_variants where id = '00000000-0000-0000-0000-0000000000a1') as stock, o.order_number, o.total_nok, o.status from orders o order by o.created_at desc limit 1;
 -- rollback;
 --
 -- 2) Out of stock is rejected and stock is unchanged (expect ERROR OUT_OF_STOCK, detail available 1):
@@ -308,8 +308,7 @@ on conflict (id) do nothing;
 --   insert into product_variants (id, product_id, label, stock) values ('00000000-0000-0000-0000-0000000000a1', '00000000-0000-0000-0000-000000000001', 'M', 5);
 --   select cancel_order(out_order_id) from place_order('{"customer_name":"Test","email":"t@t.no","phone":"12345678","delivery_method":"pickup"}',
 --                             '[{"variant_id":"00000000-0000-0000-0000-0000000000a1","quantity":2}]');
---   select stock from product_variants where id = '00000000-0000-0000-0000-0000000000a1';
---   select status from orders order by created_at desc limit 1;
+--   select (select stock from product_variants where id = '00000000-0000-0000-0000-0000000000a1') as stock, o.status from orders o order by o.created_at desc limit 1;
 -- rollback;
 --
 -- 4) Invalid transition is rejected (expect ERROR INVALID_TRANSITION awaiting_payment -> delivered):
