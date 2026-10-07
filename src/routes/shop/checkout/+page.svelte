@@ -97,6 +97,9 @@
 			</ul>
 		</section>
 
+		{#if !data.paymentConfigured}
+			<p class="rounded border border-red-400 bg-red-400/10 p-3 text-red-200">The shop is not taking orders right now. Please try again later.</p>
+		{:else}
 		<form
 			method="POST"
 			action="?/placeOrder"
@@ -192,6 +195,7 @@
 				</button>
 			</section>
 		</form>
+		{/if}
 	{/if}
 </div>
 

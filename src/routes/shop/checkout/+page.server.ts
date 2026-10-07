@@ -16,6 +16,7 @@ export const load: PageServerLoad = async () => {
 		// App.PageData requires session; public shop pages never expose it.
 		session: null,
 		shippingPriceNok: settings.shipping_price_nok,
+		paymentConfigured: settings.vipps_number.trim() !== '',
 		catalog
 	};
 };
@@ -31,6 +32,11 @@ export const actions: Actions = {
 		const { input, errors } = parseCheckoutForm(await request.formData());
 		const values = formValues(input);
 		if (Object.keys(errors).length > 0) return fail(400, { errors, values });
+
+		const settings = await getSettings();
+		if (settings.vipps_number.trim() === '') {
+			return fail(503, { message: 'The shop is not taking orders right now. Please try again later.', values });
+		}
 
 		const { data, error } = await supabaseAdmin.rpc('place_order', {
 			p_customer: {
