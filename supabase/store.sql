@@ -276,9 +276,12 @@ grant execute on function public.cancel_order(uuid) to service_role;
 grant execute on function public.set_order_status(uuid, text) to service_role;
 
 -- Product images bucket (public read; uploads only via the service key).
-insert into storage.buckets (id, name, public)
-values ('product-images', 'product-images', true)
-on conflict (id) do nothing;
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('product-images', 'product-images', true, 4194304, array['image/jpeg', 'image/png', 'image/webp'])
+on conflict (id) do update
+  set public = excluded.public,
+      file_size_limit = excluded.file_size_limit,
+      allowed_mime_types = excluded.allowed_mime_types;
 
 -- =============================================================================
 -- MANUAL TEST CHECKLIST: run these one block at a time in the SQL editor

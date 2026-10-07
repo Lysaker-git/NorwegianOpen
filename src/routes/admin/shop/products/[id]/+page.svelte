@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { ActionData, PageData } from './$types';
-	import { ONE_SIZE_LABEL } from '$lib/shop/config';
+	import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_BYTES, ONE_SIZE_LABEL } from '$lib/shop/config';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -17,6 +17,15 @@
 	$: errors = form?.errors ?? {};
 	$: ordered = new Set(data.orderedVariantIds);
 
+	let imageClientError = '';
+	function checkImage(input: HTMLInputElement) {
+		const file = input.files?.[0];
+		imageClientError = '';
+		if (file && (!ALLOWED_IMAGE_TYPES[file.type] || file.size > MAX_IMAGE_BYTES)) {
+			input.value = '';
+			imageClientError = 'Image must be JPG, PNG or WebP and 4 MB or smaller.';
+		}
+	}
 	function addRow() {
 		rows = [...rows, { id: '', label: '', stock: 0, original: '' }];
 	}
