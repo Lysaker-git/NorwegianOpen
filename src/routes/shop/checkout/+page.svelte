@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { get } from 'svelte/store';
 	import { enhance } from '$app/forms';
 	import type { ActionData, PageData } from './$types';
 	import { cart, cartTotal, type StockProblem } from '$lib/shop/cart';
@@ -80,7 +81,10 @@
 							min="1"
 							max={Math.min(item.maxQuantity, 20)}
 							value={item.quantity}
-							on:change={(e) => cart.setQuantity(item.variantId, Number(e.currentTarget.value))}
+							on:change={(e) => {
+								cart.setQuantity(item.variantId, Number(e.currentTarget.value));
+								e.currentTarget.value = String(get(cart).find((i) => i.variantId === item.variantId)?.quantity ?? '');
+							}}
 							class="w-16 rounded px-2 py-1 text-gray-900"
 							aria-label="Quantity"
 						/>
