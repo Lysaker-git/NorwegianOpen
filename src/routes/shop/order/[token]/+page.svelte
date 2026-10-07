@@ -26,6 +26,7 @@
 
 <svelte:head>
 	<title>Order {order.order_number} | Norwegian Open Shop</title>
+	<meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 
 <div class="container mx-auto max-w-3xl px-4 py-12 text-white">

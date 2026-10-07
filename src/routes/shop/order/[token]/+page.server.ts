@@ -2,7 +2,8 @@ import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { getOrderByToken, getSettings } from '$lib/shop/db.server';
 
-export const load: PageServerLoad = async ({ params, url }) => {
+export const load: PageServerLoad = async ({ params, url, setHeaders }) => {
+	setHeaders({ 'cache-control': 'private, no-store' });
 	const order = await getOrderByToken(params.token);
 	if (!order) error(404, 'Order not found');
 	const settings = await getSettings();
