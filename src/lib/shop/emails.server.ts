@@ -48,7 +48,7 @@ export async function sendOrderEmail(orderId: string, type: EmailType, origin: s
 	} catch (err) {
 		const message = err instanceof Error ? err.message : String(err);
 		console.error(`[SHOP] Failed to send ${type} email for order ${orderId}:`, message);
-		if (recipient !== null) await safeLog(orderId, type, recipient, false, message);
+		await safeLog(orderId, type, recipient ?? '', false, message);
 		return { success: false, error: message, recipient };
 	}
 }

@@ -77,6 +77,16 @@ describe('sendOrderEmail', () => {
 		expect(mocks.sendMail).not.toHaveBeenCalled();
 	});
 
+	it('logs a failure when loading settings fails', async () => {
+		mocks.getSettings.mockRejectedValue(new Error('db down'));
+		const result = await sendOrderEmail('o1', 'paid', 'https://x.no');
+		expect(result).toEqual({ success: false, error: 'db down', recipient: null });
+		expect(mocks.sendMail).not.toHaveBeenCalled();
+		expect(mocks.logOrderEmail).toHaveBeenCalledWith(
+			expect.objectContaining({ order_id: 'o1', email_type: 'paid', recipient: '', success: false, error: 'db down' })
+		);
+	});
+
 	it('still succeeds if writing the log fails', async () => {
 		mocks.logOrderEmail.mockRejectedValue(new Error('db down'));
 		const result = await sendOrderEmail('o1', 'sent', 'https://x.no');
