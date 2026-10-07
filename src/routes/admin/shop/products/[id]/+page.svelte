@@ -5,20 +5,20 @@
 	export let data: PageData;
 	export let form: ActionData;
 
-	type Row = { id: string; label: string; stock: number | string };
+	type Row = { id: string; label: string; stock: number | string; original: number | string };
 
-	let rows: Row[] = data.product?.product_variants.map((v) => ({ id: v.id, label: v.label, stock: v.stock })) ?? [
-		{ id: '', label: ONE_SIZE_LABEL, stock: 0 }
+	let rows: Row[] = data.product?.product_variants.map((v) => ({ id: v.id, label: v.label, stock: v.stock, original: v.stock })) ?? [
+		{ id: '', label: ONE_SIZE_LABEL, stock: 0, original: '' }
 	];
 	// After a failed save, show what the admin typed.
-	$: if (form?.values) rows = form.values.variants.map((v) => ({ id: v.id ?? '', label: v.label, stock: Number.isNaN(v.stock) ? '' : v.stock }));
+	$: if (form?.values) rows = form.values.variants.map((v) => ({ id: v.id ?? '', label: v.label, stock: Number.isNaN(v.stock) ? '' : v.stock, original: v.original_stock ?? '' }));
 
 	$: values = form?.values;
 	$: errors = form?.errors ?? {};
 	$: ordered = new Set(data.orderedVariantIds);
 
 	function addRow() {
-		rows = [...rows, { id: '', label: '', stock: 0 }];
+		rows = [...rows, { id: '', label: '', stock: 0, original: '' }];
 	}
 	function removeRow(index: number) {
 		rows = rows.filter((_, i) => i !== index);
@@ -33,6 +33,9 @@
 {/if}
 {#if data.saveFailed}
 	<p class="mb-4 rounded border border-red-500 bg-red-500/10 p-3 text-red-200">Saving failed partway. This page shows what is currently saved. Please check and save again.</p>
+{/if}
+{#if data.stockConflict}
+	<p class="mb-4 rounded border border-red-500 bg-red-500/10 p-3 text-red-200">Stock for "{data.stockConflict}" changed since you opened this page (an order or cancellation). This page now shows the current stock. Please re-enter your change and save again.</p>
 {/if}
 {#if data.imageFailed}
 	<p class="mb-4 rounded border border-amber-500 bg-amber-500/10 p-3 text-amber-200">The product was saved, but the image upload failed. Please try uploading it again.</p>
@@ -62,6 +65,7 @@
 		{#each rows as row, i (i)}
 			<div class="mb-2 flex items-center gap-2">
 				<input type="hidden" name="variant_id" value={row.id} />
+				<input type="hidden" name="variant_stock_original" value={row.original} />
 				<input name="variant_label" placeholder="Size, e.g. M" bind:value={row.label} class="w-40 rounded px-3 py-2 text-gray-900" />
 				<input name="variant_stock" type="number" min="0" step="1" bind:value={row.stock} class="w-28 rounded px-3 py-2 text-gray-900" aria-label="Stock" />
 				{#if row.id && ordered.has(row.id)}

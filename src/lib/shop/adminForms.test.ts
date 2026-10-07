@@ -1,13 +1,14 @@
 import { describe, it, expect } from 'vitest';
 import { parseProductForm, parseSettingsForm } from './adminForms';
 
-function productForm(fields: Record<string, string>, variants: [string, string, string][]) {
+function productForm(fields: Record<string, string>, variants: [string, string, string, string?][]) {
 	const f = new FormData();
 	for (const [k, v] of Object.entries(fields)) f.set(k, v);
-	for (const [id, label, stock] of variants) {
+	for (const [id, label, stock, original] of variants) {
 		f.append('variant_id', id);
 		f.append('variant_label', label);
 		f.append('variant_stock', stock);
+		if (original !== undefined) f.append('variant_stock_original', original);
 	}
 	return f;
 }
@@ -16,8 +17,8 @@ describe('parseProductForm', () => {
 	it('parses a valid product with sizes', () => {
 		const { values, errors } = parseProductForm(
 			productForm({ name: ' Tee ', description: 'Nice', price_nok: '300', is_active: 'on' }, [
-				['abc', 'S', '4'],
-				['', 'M', '0']
+				['abc', 'S', '4', '4'],
+				['', 'M', '0', '']
 			])
 		);
 		expect(errors).toEqual({});
@@ -27,10 +28,21 @@ describe('parseProductForm', () => {
 			price_nok: 300,
 			is_active: true,
 			variants: [
-				{ id: 'abc', label: 'S', stock: 4, sort_order: 0 },
-				{ id: null, label: 'M', stock: 0, sort_order: 1 }
+				{ id: 'abc', label: 'S', stock: 4, original_stock: 4, sort_order: 0 },
+				{ id: null, label: 'M', stock: 0, original_stock: null, sort_order: 1 }
 			]
 		});
+	});
+	it('parses the original stock, and null when empty, missing or not an integer', () => {
+		const { values } = parseProductForm(
+			productForm({ name: 'Tee', price_nok: '1' }, [
+				['a', 'S', '3', '7'],
+				['b', 'M', '3', ''],
+				['c', 'L', '3', 'x'],
+				['d', 'XL', '3']
+			])
+		);
+		expect(values.variants.map((v) => v.original_stock)).toEqual([7, null, null, null]);
 	});
 	it('a single row with empty label becomes "One size"', () => {
 		const { values, errors } = parseProductForm(productForm({ name: 'Bag', price_nok: '150' }, [['', '', '10']]));

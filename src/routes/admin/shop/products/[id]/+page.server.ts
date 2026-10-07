@@ -7,7 +7,7 @@ import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_BYTES, PRODUCT_IMAGE_BUCKET } from '$lib
 
 export const load: PageServerLoad = async ({ params, url }) => {
 	if (params.id === 'new') {
-		return { product: null, imageUrl: null, orderedVariantIds: [] as string[], imageFailed: false, saveFailed: false };
+		return { product: null, imageUrl: null, orderedVariantIds: [] as string[], imageFailed: false, saveFailed: false, stockConflict: null as string | null };
 	}
 	const product = await getProduct(params.id);
 	if (!product) error(404, 'Product not found');
@@ -17,7 +17,8 @@ export const load: PageServerLoad = async ({ params, url }) => {
 		imageUrl: productImageUrl(product.image_path),
 		orderedVariantIds,
 		imageFailed: url.searchParams.has('image_failed'),
-		saveFailed: url.searchParams.has('save_failed')
+		saveFailed: url.searchParams.has('save_failed'),
+		stockConflict: url.searchParams.get('stock_conflict')
 	};
 };
 
@@ -108,14 +109,22 @@ export const actions: Actions = {
 				.eq('product_id', productId);
 			if (tmpError) return abortSave(`Temp-rename size "${v.label}"`, tmpError);
 		}
-		// (c) apply final values
+		// (c) apply final values. Stock is only written if the admin changed it, and then only if
+		// it still matches what the editor loaded, so live orders/cancellations are never overwritten.
 		for (const v of kept) {
-			const { error: updError } = await supabaseAdmin
-				.from('product_variants')
-				.update({ label: v.label, stock: v.stock, sort_order: v.sort_order })
-				.eq('id', v.id)
-				.eq('product_id', productId);
+			const stockUnchanged = v.original_stock !== null && v.stock === v.original_stock;
+			const fields = stockUnchanged
+				? { label: v.label, sort_order: v.sort_order }
+				: { label: v.label, stock: v.stock, sort_order: v.sort_order };
+			let query = supabaseAdmin.from('product_variants').update(fields).eq('id', v.id).eq('product_id', productId);
+			const guarded = !stockUnchanged && v.original_stock !== null;
+			if (guarded) query = query.eq('stock', v.original_stock as number);
+			const { data: updated, error: updError } = await query.select('id');
 			if (updError) return abortSave(`Update size "${v.label}"`, updError);
+			if (guarded && (updated?.length ?? 0) === 0) {
+				console.error(`[SHOP ADMIN] Stock conflict for size "${v.label}" of product ${productId}`);
+				redirect(303, `/admin/shop/products/${productId}?stock_conflict=${encodeURIComponent(v.label)}`);
+			}
 		}
 		// (d) insert new sizes
 		for (const v of added) {

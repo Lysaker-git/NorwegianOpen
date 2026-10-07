@@ -4,6 +4,7 @@ export interface ProductFormVariant {
 	id: string | null;
 	label: string;
 	stock: number;
+	original_stock: number | null;
 	sort_order: number;
 }
 
@@ -21,12 +22,14 @@ export function parseProductForm(form: FormData): { values: ProductFormValues; e
 	const ids = form.getAll('variant_id').map((v) => String(v).trim());
 	const labels = form.getAll('variant_label').map((v) => String(v).trim());
 	const stocks = form.getAll('variant_stock').map((v) => String(v).trim());
+	const originals = form.getAll('variant_stock_original').map((v) => String(v).trim());
 	const priceRaw = String(form.get('price_nok') ?? '').trim();
 
 	const variants: ProductFormVariant[] = labels.map((label, i) => ({
 		id: ids[i] ? ids[i] : null,
 		label: label || (labels.length === 1 ? ONE_SIZE_LABEL : ''),
 		stock: stocks[i] === '' ? NaN : Number(stocks[i]),
+		original_stock: originals[i] && Number.isInteger(Number(originals[i])) ? Number(originals[i]) : null,
 		sort_order: i
 	}));
 
