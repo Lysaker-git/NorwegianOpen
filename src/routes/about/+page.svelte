@@ -63,7 +63,7 @@
           <!-- Main text -->
           <div class="bg-gray-800 text-white backdrop-blur-sm rounded-lg p-6 md:p-10 shadow-xl border border-amber-400/30 transform transition-all hover:shadow-amber-400/20">
             <p class="mb-6 text-lg leading-relaxed">
-              From the echoes of Valhalla to the forests of Midgard, the call goes out once more! October 1–4, 2026, warriors of West Coast Swing will once again gather in Norway to dance, duel, and celebrate under the watchful eyes of the Norse gods.
+              From the echoes of Valhalla to the forests of Midgard, the call goes out once more! October 8–10, 2027, warriors of West Coast Swing will once again gather in Norway to dance, duel, and celebrate under the watchful eyes of the Norse gods.
             </p>
 
             <p class="mb-4 text-lg leading-relaxed">

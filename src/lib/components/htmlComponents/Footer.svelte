@@ -20,7 +20,7 @@
             <li><a href="/privacy">Privacy Policy</a></li>
         </ul>
     </div>
-    <p>© 2026 Norwegian Open WCS | All Rights Reserved</p>
+    <p>© 2026 Norwegian Open WCS | All Rights Reserved | <a href="/admin/login" class="text-gray-500">Admin</a></p>
 </footer>
 
 <style>

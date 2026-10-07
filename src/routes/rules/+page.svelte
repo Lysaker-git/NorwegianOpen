@@ -1,6 +1,6 @@
 <script lang="ts">
     let eventName = "NORWEGIAN OPEN 2026"
-    const lastUpdated = "29/09/2026"
+    const lastUpdated = "30/09/2026"
     const wsdcRulesUrl = "https://www.worldsdc.com/wp-content/uploads/2026/03/Revised-WSDC-Registry-Event-Rules-Updated-Jan172026-V2026.1B.pdf"
   </script>
 
@@ -49,7 +49,7 @@
               <li>Which contests give WSDC points, and the definition of Sophisticated (35+).</li>
               <li>How divisions with too few entries are combined or cancelled.</li>
               <li>How contests are scored (callbacks in prelims, relative placement in finals) and how results are published.</li>
-              <li>Lifts are now only allowed in Open Strictly Swing.</li>
+              <li>No lifts or aerials in any Jack &amp; Jill or Strictly Swing division.</li>
             </ul>
           </div>
 
@@ -65,7 +65,7 @@
               </h2>
               <p class="mb-4">To participate in any competition at {eventName}, all competitors must:</p>
               <ul class="list-disc pl-6 space-y-2 mb-4">
-                <li>Hold a valid event pass that permits competition entry (Full Pass or Party Pass).</li>
+                <li>Hold a valid event pass that permits competition entry (Full Pass, Party Pass, or Day Pass).</li>
                 <li>Register for each competition before the announced deadline. Competitions are registered and run through <a href="https://scoring.dance" target="_blank" rel="noopener noreferrer" class="link-style">Scoring.dance</a>; registration may also be completed at the Registration Desk while spots remain.</li>
                 <li>Pay all required entry fees associated with their chosen competitions.</li>
                 <li>Pick up their competitor bib number during the designated times and wear it visibly during all preliminary, semi-final, and final rounds. Bibs are recommended but may not be mandatory for spotlighted finals.</li>
@@ -169,7 +169,7 @@
               </h2>
               <p class="mb-4">Petitions can only move you one division, up or down.</p>
               <p class="mb-4">
-                  <strong class="font-semibold">Petition Down (primary role only):</strong> Submit a petition to the Chief Judge before the contest, as early as possible (
+                  <strong class="font-semibold">Petition Down (primary role only):</strong> Submit a petition to the Chief Judge at least <strong>two weeks</strong> before the event (
                       <a href="https://www.worldsdc.com/wp-content/uploads/2023/12/WSDC-Jack-and-Jill-petition_vF_Oct-2023.pdf" target="_blank" rel="noopener noreferrer" class="link-style">Petition down Form</a>
                   ). The Chief Judge, or people they appoint, will review your WSDC record and approve or deny it. Petitions down apply to this event only and cannot be transferred to other events.
               </p>
@@ -210,11 +210,11 @@
               <p class="mb-4">Competitors are expected to uphold a high standard of conduct and personal responsibility.</p>
               <ul class="list-disc pl-6 space-y-2 mb-4">
                 <li><strong class="font-semibold">Know the Rules:</strong> Familiarize yourself with all competition rules and schedules. Competitors who do not follow the WSDC Registry Rules will not receive WSDC points. Ask the Chief Judge or event staff if anything is unclear.</li>
-                <li><strong class="font-semibold">Be Prepared:</strong> Arrive at the ballroom 15–20 minutes before your scheduled competition and marshalling times. Check the <a href="/schedule" class="link-style">Norwegian Open Schedule</a> and the schedule posted at the event for updates.</li>
+                <li><strong class="font-semibold">Be Prepared:</strong> Arrive at the ballroom at least 15 minutes before your scheduled competition and marshalling times. Check the <a href="/schedule" class="link-style">Norwegian Open Schedule</a> and the schedule posted at the event for updates.</li>
                 <li><strong class="font-semibold">Marshalling:</strong> Listen for marshalling calls and proceed promptly to the designated area. Failure to be present when your heat or final is called may result in disqualification. Alternates may be called for finals if registered competitors are absent.</li>
                 <li><strong class="font-semibold">Sportsmanship:</strong> Demonstrate respect towards partners, fellow competitors, judges, staff, and spectators at all times, both on and off the floor. Poor sportsmanship or disrespectful behavior may lead to penalties or disqualification.</li>
                 <li><strong class="font-semibold">Communication:</strong> Address concerns or questions through official channels, such as speaking privately with the Chief Judge or Ida Marie Strand, our Event Director. Directly confronting, arguing with, or harassing judges or officials is prohibited and may result in disqualification and future bans.</li>
-                <li><strong class="font-semibold">Withdrawals:</strong> Competition entry fees are non-refundable. If you must withdraw, please notify competition staff as soon as possible.</li>
+                <li><strong class="font-semibold">Withdrawals:</strong> If you withdraw after registration for that competition closes, entry fees are not refunded. Please notify competition staff as soon as possible.</li>
               </ul>
             </section>
 
@@ -222,15 +222,14 @@
                 <h2 class="mt-10 mb-5 pb-2 border-b border-gray-300 text-xl sm:text-2xl font-medium text-white">
                   VII. Dance Requirements, Formats & Judging
                 </h2>
-                <p class="mb-4"><strong class="font-semibold">Swing Content:</strong> Competitions are focused on swing dancing, and judges expect recognizable swing content throughout. Jack &amp; Jill divisions primarily feature West Coast Swing.</p>
+                <p class="mb-4"><strong class="font-semibold">Swing Content:</strong> Competitions are focused on swing dancing, and judges expect recognizable swing content throughout. Judges expect recognizable West Coast Swing in Jack &amp; Jill. Strictly Swing may include any swing style that suits the music.</p>
                 <p class="mb-4"><strong class="font-semibold">Lead/Follow:</strong> Jack &amp; Jill and Strictly Swing competitions emphasize spontaneous lead/follow dancing. Pre-choreographed routines or significant amounts of choreographed sequences are not permitted.</p>
                 <p class="mb-4"><strong class="font-semibold">Connection:</strong> Maintain appropriate physical dance connection with your partner throughout the dance, except during spins, turns, short breakaways, etc., that are natural parts of the dance.</p>
                 <div class="mb-4">
                   <strong class="font-semibold block mb-1">Partner Weight Support & Lifts:</strong>
                   <ul class="list-disc pl-6 space-y-2">
                       <li>"On the ground" support moves (drops, slides, leans where connection to the floor is maintained) are permitted if executed safely and appropriately for a social dance context.</li>
-                      <li>Lifts, aerials, and acrobatic moves where both of a partner's feet leave the floor are <strong class="font-bold text-red-600 uppercase">NOT ALLOWED</strong> in all Jack &amp; Jill contests (including All-Star and Sophisticated) and in Novice and Intermediate Strictly Swing.</li>
-                      <li><em class="font-medium">Exception:</em> Limited lifts (below the shoulder) may be permitted <em class="font-medium">only</em> in Open Strictly Swing.</li>
+                      <li>Lifts, aerials, and acrobatic moves where both of a partner's feet leave the floor are <strong class="font-bold text-red-600 uppercase">NOT ALLOWED</strong> in any Jack &amp; Jill or Strictly Swing division.</li>
                       <li>Any move deemed unsafe by the judges may result in a penalty. When in doubt, prioritize safety and leave it out.</li>
                   </ul>
                 </div>
@@ -297,7 +296,7 @@
               <h2 class="mt-10 mb-5 pb-2 border-b border-gray-300 text-xl sm:text-2xl font-medium text-white">
                 X. Organizer Rights & Final Authority
               </h2>
-              <p class="mb-4">The {eventName} Organizers (Norvind WCS) and the Chief Judge may adjust schedules and formats, and combine or cancel divisions as described in Section V. Any change to these rules will be announced on this page and at the event, and will follow the WSDC Registry Event Rules.</p>
+              <p class="mb-4">The {eventName} organizer, Ida Marie Strand, and the Chief Judge may adjust schedules and formats, and combine or cancel divisions as described in Section V. Any change to these rules will be announced on this page and at the event, and will follow the WSDC Registry Event Rules.</p>
               <p class="mb-4">Decisions made by the Chief Judge and event officials on rule interpretations, eligibility, and placements are final and binding.</p>
             </section>
 

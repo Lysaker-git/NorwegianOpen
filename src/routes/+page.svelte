@@ -79,7 +79,7 @@ function startPreloading() {
 </script>
 
 <svelte:head>
-	<title>Norwegian Open WCS 2026</title>
+	<title>Norwegian Open WCS 2027</title>
 </svelte:head>
 
 <svelte:window on:keydown={onWindowKeydown} />
@@ -96,7 +96,7 @@ function startPreloading() {
 					
 			        {#if today <= regOpenDate}
 					<img class="cInvert max-h-100 mx-auto" src={DarkLogo} alt="Norwegian Open WCS 2026 Logo" />
-					<h2 class="mb-10 text-2xl font-bold md:text-3xl lg:text-4xl text-white">Save the dates 1. of October - 5. of October 2026</h2>
+					<h2 class="mb-10 text-2xl font-bold md:text-3xl lg:text-4xl text-white">Save the dates 8. of October - 10. of October 2027</h2>
 
 					<div class="pt-4">
 						<RegistrationCountdown />
@@ -107,20 +107,21 @@ function startPreloading() {
 						 Registration is now open!
 					</h2>
 					<img class="cInvert max-h-100 mx-auto" src={DarkLogo} alt="Norwegian Open WCS 2026 Logo" />
-					<h2 class="mb-10 text-2xl font-bold md:text-3xl lg:text-4xl text-white">Save the dates 1. of October - 5. of October</h2>
+feature/shop
+					<h2 class="mb-10 text-2xl font-bold md:text-3xl lg:text-4xl text-white">Save the dates 8. of October - 10. of October 2027</h2>
 					<a
 						href="/register"
 						class="mt-10 rounded-md bg-[#A09992] px-6 py-3 text-lg font-semibold text-black hover:bg-[#D4CABC]"
 						>Register</a>
 					{:else}
 					<h2 class="pt-4 mb-6 text-2xl font-bold md:text-3xl lg:text-4xl text-white">
-						Thank you for joining Norwegian Open WCS 2026!
+						Thank you for joining Norwegian Open WCS 2027!
 					</h2>
 					<p class="mb-6 text-gray-300">
 						Thank you for being part of this year's event — we hope you had a wonderful time. See you next year!
 					</p>
 					<img class="cInvert max-h-100 mx-auto" src={DarkLogo} alt="Norwegian Open WCS 2026 Logo" />
-					<h2 class="mb-10 text-2xl font-bold md:text-3xl lg:text-4xl text-white">Save the dates 1. of October - 5. of October</h2>
+					<h2 class="mb-10 text-2xl font-bold md:text-3xl lg:text-4xl text-white">Save the dates 8. of October - 10. of October 2027</h2>
 					{/if}
 				</div>
 			</div>	
