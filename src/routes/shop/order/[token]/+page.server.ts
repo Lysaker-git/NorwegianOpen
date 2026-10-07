@@ -10,6 +10,7 @@ export const load: PageServerLoad = async ({ params, url }) => {
 		order,
 		vippsNumber: settings.vipps_number,
 		isNew: url.searchParams.has('new'),
+		mailFailed: url.searchParams.get('mail') === '0',
 		session: null // App.PageData requires session; public shop pages never expose it.
 	};
 };

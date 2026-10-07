@@ -30,7 +30,13 @@
 
 <div class="container mx-auto max-w-3xl px-4 py-12 text-white">
 	{#if data.isNew}
-		<p class="mb-6 rounded border border-green-400 bg-green-400/10 p-4">Order placed! We've emailed you the details.</p>
+		<p class="mb-6 rounded border border-green-400 bg-green-400/10 p-4">
+			{#if data.mailFailed}
+				Order placed! We couldn't send the confirmation email, so please save the link to this page. It shows your payment details and order status.
+			{:else}
+				Order placed! We've emailed you the details.
+			{/if}
+		</p>
 	{/if}
 
 	<h1 class="mb-2 text-3xl font-bold">Order {order.order_number}</h1>

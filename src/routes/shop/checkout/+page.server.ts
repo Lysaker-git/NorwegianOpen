@@ -68,7 +68,7 @@ export const actions: Actions = {
 
 		const row = (Array.isArray(data) ? data[0] : data) as { out_order_id: string; out_access_token: string };
 		// The order stands even if the email fails; the order page shows the payment details.
-		await sendOrderEmail(row.out_order_id, 'confirmation', url.origin);
-		redirect(303, `/shop/order/${row.out_access_token}?new=1`);
+		const mail = await sendOrderEmail(row.out_order_id, 'confirmation', url.origin);
+		redirect(303, `/shop/order/${row.out_access_token}?new=1${mail.success ? '' : '&mail=0'}`);
 	}
 };
