@@ -100,8 +100,29 @@ export const actions: Actions = {
 		const kept = values.variants.filter((v): v is typeof v & { id: string } => !!v.id);
 		const added = values.variants.filter((v) => !v.id);
 
-		// (b) move kept sizes to temporary labels so renames/swaps can't hit unique (product_id, label)
+		// (b) write changed stock first, only if it still matches what the editor loaded, so live
+		// orders/cancellations are never overwritten. Runs before any label change, so a conflict
+		// leaves no half-renamed sizes behind.
 		for (const v of kept) {
+			if (v.original_stock === null || v.stock === v.original_stock) continue;
+			const { data: updated, error: stockError } = await supabaseAdmin
+				.from('product_variants')
+				.update({ stock: v.stock })
+				.eq('id', v.id)
+				.eq('product_id', productId)
+				.eq('stock', v.original_stock)
+				.select('id');
+			if (stockError) return abortSave(`Update stock for size "${v.label}"`, stockError);
+			if ((updated?.length ?? 0) === 0) {
+				console.error(`[SHOP ADMIN] Stock conflict for size "${v.label}" of product ${productId}`);
+				redirect(303, `/admin/shop/products/${productId}?stock_conflict=${encodeURIComponent(v.label)}`);
+			}
+		}
+
+		// (c) move renamed sizes to temporary labels so renames/swaps can't hit unique (product_id, label)
+		const currentLabels = new Map((existing?.product_variants ?? []).map((v) => [v.id, v.label]));
+		const renamed = kept.filter((v) => currentLabels.get(v.id) !== v.label);
+		for (const v of renamed) {
 			const { error: tmpError } = await supabaseAdmin
 				.from('product_variants')
 				.update({ label: `__tmp_${v.id}` })
@@ -109,24 +130,22 @@ export const actions: Actions = {
 				.eq('product_id', productId);
 			if (tmpError) return abortSave(`Temp-rename size "${v.label}"`, tmpError);
 		}
-		// (c) apply final values. Stock is only written if the admin changed it, and then only if
-		// it still matches what the editor loaded, so live orders/cancellations are never overwritten.
+
+		// (d) apply final labels and order. Stock was handled in (b), except for rows without a
+		// loaded original value, which are written as submitted.
 		for (const v of kept) {
-			const stockUnchanged = v.original_stock !== null && v.stock === v.original_stock;
-			const fields = stockUnchanged
-				? { label: v.label, sort_order: v.sort_order }
-				: { label: v.label, stock: v.stock, sort_order: v.sort_order };
-			let query = supabaseAdmin.from('product_variants').update(fields).eq('id', v.id).eq('product_id', productId);
-			const guarded = !stockUnchanged && v.original_stock !== null;
-			if (guarded) query = query.eq('stock', v.original_stock as number);
-			const { data: updated, error: updError } = await query.select('id');
+			const fields =
+				v.original_stock === null
+					? { label: v.label, stock: v.stock, sort_order: v.sort_order }
+					: { label: v.label, sort_order: v.sort_order };
+			const { error: updError } = await supabaseAdmin
+				.from('product_variants')
+				.update(fields)
+				.eq('id', v.id)
+				.eq('product_id', productId);
 			if (updError) return abortSave(`Update size "${v.label}"`, updError);
-			if (guarded && (updated?.length ?? 0) === 0) {
-				console.error(`[SHOP ADMIN] Stock conflict for size "${v.label}" of product ${productId}`);
-				redirect(303, `/admin/shop/products/${productId}?stock_conflict=${encodeURIComponent(v.label)}`);
-			}
 		}
-		// (d) insert new sizes
+		// (e) insert new sizes
 		for (const v of added) {
 			const { error: insError } = await supabaseAdmin
 				.from('product_variants')

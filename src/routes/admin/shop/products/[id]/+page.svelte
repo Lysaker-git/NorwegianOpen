@@ -96,7 +96,8 @@
 				<label class="flex items-center gap-2 text-sm"><input type="checkbox" name="remove_image" /> Remove image</label>
 			</div>
 		{/if}
-		<input type="file" name="image" accept="image/jpeg,image/png,image/webp" class="mt-1 block text-sm" />
+		<input type="file" name="image" accept="image/jpeg,image/png,image/webp" class="mt-1 block text-sm" on:change={(e) => checkImage(e.currentTarget)} />
+		{#if imageClientError}<span class="block text-sm text-red-300">{imageClientError}</span>{/if}
 		{#if errors.image}<span class="text-sm text-red-300">{errors.image}</span>{/if}
 	</div>
 

@@ -6,17 +6,17 @@ import { pros } from '$lib/components/objects/pros';
 
 import type { PriceRow } from '$lib/components/interface.ts';
 
-export const REG_OPEN_STRING = '2026-02-24';
-export const YMIR_DEADLINE_STRING = '2026-04-15'; 
-export const MIDGARD_DEADLINE_STRING = '2026-05-31';
+export const REG_OPEN_STRING = '2027-02-24';
+export const YMIR_DEADLINE_STRING = '2027-04-15';
+export const MIDGARD_DEADLINE_STRING = '2027-05-31';
 
 export const ymirDeadline = new Date(YMIR_DEADLINE_STRING + 'T23:59:59');
 export const midgardDeadline = new Date(MIDGARD_DEADLINE_STRING + 'T23:59:59');
 
-export const navEndDate = new Date('2026-10-05T23:59:59');
+export const navEndDate = new Date('2027-10-10T23:59:59');
 export const today = new Date();
 export const regOpenDate = new Date(REG_OPEN_STRING + 'T20:00:00');
-export const eventDate = new Date('2026-10-01T00:00:00');
+export const eventDate = new Date('2027-10-08T00:00:00');
 
 export const proImages: Record<string, string> = {
     "OLIVIER & VIRGINIE MASSART": olivierAndVirginie,
