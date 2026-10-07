@@ -1,0 +1,131 @@
+import { error, fail, redirect } from '@sveltejs/kit';
+import type { Actions, PageServerLoad } from './$types';
+import { supabaseAdmin } from '$lib/supabaseAdminClient';
+import { getOrderedVariantIds, getProduct, productImageUrl } from '$lib/shop/db.server';
+import { parseProductForm, type ProductFormErrors } from '$lib/shop/adminForms';
+import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_BYTES, PRODUCT_IMAGE_BUCKET } from '$lib/shop/config';
+
+export const load: PageServerLoad = async ({ params, url }) => {
+	if (params.id === 'new') {
+		return { product: null, imageUrl: null, orderedVariantIds: [] as string[], imageFailed: false };
+	}
+	const product = await getProduct(params.id);
+	if (!product) error(404, 'Product not found');
+	const orderedVariantIds = await getOrderedVariantIds(product.product_variants.map((v) => v.id));
+	return {
+		product,
+		imageUrl: productImageUrl(product.image_path),
+		orderedVariantIds,
+		imageFailed: url.searchParams.has('image_failed')
+	};
+};
+
+function imageError(file: File): string | null {
+	if (!ALLOWED_IMAGE_TYPES[file.type]) return 'Image must be JPG, PNG or WebP.';
+	if (file.size > MAX_IMAGE_BYTES) return 'Image must be 4 MB or smaller.';
+	return null;
+}
+
+export const actions: Actions = {
+	save: async ({ params, request }) => {
+		const form = await request.formData();
+		const { values, errors } = parseProductForm(form);
+		const image = form.get('image');
+		const file = image instanceof File && image.size > 0 ? image : null;
+		const imgErr = file ? imageError(file) : null;
+		if (imgErr) errors.image = imgErr;
+		if (Object.keys(errors).length > 0) return fail(400, { errors, values });
+
+		const isNew = params.id === 'new';
+		const existing = isNew ? null : await getProduct(params.id);
+		if (!isNew && !existing) error(404, 'Product not found');
+
+		// Refuse to remove sizes that have orders, before changing anything.
+		const keptIds = new Set(values.variants.map((v) => v.id).filter((id): id is string => !!id));
+		const removed = (existing?.product_variants ?? []).filter((v) => !keptIds.has(v.id));
+		const orderedRemoved = new Set(await getOrderedVariantIds(removed.map((v) => v.id)));
+		const blocked = removed.filter((v) => orderedRemoved.has(v.id));
+		if (blocked.length > 0) {
+			return fail(400, {
+				errors: <ProductFormErrors>{
+					variants: `These sizes have orders and can't be removed: ${blocked.map((v) => v.label).join(', ')}. Set their stock to 0 instead.`
+				},
+				values
+			});
+		}
+
+		const productFields = {
+			name: values.name,
+			description: values.description,
+			price_nok: values.price_nok,
+			is_active: values.is_active
+		};
+
+		let productId = params.id;
+		if (isNew) {
+			const { data, error: insertError } = await supabaseAdmin.from('products').insert(productFields).select('id').single();
+			if (insertError || !data) {
+				console.error('[SHOP ADMIN] Insert product failed:', insertError);
+				return fail(500, { message: 'Could not save the product.', values });
+			}
+			productId = data.id;
+		} else {
+			const { error: updateError } = await supabaseAdmin.from('products').update(productFields).eq('id', productId);
+			if (updateError) {
+				console.error('[SHOP ADMIN] Update product failed:', updateError);
+				return fail(500, { message: 'Could not save the product.', values });
+			}
+		}
+
+		if (removed.length > 0) {
+			const { error: deleteError } = await supabaseAdmin
+				.from('product_variants')
+				.delete()
+				.in('id', removed.map((v) => v.id));
+			if (deleteError) return fail(500, { message: `Could not remove sizes: ${deleteError.message}`, values });
+		}
+
+		for (const v of values.variants) {
+			const row = { label: v.label, stock: v.stock, sort_order: v.sort_order };
+			const { error: variantError } = v.id
+				? await supabaseAdmin.from('product_variants').update(row).eq('id', v.id).eq('product_id', productId)
+				: await supabaseAdmin.from('product_variants').insert({ ...row, product_id: productId });
+			if (variantError) {
+				return fail(500, { message: `Could not save size "${v.label}": ${variantError.message}`, values });
+			}
+		}
+
+		const removeImage = form.get('remove_image') === 'on';
+		if (file || removeImage) {
+			const oldPath = existing?.image_path ?? null;
+			let newPath: string | null = null;
+			if (file) {
+				newPath = `products/${productId}-${Date.now()}.${ALLOWED_IMAGE_TYPES[file.type]}`;
+				const { error: uploadError } = await supabaseAdmin.storage
+					.from(PRODUCT_IMAGE_BUCKET)
+					.upload(newPath, file, { contentType: file.type });
+				if (uploadError) {
+					console.error('[SHOP ADMIN] Image upload failed:', uploadError);
+					redirect(303, `/admin/shop/products/${productId}?image_failed=1`);
+				}
+			}
+			await supabaseAdmin.from('products').update({ image_path: newPath }).eq('id', productId);
+			if (oldPath) await supabaseAdmin.storage.from(PRODUCT_IMAGE_BUCKET).remove([oldPath]);
+		}
+
+		redirect(303, '/admin/shop/products?saved=1');
+	},
+
+	delete: async ({ params }) => {
+		const product = await getProduct(params.id);
+		if (!product) error(404, 'Product not found');
+		const ordered = await getOrderedVariantIds(product.product_variants.map((v) => v.id));
+		if (ordered.length > 0) {
+			return fail(400, { message: 'This product has orders and cannot be deleted. Untick "Visible in shop" to hide it instead.' });
+		}
+		const { error: deleteError } = await supabaseAdmin.from('products').delete().eq('id', product.id);
+		if (deleteError) return fail(500, { message: 'Could not delete the product.' });
+		if (product.image_path) await supabaseAdmin.storage.from(PRODUCT_IMAGE_BUCKET).remove([product.image_path]);
+		redirect(303, '/admin/shop/products?deleted=1');
+	}
+};
