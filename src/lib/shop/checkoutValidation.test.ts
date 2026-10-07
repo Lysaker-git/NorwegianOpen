@@ -25,6 +25,12 @@ describe('parseCheckoutForm', () => {
 		expect(input.delivery_method).toBe('pickup');
 		expect(input.country).toBe('Norway');
 	});
+	it('rejects email address lists and display names, accepts a plain address', () => {
+		for (const email of ['a@x.no,b@y.no', 'a@x.no;b@y.no', 'Name <a@x.no>', 'a b@x.no']) {
+			expect(parseCheckoutForm(form({ ...valid, email })).errors.email).toBeDefined();
+		}
+		expect(parseCheckoutForm(form({ ...valid, email: 'kari.nordmann+shop@example.co.uk' })).errors.email).toBeUndefined();
+	});
 	it('requires name, valid email and phone', () => {
 		const { errors } = parseCheckoutForm(form({ ...valid, customer_name: ' ', email: 'nope', phone: '12' }));
 		expect(Object.keys(errors).sort()).toEqual(['customer_name', 'email', 'phone']);

@@ -71,7 +71,7 @@ export function parseCheckoutForm(form: FormData): { input: CheckoutInput; error
 
 	const errors: CheckoutErrors = {};
 	if (!input.customer_name) errors.customer_name = 'Please enter your name.';
-	if (!/^\S+@\S+\.\S+$/.test(input.email)) errors.email = 'Please enter a valid email address.';
+	if (!/^[^\s@,;<>"()]+@[^\s@,;<>"()]+\.[^\s@,;<>"()]+$/.test(input.email)) errors.email = 'Please enter a valid email address.';
 	if (input.phone.replace(/\D/g, '').length < 8) errors.phone = 'Please enter a valid phone number.';
 	if (delivery_method === 'shipping') {
 		if (!input.address_line) errors.address_line = 'Please enter your street address.';
