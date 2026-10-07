@@ -107,6 +107,7 @@ function startPreloading() {
 						 Registration is now open!
 					</h2>
 					<img class="cInvert max-h-100 mx-auto" src={DarkLogo} alt="Norwegian Open WCS 2026 Logo" />
+feature/shop
 					<h2 class="mb-10 text-2xl font-bold md:text-3xl lg:text-4xl text-white">Save the dates 8. of October - 10. of October 2027</h2>
 					<a
 						href="/register"
