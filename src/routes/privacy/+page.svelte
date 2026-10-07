@@ -1,6 +1,6 @@
 <script lang="ts">
     let eventName = "NORWEGIAN OPEN 2026"
-    const lastUpdated = "30/09/2026"
+    const lastUpdated = "07/10/2026"
     const contactEmail = "norwegianopenwcs@gmail.com"
 </script>
 
@@ -26,8 +26,8 @@
 
       <!-- Update notice -->
       <div class="mb-8 rounded-lg border-2 border-amber-400 bg-amber-400/10 p-5 text-white">
-        <p class="font-semibold text-amber-400 mb-1">New {lastUpdated}</p>
-        <p class="text-sm">This Privacy Policy is new. Registration data is handled on DancePoint; this page explains what that means for you.</p>
+        <p class="font-semibold text-amber-400 mb-1">Updated {lastUpdated}</p>
+        <p class="text-sm">Updated: we now run a merch shop on this website. See "Shop orders" below for how we handle order details.</p>
       </div>
 
       <!-- Main text -->
@@ -42,7 +42,18 @@
 
         <section class="mb-8">
           <h2 class="section-heading">This website</h2>
-          <p class="mb-2">This website does not handle registration and does not store registration data. The only personal data it receives is what you send through the <a href="/contact" class="link-style">contact form</a> (your name, email address, and message). That message is delivered to our email inbox (Google Gmail) and is only used to answer you.</p>
+          <p class="mb-2">This website does not handle event registration. It receives personal data in two places: the <a href="/shop" class="link-style">shop</a> (see "Shop orders" below) and the <a href="/contact" class="link-style">contact form</a> (your name, email address, and message). Contact form messages are delivered to our email inbox (Google Gmail) and only used to answer you.</p>
+        </section>
+
+        <section class="mb-8">
+          <h2 class="section-heading">Shop orders</h2>
+          <ul class="list-disc pl-6 space-y-2">
+            <li><strong>What we collect:</strong> your name, email address, phone number, delivery choice, postal address (only if you choose shipping), the items you order, and your order and payment status.</li>
+            <li><strong>Why:</strong> to process, deliver and follow up your order, and to email you updates about it (contract, GDPR Art. 6(1)(b)). Payment is made with Vipps directly between you and us; we do not receive or store any card or bank details.</li>
+            <li><strong>Where it is stored:</strong> in our database at Supabase. Order emails are sent through Google Gmail, with a copy to our event inbox. These providers only process the data on our behalf; where data is processed outside the EEA, it is protected by the EU Standard Contractual Clauses.</li>
+            <li><strong>How long:</strong> order records are kept for 5 years, as required by the Norwegian Bookkeeping Act (bokføringsloven). After that they are deleted.</li>
+            <li><strong>Your order page:</strong> each order has a private link that only you receive by email. Anyone with that link can see the order, so please don't share it.</li>
+          </ul>
         </section>
 
         <section class="mb-8">
@@ -69,7 +80,7 @@
             <li>have your data deleted, unless we must keep it by law;</li>
             <li>object to or restrict how we use it, including photos and video used for promotion.</li>
           </ul>
-          <p class="mb-2">Email <a href="mailto:{contactEmail}" class="link-style">{contactEmail}</a> to use any of these rights. For registration data, you can also manage your account on DancePoint.</p>
+          <p class="mb-2">Email <a href="mailto:{contactEmail}" class="link-style">{contactEmail}</a> to use any of these rights. For registration data, you can also manage your account on DancePoint. For shop orders, email us with your order number.</p>
           <p class="mb-2">Results already reported to the WSDC must be corrected or removed through the WSDC directly.</p>
           <p class="mb-2">If you think we handle your data wrongly, you can complain to the Norwegian Data Protection Authority, <a href="https://www.datatilsynet.no" target="_blank" rel="noopener noreferrer" class="link-style">Datatilsynet</a>.</p>
         </section>
