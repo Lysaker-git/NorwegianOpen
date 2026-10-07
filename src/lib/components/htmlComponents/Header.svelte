@@ -135,6 +135,9 @@
                 {/if}
             </li>
             <li>
+                <a href="/shop" class="hover:text-amber-200 transition-colors duration-300 font-bold">Shop</a>
+            </li>
+            <li>
                 <a href="/contact" class="hover:text-amber-200 transition-colors duration-300 font-bold">Contact Us</a>
             </li>
         </ul>
@@ -201,6 +204,9 @@
                     <!-- <li><a href="/register/hotel" on:click={() => { handleNavClick(); registerDropdownOpen = false; }} class="text-xl py-2 hover:text-amber-200 transition-colors duration-300">Book Hotel</a></li> -->
                 </ul>
                 {/if}
+            </li>
+            <li class="mt-4">
+                <a href="/shop" on:click={handleNavClick} class="text-3xl font-bold hover:text-amber-200 transition-colors duration-300">Shop</a>
             </li>
             <li class="mt-4">
                 <a href="/contact" on:click={handleNavClick} class="text-3xl font-bold hover:text-amber-200 transition-colors duration-300">Contact Us</a>
