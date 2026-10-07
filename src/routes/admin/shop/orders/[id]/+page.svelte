@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 	import type { ActionData, PageData } from './$types';
 	import { EMAIL_TYPE_LABELS, STATUS_LABELS, confirmMessage } from '$lib/shop/orderStatus';
 	import { formatNok, itemDisplayName } from '$lib/shop/format';
@@ -42,8 +43,9 @@
 						return;
 					}
 					busy = true;
-					return async ({ update }) => {
+					return async ({ result, update }) => {
 						await update();
+						if (result.type === 'failure') await invalidateAll();
 						busy = false;
 					};
 				}}
