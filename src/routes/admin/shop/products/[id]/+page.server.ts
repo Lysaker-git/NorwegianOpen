@@ -7,7 +7,7 @@ import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_BYTES, PRODUCT_IMAGE_BUCKET } from '$lib
 
 export const load: PageServerLoad = async ({ params, url }) => {
 	if (params.id === 'new') {
-		return { product: null, imageUrl: null, orderedVariantIds: [] as string[], imageFailed: false };
+		return { product: null, imageUrl: null, orderedVariantIds: [] as string[], imageFailed: false, saveFailed: false };
 	}
 	const product = await getProduct(params.id);
 	if (!product) error(404, 'Product not found');
@@ -16,7 +16,8 @@ export const load: PageServerLoad = async ({ params, url }) => {
 		product,
 		imageUrl: productImageUrl(product.image_path),
 		orderedVariantIds,
-		imageFailed: url.searchParams.has('image_failed')
+		imageFailed: url.searchParams.has('image_failed'),
+		saveFailed: url.searchParams.has('save_failed')
 	};
 };
 
@@ -62,37 +63,71 @@ export const actions: Actions = {
 		};
 
 		let productId = params.id;
-		if (isNew) {
-			const { data, error: insertError } = await supabaseAdmin.from('products').insert(productFields).select('id').single();
-			if (insertError || !data) {
-				console.error('[SHOP ADMIN] Insert product failed:', insertError);
-				return fail(500, { message: 'Could not save the product.', values });
+		// New products start hidden, so a half-saved product is never visible in the shop.
+		const abortSave = async (what: string, err: unknown) => {
+			console.error(`[SHOP ADMIN] ${what} failed:`, err);
+			if (isNew && productId !== 'new') {
+				const { error: cleanupError } = await supabaseAdmin.from('products').delete().eq('id', productId);
+				if (cleanupError) console.error('[SHOP ADMIN] Cleanup of new product failed:', cleanupError);
 			}
+			if (!isNew) redirect(303, `/admin/shop/products/${productId}?save_failed=1`);
+			return fail(500, { message: 'Could not save the product.', values });
+		};
+
+		if (isNew) {
+			const { data, error: insertError } = await supabaseAdmin
+				.from('products')
+				.insert({ ...productFields, is_active: false })
+				.select('id')
+				.single();
+			if (insertError || !data) return abortSave('Insert product', insertError);
 			productId = data.id;
 		} else {
 			const { error: updateError } = await supabaseAdmin.from('products').update(productFields).eq('id', productId);
-			if (updateError) {
-				console.error('[SHOP ADMIN] Update product failed:', updateError);
-				return fail(500, { message: 'Could not save the product.', values });
-			}
+			if (updateError) return abortSave('Update product', updateError);
 		}
 
+		// (a) delete removed sizes
 		if (removed.length > 0) {
 			const { error: deleteError } = await supabaseAdmin
 				.from('product_variants')
 				.delete()
 				.in('id', removed.map((v) => v.id));
-			if (deleteError) return fail(500, { message: `Could not remove sizes: ${deleteError.message}`, values });
+			if (deleteError) return abortSave('Remove sizes', deleteError);
 		}
 
-		for (const v of values.variants) {
-			const row = { label: v.label, stock: v.stock, sort_order: v.sort_order };
-			const { error: variantError } = v.id
-				? await supabaseAdmin.from('product_variants').update(row).eq('id', v.id).eq('product_id', productId)
-				: await supabaseAdmin.from('product_variants').insert({ ...row, product_id: productId });
-			if (variantError) {
-				return fail(500, { message: `Could not save size "${v.label}": ${variantError.message}`, values });
-			}
+		const kept = values.variants.filter((v): v is typeof v & { id: string } => !!v.id);
+		const added = values.variants.filter((v) => !v.id);
+
+		// (b) move kept sizes to temporary labels so renames/swaps can't hit unique (product_id, label)
+		for (const v of kept) {
+			const { error: tmpError } = await supabaseAdmin
+				.from('product_variants')
+				.update({ label: `__tmp_${v.id}` })
+				.eq('id', v.id)
+				.eq('product_id', productId);
+			if (tmpError) return abortSave(`Temp-rename size "${v.label}"`, tmpError);
+		}
+		// (c) apply final values
+		for (const v of kept) {
+			const { error: updError } = await supabaseAdmin
+				.from('product_variants')
+				.update({ label: v.label, stock: v.stock, sort_order: v.sort_order })
+				.eq('id', v.id)
+				.eq('product_id', productId);
+			if (updError) return abortSave(`Update size "${v.label}"`, updError);
+		}
+		// (d) insert new sizes
+		for (const v of added) {
+			const { error: insError } = await supabaseAdmin
+				.from('product_variants')
+				.insert({ label: v.label, stock: v.stock, sort_order: v.sort_order, product_id: productId });
+			if (insError) return abortSave(`Insert size "${v.label}"`, insError);
+		}
+
+		if (isNew && values.is_active) {
+			const { error: activateError } = await supabaseAdmin.from('products').update({ is_active: true }).eq('id', productId);
+			if (activateError) return abortSave('Activate product', activateError);
 		}
 
 		const removeImage = form.get('remove_image') === 'on';
@@ -109,8 +144,19 @@ export const actions: Actions = {
 					redirect(303, `/admin/shop/products/${productId}?image_failed=1`);
 				}
 			}
-			await supabaseAdmin.from('products').update({ image_path: newPath }).eq('id', productId);
-			if (oldPath) await supabaseAdmin.storage.from(PRODUCT_IMAGE_BUCKET).remove([oldPath]);
+			const { error: pathError } = await supabaseAdmin.from('products').update({ image_path: newPath }).eq('id', productId);
+			if (pathError) {
+				console.error('[SHOP ADMIN] Saving image path failed:', pathError);
+				if (newPath) {
+					const { error: rmNew } = await supabaseAdmin.storage.from(PRODUCT_IMAGE_BUCKET).remove([newPath]);
+					if (rmNew) console.error('[SHOP ADMIN] Removing uploaded image failed:', rmNew);
+				}
+				redirect(303, `/admin/shop/products/${productId}?image_failed=1`);
+			}
+			if (oldPath) {
+				const { error: rmOld } = await supabaseAdmin.storage.from(PRODUCT_IMAGE_BUCKET).remove([oldPath]);
+				if (rmOld) console.error('[SHOP ADMIN] Removing old image failed:', rmOld);
+			}
 		}
 
 		redirect(303, '/admin/shop/products?saved=1');
@@ -125,7 +171,10 @@ export const actions: Actions = {
 		}
 		const { error: deleteError } = await supabaseAdmin.from('products').delete().eq('id', product.id);
 		if (deleteError) return fail(500, { message: 'Could not delete the product.' });
-		if (product.image_path) await supabaseAdmin.storage.from(PRODUCT_IMAGE_BUCKET).remove([product.image_path]);
+		if (product.image_path) {
+			const { error: removeError } = await supabaseAdmin.storage.from(PRODUCT_IMAGE_BUCKET).remove([product.image_path]);
+			if (removeError) console.error('[SHOP ADMIN] Removing image failed:', removeError);
+		}
 		redirect(303, '/admin/shop/products?deleted=1');
 	}
 };

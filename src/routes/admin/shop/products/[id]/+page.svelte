@@ -31,6 +31,9 @@
 {#if form?.message}
 	<p class="mb-4 rounded border border-red-500 bg-red-500/10 p-3 text-red-200">{form.message}</p>
 {/if}
+{#if data.saveFailed}
+	<p class="mb-4 rounded border border-red-500 bg-red-500/10 p-3 text-red-200">Saving failed partway. This page shows what is currently saved. Please check and save again.</p>
+{/if}
 {#if data.imageFailed}
 	<p class="mb-4 rounded border border-amber-500 bg-amber-500/10 p-3 text-amber-200">The product was saved, but the image upload failed. Please try uploading it again.</p>
 {/if}
